@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+secrets.ini
+__pycache__/
+
+# large or regenerable data
+billstatus_bulk/
+congress_api/
+parsed/
+derived/
