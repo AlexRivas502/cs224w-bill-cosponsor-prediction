@@ -1,0 +1,140 @@
+{
+ "model": "lightgcn",
+ "task": "t2",
+ "fold": 117,
+ "t0": 0,
+ "protocol": "plain",
+ "tuned_on": [
+  114,
+  115,
+  116
+ ],
+ "role": "val",
+ "tol": 0.01,
+ "chosen": {},
+ "best_val": 0.8024532659414172,
+ "runs": [
+  {
+   "overrides": {},
+   "val_metric": 0.8024532659414172,
+   "val_per_congress": [
+    0.7858224709621379,
+    0.820671515144978,
+    0.8008658117171356
+   ],
+   "best_epochs": [
+    10,
+    6,
+    8
+   ],
+   "seconds": 83.9262170791626,
+   "adopted": true,
+   "note": "apriori"
+  },
+  {
+   "overrides": {
+    "model.K": 1
+   },
+   "factor": "model.K",
+   "value": 1,
+   "val_metric": 0.8033141044300559,
+   "val_per_congress": [
+    0.7896684319077557,
+    0.8169841907607456,
+    0.8032896906216663
+   ],
+   "best_epochs": [
+    9,
+    5,
+    6
+   ],
+   "seconds": 48.68031978607178,
+   "gain": 0.0008608384886387155,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "model.K": 3
+   },
+   "factor": "model.K",
+   "value": 3,
+   "val_metric": 0.8026961833309544,
+   "val_per_congress": [
+    0.7894926154952907,
+    0.8180241776732697,
+    0.8005717568243026
+   ],
+   "best_epochs": [
+    11,
+    8,
+    5
+   ],
+   "seconds": 67.84889602661133,
+   "gain": 0.00024291738953718944,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "model.combine": "mean"
+   },
+   "factor": "model.combine",
+   "value": "mean",
+   "val_metric": 0.8037787563383882,
+   "val_per_congress": [
+    0.790106711393082,
+    0.8191099392906516,
+    0.8021196183314311
+   ],
+   "best_epochs": [
+    10,
+    5,
+    5
+   ],
+   "seconds": 47.402806997299194,
+   "gain": 0.0013254903969710519,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "train.lr": 0.0003
+   },
+   "factor": "train.lr",
+   "value": 0.0003,
+   "val_metric": 0.8066286261001006,
+   "val_per_congress": [
+    0.7913756418883681,
+    0.8228028141668329,
+    0.8057074222451005
+   ],
+   "best_epochs": [
+    12,
+    8,
+    8
+   ],
+   "seconds": 64.24139714241028,
+   "gain": 0.004175360158683361,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "train.lr": 0.003
+   },
+   "factor": "train.lr",
+   "value": 0.003,
+   "val_metric": 0.8005554245062738,
+   "val_per_congress": [
+    0.7886551952149875,
+    0.8136443676214412,
+    0.799366710682393
+   ],
+   "best_epochs": [
+    9,
+    4,
+    4
+   ],
+   "seconds": 65.83555579185486,
+   "gain": -0.001897841435143377,
+   "adopted": false
+  }
+ ]
+}

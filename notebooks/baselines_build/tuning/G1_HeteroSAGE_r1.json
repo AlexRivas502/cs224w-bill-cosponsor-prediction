@@ -1,0 +1,709 @@
+{
+ "model": "hetero_sage",
+ "label": "G1 HeteroSAGE",
+ "round": 1,
+ "fold": 117,
+ "role": "val",
+ "split": "supervision 109-115, early stopping and selection on validation 116 (Task 1); Task 2 = mean AUROC over validation 114, 115, 116, each fit on 109..v-1 (DESIGN 6.2)",
+ "test_numbers_logged": false,
+ "selection_rule": "one factor at a time from APRIORI; adopt iff validation gain >= D_TOL (0.005 Recall@20 / 0.01 AUROC); seed-1 rerun of APRIORI estimates noise",
+ "threads": 4,
+ "known_issue": "train.fit normalises the step loss by the weighted bill count; G1 steps hold one Congress, so the sup_half_life recency weight cancels and has no effect (sup_half_life=None gives an identical validation score) [FIXED 2026-11-08: the loss is divided by the unweighted count; G1 keeps sup_half_life = None, identical to round 1]",
+ "result": {
+  "t1": {
+   "chosen": {},
+   "best_val": 0.3755174392258682,
+   "tuned_on": [
+    116
+   ]
+  },
+  "t2": {
+   "chosen": {},
+   "best_val": 0.7913067454532179,
+   "tuned_on": [
+    114,
+    115,
+    116
+   ]
+  }
+ },
+ "t1": {
+  "model": "hetero_sage",
+  "label": "G1 HeteroSAGE",
+  "round": 1,
+  "task": "t1",
+  "fold": 117,
+  "t0": 0,
+  "protocol": "stream",
+  "tuned_on": [
+   116
+  ],
+  "role": "val",
+  "tol": 0.005,
+  "selection_rule": "one factor at a time from APRIORI; adopt if gain >= tol",
+  "apriori": {
+   "model": {
+    "d": 128,
+    "layers": 2,
+    "dropout": 0.2,
+    "drop_edge": 0.1,
+    "tower": 64,
+    "pair_hidden": 32,
+    "phi_norm": "global",
+    "use_dot": true,
+    "use_pair": true,
+    "aggr": "mean",
+    "tuned_on": []
+   },
+   "train": {
+    "lr": 0.003,
+    "weight_decay": 0.0001,
+    "betas": [
+     0.9,
+     0.999
+    ],
+    "batch_bills": 1024,
+    "max_epochs": 20,
+    "patience": 4,
+    "warmup_frac": 0.05,
+    "min_lr_frac": 0.1,
+    "clip": 1.0,
+    "sup_half_life": 3.0,
+    "loss": "softmax",
+    "val_smooth": 1,
+    "mix_congresses": false
+   },
+   "H": 3,
+   "use_title": true
+  },
+  "chosen": {},
+  "best_val": 0.3755174392258682,
+  "runs": [
+   {
+    "overrides": {},
+    "seed": 0,
+    "val_metric": 0.3755174392258682,
+    "val_per_congress": [
+     0.3755174392258682
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 736.8239502906799,
+    "adopted": true,
+    "note": "apriori"
+   },
+   {
+    "overrides": {},
+    "seed": 1,
+    "val_metric": 0.376676992289568,
+    "val_per_congress": [
+     0.376676992289568
+    ],
+    "best_epochs": [
+     12
+    ],
+    "seconds": 892.6008682250977,
+    "adopted": false,
+    "note": "apriori, seed 1 (noise estimate)"
+   },
+   {
+    "overrides": {
+     "train.lr": 0.001
+    },
+    "factor": "train.lr",
+    "value": 0.001,
+    "seed": 0,
+    "val_metric": 0.37053799123727355,
+    "val_per_congress": [
+     0.37053799123727355
+    ],
+    "best_epochs": [
+     7
+    ],
+    "seconds": 183.87077808380127,
+    "gain": -0.004979447988594676,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "train.lr": 0.006
+    },
+    "factor": "train.lr",
+    "value": 0.006,
+    "seed": 0,
+    "val_metric": 0.37595448015760335,
+    "val_per_congress": [
+     0.37595448015760335
+    ],
+    "best_epochs": [
+     9
+    ],
+    "seconds": 107.2559278011322,
+    "gain": 0.00043704093173513314,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.layers": 1
+    },
+    "factor": "model.layers",
+    "value": 1,
+    "seed": 0,
+    "val_metric": 0.37381623833439276,
+    "val_per_congress": [
+     0.37381623833439276
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 49.33534097671509,
+    "gain": -0.0017012008914754628,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.layers": 3
+    },
+    "factor": "model.layers",
+    "value": 3,
+    "seed": 0,
+    "val_metric": 0.3740651008442398,
+    "val_per_congress": [
+     0.3740651008442398
+    ],
+    "best_epochs": [
+     8
+    ],
+    "seconds": 174.92019200325012,
+    "gain": -0.0014523383816284485,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.d": 64
+    },
+    "factor": "model.d",
+    "value": 64,
+    "seed": 0,
+    "val_metric": 0.3748992625785219,
+    "val_per_congress": [
+     0.3748992625785219
+    ],
+    "best_epochs": [
+     14
+    ],
+    "seconds": 86.88031077384949,
+    "gain": -0.0006181766473463135,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.d": 256
+    },
+    "factor": "model.d",
+    "value": 256,
+    "seed": 0,
+    "val_metric": 0.37582385424005377,
+    "val_per_congress": [
+     0.37582385424005377
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 246.70068097114563,
+    "gain": 0.00030641501418554595,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "H": 2
+    },
+    "factor": "H",
+    "value": 2,
+    "seed": 0,
+    "val_metric": 0.37206592454045,
+    "val_per_congress": [
+     0.37206592454045
+    ],
+    "best_epochs": [
+     7
+    ],
+    "seconds": 108.94857907295227,
+    "gain": -0.003451514685418211,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "H": 4
+    },
+    "factor": "H",
+    "value": 4,
+    "seed": 0,
+    "val_metric": 0.3751288849146415,
+    "val_per_congress": [
+     0.3751288849146415
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 549.1128890514374,
+    "gain": -0.0003885543112266965,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.dropout": 0.1
+    },
+    "factor": "model.dropout",
+    "value": 0.1,
+    "seed": 0,
+    "val_metric": 0.37590216029478735,
+    "val_per_congress": [
+     0.37590216029478735
+    ],
+    "best_epochs": [
+     8
+    ],
+    "seconds": 477.9986140727997,
+    "gain": 0.00038472106891912494,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.dropout": 0.3
+    },
+    "factor": "model.dropout",
+    "value": 0.3,
+    "seed": 0,
+    "val_metric": 0.37268224275236717,
+    "val_per_congress": [
+     0.37268224275236717
+    ],
+    "best_epochs": [
+     6
+    ],
+    "seconds": 631.8894579410553,
+    "gain": -0.002835196473501056,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "train.loss": "bpr"
+    },
+    "factor": "train.loss",
+    "value": "bpr",
+    "seed": 0,
+    "val_metric": 0.372039225770642,
+    "val_per_congress": [
+     0.372039225770642
+    ],
+    "best_epochs": [
+     7
+    ],
+    "seconds": 1016.8266448974609,
+    "gain": -0.003478213455226198,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "train.sup_half_life": null
+    },
+    "factor": "train.sup_half_life",
+    "value": null,
+    "seed": 0,
+    "val_metric": 0.3755174392258682,
+    "val_per_congress": [
+     0.3755174392258682
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 638.1192052364349,
+    "gain": 0.0,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "train.weight_decay": 0.001
+    },
+    "factor": "train.weight_decay",
+    "value": 0.001,
+    "seed": 0,
+    "val_metric": 0.3752770014829761,
+    "val_per_congress": [
+     0.3752770014829761
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 512.1418390274048,
+    "gain": -0.00024043774289211894,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.drop_edge": 0.0
+    },
+    "factor": "model.drop_edge",
+    "value": 0.0,
+    "seed": 0,
+    "val_metric": 0.37438221028790974,
+    "val_per_congress": [
+     0.37438221028790974
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 466.42844414711,
+    "gain": -0.0011352289379584768,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.drop_edge": 0.2
+    },
+    "factor": "model.drop_edge",
+    "value": 0.2,
+    "seed": 0,
+    "val_metric": 0.37590642544488323,
+    "val_per_congress": [
+     0.37590642544488323
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 523.6269431114197,
+    "gain": 0.0003889862190150084,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.pair_hidden": 128
+    },
+    "factor": "model.pair_hidden",
+    "value": 128,
+    "seed": 0,
+    "val_metric": 0.37420697523102814,
+    "val_per_congress": [
+     0.37420697523102814
+    ],
+    "best_epochs": [
+     5
+    ],
+    "seconds": 449.3687160015106,
+    "gain": -0.0013104639948400831,
+    "adopted": false,
+    "phase": "extension"
+   },
+   {
+    "overrides": {
+     "model.phi_norm": "per_congress"
+    },
+    "factor": "model.phi_norm",
+    "value": "per_congress",
+    "seed": 0,
+    "val_metric": 0.37407325243569106,
+    "val_per_congress": [
+     0.37407325243569106
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 226.23181295394897,
+    "gain": -0.00144418679017716,
+    "adopted": false,
+    "phase": "extension"
+   },
+   {
+    "overrides": {
+     "train.patience": 6
+    },
+    "factor": "train.patience",
+    "value": 6,
+    "seed": 0,
+    "val_metric": 0.3755174392258682,
+    "val_per_congress": [
+     0.3755174392258682
+    ],
+    "best_epochs": [
+     10
+    ],
+    "seconds": 323.2290768623352,
+    "gain": 0.0,
+    "adopted": false,
+    "phase": "extension"
+   }
+  ],
+  "notes": [
+   "extension phase: factors beyond DESIGN 6.2 grid, same rule, continued from the chosen config"
+  ]
+ },
+ "t2": {
+  "model": "hetero_sage",
+  "label": "G1 HeteroSAGE",
+  "round": 1,
+  "task": "t2",
+  "fold": 117,
+  "t0": 0,
+  "protocol": "plain",
+  "tuned_on": [
+   114,
+   115,
+   116
+  ],
+  "role": "val",
+  "tol": 0.01,
+  "selection_rule": "one factor at a time from APRIORI; adopt if gain >= tol",
+  "apriori": {
+   "model": {
+    "d": 128,
+    "layers": 2,
+    "dropout": 0.2,
+    "drop_edge": 0.1,
+    "tower": 64,
+    "pair_hidden": 32,
+    "phi_norm": "global",
+    "use_dot": true,
+    "use_pair": true,
+    "aggr": "mean",
+    "tuned_on": []
+   },
+   "train": {
+    "lr": 0.003,
+    "weight_decay": 0.0001,
+    "betas": [
+     0.9,
+     0.999
+    ],
+    "batch_bills": 2048,
+    "max_epochs": 30,
+    "patience": 6,
+    "warmup_frac": 0.05,
+    "min_lr_frac": 0.1,
+    "clip": 1.0,
+    "sup_half_life": 3.0,
+    "loss": "softmax",
+    "val_smooth": 3,
+    "mix_congresses": false
+   },
+   "H": 3,
+   "use_title": true
+  },
+  "chosen": {},
+  "best_val": 0.7913067454532179,
+  "runs": [
+   {
+    "overrides": {},
+    "seed": 0,
+    "val_metric": 0.7913067454532179,
+    "val_per_congress": [
+     0.7720418673216859,
+     0.8030171080993137,
+     0.798861260938654
+    ],
+    "best_epochs": [
+     14,
+     6,
+     10
+    ],
+    "seconds": 1340.383455991745,
+    "adopted": true,
+    "note": "apriori"
+   },
+   {
+    "overrides": {
+     "model.layers": 1
+    },
+    "factor": "model.layers",
+    "value": 1,
+    "seed": 0,
+    "val_metric": 0.793643716449771,
+    "val_per_congress": [
+     0.7756785347360493,
+     0.8084482757070922,
+     0.796804338906172
+    ],
+    "best_epochs": [
+     9,
+     6,
+     6
+    ],
+    "seconds": 286.38943886756897,
+    "gain": 0.002336970996553167,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "use_title": false
+    },
+    "factor": "use_title",
+    "value": false,
+    "seed": 0,
+    "val_metric": 0.7923962208109496,
+    "val_per_congress": [
+     0.7692062507442351,
+     0.8078648673185236,
+     0.8001175443700902
+    ],
+    "best_epochs": [
+     12,
+     8,
+     11
+    ],
+    "seconds": 432.71357798576355,
+    "gain": 0.0010894753577317395,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "train.lr": 0.001
+    },
+    "factor": "train.lr",
+    "value": 0.001,
+    "seed": 0,
+    "val_metric": 0.7906561778534735,
+    "val_per_congress": [
+     0.7726184860773032,
+     0.8033296659637541,
+     0.7960203815193632
+    ],
+    "best_epochs": [
+     13,
+     6,
+     7
+    ],
+    "seconds": 313.19403314590454,
+    "gain": -0.0006505675997443561,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.dropout": 0.3
+    },
+    "factor": "model.dropout",
+    "value": 0.3,
+    "seed": 0,
+    "val_metric": 0.7922214077356996,
+    "val_per_congress": [
+     0.7740585868040459,
+     0.8044046412000209,
+     0.7982009952030319
+    ],
+    "best_epochs": [
+     14,
+     6,
+     6
+    ],
+    "seconds": 450.1891107559204,
+    "gain": 0.0009146622824817152,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "train.weight_decay": 0.001
+    },
+    "factor": "train.weight_decay",
+    "value": 0.001,
+    "seed": 0,
+    "val_metric": 0.7903044763920098,
+    "val_per_congress": [
+     0.7709629687065863,
+     0.8040245560954737,
+     0.7959259043739696
+    ],
+    "best_epochs": [
+     14,
+     6,
+     9
+    ],
+    "seconds": 1265.3332979679108,
+    "gain": -0.0010022690612080387,
+    "adopted": false
+   },
+   {
+    "overrides": {
+     "model.d": 64
+    },
+    "factor": "model.d",
+    "value": 64,
+    "seed": 0,
+    "val_metric": 0.792458080760536,
+    "val_per_congress": [
+     0.7728777491314563,
+     0.8091580420561,
+     0.7953384510940519
+    ],
+    "best_epochs": [
+     14,
+     8,
+     9
+    ],
+    "seconds": 559.7104501724243,
+    "gain": 0.0011513353073181465,
+    "adopted": false,
+    "phase": "extension"
+   },
+   {
+    "overrides": {
+     "train.batch_bills": 512
+    },
+    "factor": "train.batch_bills",
+    "value": 512,
+    "seed": 0,
+    "val_metric": 0.7913953891913142,
+    "val_per_congress": [
+     0.7673849785583361,
+     0.8064467952762842,
+     0.8003543937393224
+    ],
+    "best_epochs": [
+     16,
+     4,
+     6
+    ],
+    "seconds": 3170.044403076172,
+    "gain": 8.864373809636117e-05,
+    "adopted": false,
+    "phase": "extension"
+   }
+  ],
+  "notes": [
+   "extension phase: factors beyond DESIGN 6.2 grid, same rule, continued from the chosen config"
+  ]
+ },
+ "post_fix_recheck": {
+  "date": "2026-11-09",
+  "code": "current train.py: Task-1 val_smooth = 3; step loss divided by the unweighted bill count",
+  "role": "val",
+  "test_used_for_selection": false,
+  "note": "Re-score of the chosen (FROZEN) settings under the code changes made after the round-1 search. Round-1 numbers above were measured with val_smooth = 1 (Task 1) and the old weighted-count normaliser. Validation Congress only; no new search; no setting changed.",
+  "source": "baselines_build/out/final_simple_3seeds (8 threads, fit 109-115, validate 116, early stopping val metric)",
+  "t1": {
+   "val116_recall20_by_seed": {
+    "0": 0.3771,
+    "1": 0.3722,
+    "2": 0.3747
+   },
+   "mean": 0.3746,
+   "sd": 0.0024,
+   "best_epochs": [
+    10,
+    11,
+    12
+   ],
+   "round1_val": 0.3755,
+   "note": "seed 0 at 4 threads (challenger run): 0.3723, E* 9 -> results depend on the thread count"
+  },
+  "t2": {
+   "val116_auroc_by_seed": {
+    "0": 0.797,
+    "1": 0.8052,
+    "2": 0.802
+   },
+   "mean": 0.8014,
+   "note": "single validation Congress 116 (the selection metric used mean 114-116); for information"
+  },
+  "decision": "unchanged (FROZEN = APRIORI)"
+ }
+}

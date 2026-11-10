@@ -1,0 +1,51 @@
+{
+ "config": {
+  "mode": "simple",
+  "tasks": [
+   "t1",
+   "t2"
+  ],
+  "t0_list": [
+   0
+  ],
+  "t1_protocols": [
+   "stream"
+  ],
+  "plain_models": [
+   "hetero_sage"
+  ],
+  "models": [
+   "lightgcn",
+   "pair_mlp"
+  ],
+  "heuristics": true,
+  "tabular_refs": true,
+  "tab_sup_start": 109,
+  "seeds": [
+   0
+  ],
+  "device": "cpu",
+  "threads": 4,
+  "locked_118": false,
+  "run_search": false,
+  "rolling_config": "apriori",
+  "allow_contaminated": false,
+  "use_title": true,
+  "H": 3,
+  "quick": false,
+  "verbose": true,
+  "cache_dir": null
+ },
+ "folds": [
+  117
+ ],
+ "timing_s": {
+  "data": 4.21,
+  "graphs + features": 8.18,
+  "checks": 3.79,
+  "heuristics": 5.32,
+  "G3 LightGCN-feat": 94.47,
+  "PairMLP": 20.97,
+  "TabGBDT / TabLogReg": 9.71
+ }
+}

@@ -1,0 +1,114 @@
+{
+ "model": "lightgcn",
+ "task": "t1",
+ "fold": 117,
+ "t0": 0,
+ "protocol": "stream",
+ "tuned_on": [
+  116
+ ],
+ "role": "val",
+ "tol": 0.005,
+ "chosen": {},
+ "best_val": 0.3753007342509356,
+ "runs": [
+  {
+   "overrides": {},
+   "val_metric": 0.3753007342509356,
+   "val_per_congress": [
+    0.3753007342509356
+   ],
+   "best_epochs": [
+    3
+   ],
+   "seconds": 59.421915769577026,
+   "adopted": true,
+   "note": "apriori"
+  },
+  {
+   "overrides": {
+    "model.K": 1
+   },
+   "factor": "model.K",
+   "value": 1,
+   "val_metric": 0.37035756157546823,
+   "val_per_congress": [
+    0.37035756157546823
+   ],
+   "best_epochs": [
+    6
+   ],
+   "seconds": 73.69864988327026,
+   "gain": -0.004943172675467344,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "model.K": 3
+   },
+   "factor": "model.K",
+   "value": 3,
+   "val_metric": 0.3760841374470798,
+   "val_per_congress": [
+    0.3760841374470798
+   ],
+   "best_epochs": [
+    5
+   ],
+   "seconds": 64.68182611465454,
+   "gain": 0.0007834031961442278,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "model.combine": "mean"
+   },
+   "factor": "model.combine",
+   "value": "mean",
+   "val_metric": 0.37564670680655476,
+   "val_per_congress": [
+    0.37564670680655476
+   ],
+   "best_epochs": [
+    5
+   ],
+   "seconds": 34.34525227546692,
+   "gain": 0.0003459725556191895,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "train.lr": 0.0003
+   },
+   "factor": "train.lr",
+   "value": 0.0003,
+   "val_metric": 0.3723975763338453,
+   "val_per_congress": [
+    0.3723975763338453
+   ],
+   "best_epochs": [
+    10
+   ],
+   "seconds": 55.572396993637085,
+   "gain": -0.002903157917090282,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "train.lr": 0.003
+   },
+   "factor": "train.lr",
+   "value": 0.003,
+   "val_metric": 0.3759890829703975,
+   "val_per_congress": [
+    0.3759890829703975
+   ],
+   "best_epochs": [
+    4
+   ],
+   "seconds": 38.064799070358276,
+   "gain": 0.0006883487194619398,
+   "adopted": false
+  }
+ ]
+}

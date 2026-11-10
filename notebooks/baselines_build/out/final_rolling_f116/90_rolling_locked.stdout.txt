@@ -1,0 +1,68 @@
+
+t1 Recall@20 per test fold:
+fold                                             116
+t0 protocol model        config_set selection       
+0  plain    cosup        reference  clean     0.2453
+            party+pop    reference  clean     0.2037
+            popularity   reference  clean     0.1620
+            rw2hop       reference  clean     0.2533
+            sh_hl1       reference  clean     0.2775
+            sponsor_hist reference  clean     0.2542
+            svd_r512_hl1 reference  clean     0.2757
+   stream   cosup        reference  clean     0.2686
+            hetero_sage  apriori    clean     0.3745
+            lightgcn     apriori    clean     0.3730
+            pair_mlp     apriori    clean     0.3666
+            party+pop    reference  clean     0.2106
+            popularity   reference  clean     0.1673
+            rgcn         apriori    clean     0.3694
+            rw2hop       reference  clean     0.2863
+            sponsor_hist reference  clean     0.2884
+
+t1: mean over clean folds, paired t-test vs sponsor_hist:
+   task  t0 protocol         model     metric   mean  std  count  diff_vs_sponsor_hist  p_ttest
+2    t1   0    plain         cosup  Recall@20 0.2453  NaN      1                   NaN      NaN
+5    t1   0    plain     party+pop  Recall@20 0.2037  NaN      1                   NaN      NaN
+8    t1   0    plain    popularity  Recall@20 0.1620  NaN      1                   NaN      NaN
+11   t1   0    plain        rw2hop  Recall@20 0.2533  NaN      1                   NaN      NaN
+14   t1   0    plain        sh_hl1  Recall@20 0.2775  NaN      1                   NaN      NaN
+17   t1   0    plain  sponsor_hist  Recall@20 0.2542  NaN      1                   NaN      NaN
+20   t1   0    plain  svd_r512_hl1  Recall@20 0.2757  NaN      1                   NaN      NaN
+23   t1   0   stream         cosup  Recall@20 0.2686  NaN      1                   NaN      NaN
+26   t1   0   stream   hetero_sage  Recall@20 0.3745  NaN      1                   NaN      NaN
+29   t1   0   stream      lightgcn  Recall@20 0.3730  NaN      1                   NaN      NaN
+32   t1   0   stream      pair_mlp  Recall@20 0.3666  NaN      1                   NaN      NaN
+35   t1   0   stream     party+pop  Recall@20 0.2106  NaN      1                   NaN      NaN
+38   t1   0   stream    popularity  Recall@20 0.1673  NaN      1                   NaN      NaN
+41   t1   0   stream          rgcn  Recall@20 0.3694  NaN      1                   NaN      NaN
+44   t1   0   stream        rw2hop  Recall@20 0.2863  NaN      1                   NaN      NaN
+47   t1   0   stream  sponsor_hist  Recall@20 0.2884  NaN      1                   NaN      NaN
+
+t2 AUROC per test fold:
+fold                                               116
+t0 protocol model          config_set selection       
+0  plain    TabGBDT        apriori    clean     0.7958
+            TabLogReg      apriori    clean     0.7706
+            chamber_maj    reference  clean     0.5350
+            eb_committee   reference  clean     0.7712
+            eb_rate        reference  clean     0.6875
+            eb_rate_t0safe reference  clean     0.5688
+            hetero_sage    apriori    clean     0.7944
+            lightgcn       apriori    clean     0.8054
+            pair_mlp       apriori    clean     0.7783
+            prior          reference  clean     0.5000
+            rgcn           apriori    clean     0.8006
+
+t2: mean over clean folds, paired t-test vs eb_rate_t0safe:
+   task  t0 protocol           model metric   mean  std  count  diff_vs_eb_rate_t0safe  p_ttest
+2    t2   0    plain         TabGBDT  AUROC 0.7958  NaN      1                     NaN      NaN
+5    t2   0    plain       TabLogReg  AUROC 0.7706  NaN      1                     NaN      NaN
+8    t2   0    plain     chamber_maj  AUROC 0.5350  NaN      1                     NaN      NaN
+11   t2   0    plain    eb_committee  AUROC 0.7712  NaN      1                     NaN      NaN
+14   t2   0    plain         eb_rate  AUROC 0.6875  NaN      1                     NaN      NaN
+17   t2   0    plain  eb_rate_t0safe  AUROC 0.5688  NaN      1                     NaN      NaN
+20   t2   0    plain     hetero_sage  AUROC 0.7944  NaN      1                     NaN      NaN
+23   t2   0    plain        lightgcn  AUROC 0.8054  NaN      1                     NaN      NaN
+26   t2   0    plain        pair_mlp  AUROC 0.7783  NaN      1                     NaN      NaN
+29   t2   0    plain           prior  AUROC 0.5000  NaN      1                     NaN      NaN
+32   t2   0    plain            rgcn  AUROC 0.8006  NaN      1                     NaN      NaN

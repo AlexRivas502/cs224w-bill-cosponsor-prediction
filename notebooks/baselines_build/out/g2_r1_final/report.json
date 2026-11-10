@@ -1,0 +1,36 @@
+{
+ "run": "g2_r1_final",
+ "sections": [
+  {
+   "file": "00_config.py",
+   "ok": true,
+   "cells": 2,
+   "seconds": 3.6,
+   "error": null
+  },
+  {
+   "file": "10_data.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 5.8,
+   "error": null
+  },
+  {
+   "file": "50_rgcn.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 199.6,
+   "error": null
+  }
+ ],
+ "ok": true,
+ "env": {
+  "BASELINES_THREADS": "4",
+  "BASELINES_MODELS": "rgcn"
+ },
+ "seconds_total": 209.0,
+ "timing_s": {
+  "data": 5.8,
+  "G2 R-GCN": 199.6
+ }
+}

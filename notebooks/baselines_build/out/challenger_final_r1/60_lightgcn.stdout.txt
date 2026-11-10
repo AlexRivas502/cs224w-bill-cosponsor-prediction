@@ -1,0 +1,51 @@
+[lightgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.2415  val Recall@20 0.3346 (avg 0.3346)  *
+    epoch  2  loss 4.9634  val Recall@20 0.3600 (avg 0.3473)  *
+    epoch  3  loss 4.8884  val Recall@20 0.3712 (avg 0.3553)  *
+    epoch  4  loss 4.8462  val Recall@20 0.3698 (avg 0.3670)  *
+    epoch  5  loss 4.8067  val Recall@20 0.3753 (avg 0.3721)  *
+    epoch  6  loss 4.7733  val Recall@20 0.3730 (avg 0.3727)  *
+    epoch  7  loss 4.7293  val Recall@20 0.3700 (avg 0.3728)  *
+    epoch  8  loss 4.6886  val Recall@20 0.3671 (avg 0.3700)
+    epoch  9  loss 4.6479  val Recall@20 0.3651 (avg 0.3674)
+    epoch 10  loss 4.5950  val Recall@20 0.3667 (avg 0.3663)
+    epoch 11  loss 4.5457  val Recall@20 0.3620 (avg 0.3646)
+[lightgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 5.2264  (refit, stop at 7)
+    epoch  2  loss 4.9369  (refit, stop at 7)
+    epoch  3  loss 4.8684  (refit, stop at 7)
+    epoch  4  loss 4.8299  (refit, stop at 7)
+    epoch  5  loss 4.7952  (refit, stop at 7)
+    epoch  6  loss 4.7645  (refit, stop at 7)
+    epoch  7  loss 4.7241  (refit, stop at 7)
+[lightgcn t1 fold 117] E* = 7, val 0.3728, test 0.4002, 226s
+[lightgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3404  val AUROC 0.7396 (avg 0.7396)  *
+    epoch  2  loss 0.2052  val AUROC 0.7845 (avg 0.7620)  *
+    epoch  3  loss 0.1943  val AUROC 0.7982 (avg 0.7741)  *
+    epoch  4  loss 0.1883  val AUROC 0.8018 (avg 0.7948)  *
+    epoch  5  loss 0.1830  val AUROC 0.7994 (avg 0.7998)  *
+    epoch  6  loss 0.1758  val AUROC 0.8073 (avg 0.8028)  *
+    epoch  7  loss 0.1719  val AUROC 0.8087 (avg 0.8051)  *
+    epoch  8  loss 0.1640  val AUROC 0.8052 (avg 0.8071)  *
+    epoch  9  loss 0.1598  val AUROC 0.7827 (avg 0.7989)
+    epoch 10  loss 0.1551  val AUROC 0.8098 (avg 0.7992)
+    epoch 11  loss 0.1510  val AUROC 0.7956 (avg 0.7961)
+    epoch 12  loss 0.1472  val AUROC 0.7955 (avg 0.8003)
+    epoch 13  loss 0.1411  val AUROC 0.7962 (avg 0.7958)
+    epoch 14  loss 0.1359  val AUROC 0.7954 (avg 0.7957)
+[lightgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 8
+    epoch  1  loss 0.3165  (refit, stop at 8)
+    epoch  2  loss 0.1897  (refit, stop at 8)
+    epoch  3  loss 0.1801  (refit, stop at 8)
+    epoch  4  loss 0.1746  (refit, stop at 8)
+    epoch  5  loss 0.1681  (refit, stop at 8)
+    epoch  6  loss 0.1632  (refit, stop at 8)
+    epoch  7  loss 0.1582  (refit, stop at 8)
+    epoch  8  loss 0.1547  (refit, stop at 8)
+[lightgcn t2 fold 117] E* = 8, val 0.8071, test 0.8301, 85s
+
+G3 LightGCN-feat: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol             model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G3 LightGCN-feat     0  Recall@20           7     frozen     clean   226.2000 0.3700 0.4002
+1   117   t2   0    plain  G3 LightGCN-feat     0      AUROC           8     frozen     clean    85.4000 0.8052 0.8301

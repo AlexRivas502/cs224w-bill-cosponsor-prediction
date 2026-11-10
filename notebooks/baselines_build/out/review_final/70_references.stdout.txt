@@ -1,0 +1,56 @@
+[pair_mlp t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.3238  val Recall@20 0.3089 (avg 0.3089)  *
+    epoch  2  loss 5.0595  val Recall@20 0.3492 (avg 0.3290)  *
+    epoch  3  loss 4.9558  val Recall@20 0.3557 (avg 0.3379)  *
+    epoch  4  loss 4.9225  val Recall@20 0.3594 (avg 0.3547)  *
+    epoch  5  loss 4.8973  val Recall@20 0.3583 (avg 0.3578)  *
+    epoch  6  loss 4.8845  val Recall@20 0.3661 (avg 0.3613)  *
+    epoch  7  loss 4.8657  val Recall@20 0.3673 (avg 0.3639)  *
+    epoch  8  loss 4.8559  val Recall@20 0.3631 (avg 0.3655)  *
+    epoch  9  loss 4.8406  val Recall@20 0.3602 (avg 0.3635)
+    epoch 10  loss 4.8333  val Recall@20 0.3639 (avg 0.3624)
+    epoch 11  loss 4.8166  val Recall@20 0.3575 (avg 0.3605)
+    epoch 12  loss 4.8051  val Recall@20 0.3636 (avg 0.3616)
+[pair_mlp t1 t0=0 stream fold 117] refit 109-116, stop at E* = 8
+    epoch  1  loss 5.3196  (refit, stop at 8)
+    epoch  2  loss 5.0425  (refit, stop at 8)
+    epoch  3  loss 4.9506  (refit, stop at 8)
+    epoch  4  loss 4.9132  (refit, stop at 8)
+    epoch  5  loss 4.8958  (refit, stop at 8)
+    epoch  6  loss 4.8761  (refit, stop at 8)
+    epoch  7  loss 4.8628  (refit, stop at 8)
+    epoch  8  loss 4.8484  (refit, stop at 8)
+[pair_mlp t1 fold 117] E* = 8, val 0.3655, test 0.3857, 19s
+[pair_mlp t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3412  val AUROC 0.7572 (avg 0.7572)  *
+    epoch  2  loss 0.1977  val AUROC 0.7712 (avg 0.7642)  *
+    epoch  3  loss 0.1873  val AUROC 0.7761 (avg 0.7682)  *
+    epoch  4  loss 0.1831  val AUROC 0.7825 (avg 0.7766)  *
+    epoch  5  loss 0.1798  val AUROC 0.7813 (avg 0.7799)  *
+    epoch  6  loss 0.1756  val AUROC 0.7889 (avg 0.7842)  *
+    epoch  7  loss 0.1727  val AUROC 0.7891 (avg 0.7864)  *
+    epoch  8  loss 0.1704  val AUROC 0.7777 (avg 0.7852)
+    epoch  9  loss 0.1659  val AUROC 0.7782 (avg 0.7817)
+    epoch 10  loss 0.1631  val AUROC 0.7834 (avg 0.7798)
+    epoch 11  loss 0.1600  val AUROC 0.7905 (avg 0.7841)
+    epoch 12  loss 0.1594  val AUROC 0.7796 (avg 0.7845)
+    epoch 13  loss 0.1556  val AUROC 0.7791 (avg 0.7831)
+[pair_mlp t2 t0=0 plain fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 0.3236  (refit, stop at 7)
+    epoch  2  loss 0.1901  (refit, stop at 7)
+    epoch  3  loss 0.1813  (refit, stop at 7)
+    epoch  4  loss 0.1780  (refit, stop at 7)
+    epoch  5  loss 0.1741  (refit, stop at 7)
+    epoch  6  loss 0.1709  (refit, stop at 7)
+    epoch  7  loss 0.1677  (refit, stop at 7)
+[pair_mlp t2 fold 117] E* = 7, val 0.7864, test 0.8050, 5s
+
+PairMLP: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol    model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  PairMLP     0  Recall@20           8     frozen     clean    19.2000 0.3631 0.3857
+1   117   t2   0    plain  PairMLP     0      AUROC           7     frozen     clean     4.7000 0.7891 0.8050
+
+Tabular references (Task 2):
+   fold task  t0 protocol      model  seed metric best_epoch config_set selection  runtime_s    val   test
+0   117   t2   0    plain    TabGBDT     0  AUROC       None    apriori     clean     4.8000 0.7958 0.8211
+1   117   t2   0    plain  TabLogReg     0  AUROC       None    apriori     clean     4.8000 0.7706 0.7966

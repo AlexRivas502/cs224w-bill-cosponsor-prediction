@@ -1,0 +1,19 @@
+[lightgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 4.2019  val Recall@20 0.5339 (avg 0.5339)  *
+    epoch  2  loss 4.0084  val Recall@20 0.5524 (avg 0.5431)  *
+[lightgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 4.1706  (refit, stop at 2)
+    epoch  2  loss 3.9844  (refit, stop at 2)
+[lightgcn t1 fold 117] E* = 2, val 0.5431, test 0.6084, 7s
+[lightgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2778  val AUROC 0.8294 (avg 0.8294)  *
+    epoch  2  loss 0.2060  val AUROC 0.8415 (avg 0.8355)  *
+[lightgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 0.2698  (refit, stop at 2)
+    epoch  2  loss 0.1935  (refit, stop at 2)
+[lightgcn t2 fold 117] E* = 2, val 0.8355, test 0.7906, 4s
+
+G3 LightGCN-feat: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol             model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G3 LightGCN-feat     0  Recall@20           2     frozen     clean     6.7000 0.5524 0.6084
+1   117   t2   0    plain  G3 LightGCN-feat     0      AUROC           2     frozen     clean     4.2000 0.8415 0.7906

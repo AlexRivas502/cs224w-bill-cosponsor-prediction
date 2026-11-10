@@ -1,0 +1,99 @@
+{
+ "run": "final_simple_3seeds",
+ "sections": [
+  {
+   "file": "00_config.py",
+   "ok": true,
+   "cells": 2,
+   "seconds": 2.4,
+   "error": null
+  },
+  {
+   "file": "10_data.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 4.1,
+   "error": null
+  },
+  {
+   "file": "20_graphs.py",
+   "ok": true,
+   "cells": 3,
+   "seconds": 14.0,
+   "error": null
+  },
+  {
+   "file": "30_heuristics.py",
+   "ok": true,
+   "cells": 2,
+   "seconds": 7.1,
+   "error": null
+  },
+  {
+   "file": "40_hetero_sage.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 1014.5,
+   "error": null
+  },
+  {
+   "file": "50_rgcn.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 661.3,
+   "error": null
+  },
+  {
+   "file": "60_lightgcn.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 638.2,
+   "error": null
+  },
+  {
+   "file": "70_references.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 124.1,
+   "error": null
+  },
+  {
+   "file": "80_compare.py",
+   "ok": true,
+   "cells": 4,
+   "seconds": 11.6,
+   "error": null
+  },
+  {
+   "file": "90_rolling_locked.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 0.0,
+   "error": null
+  },
+  {
+   "file": "95_experiments.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 0.0,
+   "error": null
+  }
+ ],
+ "ok": true,
+ "env": {
+  "BASELINES_THREADS": "8",
+  "BASELINES_SEEDS": "0,1,2"
+ },
+ "seconds_total": 2477.2,
+ "timing_s": {
+  "data": 4.1,
+  "graphs + features": 8.9,
+  "checks": 3.9,
+  "heuristics": 5.9,
+  "G1 HeteroSAGE": 1014.4,
+  "G2 R-GCN": 661.3,
+  "G3 LightGCN-feat": 638.2,
+  "PairMLP": 94.6,
+  "TabGBDT / TabLogReg": 29.5
+ }
+}

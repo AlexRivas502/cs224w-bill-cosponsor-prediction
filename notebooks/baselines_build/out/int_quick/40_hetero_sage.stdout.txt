@@ -1,0 +1,35 @@
+[hetero_sage t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 4.3108  val Recall@20 0.4907 (avg 0.4907)  *
+    epoch  2  loss 4.1437  val Recall@20 0.5094 (avg 0.5000)  *
+[hetero_sage t1 t0=0 stream fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 4.2570  (refit, stop at 2)
+    epoch  2  loss 4.1304  (refit, stop at 2)
+[hetero_sage t1 fold 117] E* = 2, val 0.5000, test 0.5758, 8s
+[hetero_sage t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 4.4859  val Recall@20 0.4534 (avg 0.4534)  *
+    epoch  2  loss 4.2715  val Recall@20 0.5018 (avg 0.4776)  *
+[hetero_sage t1 t0=0 stream fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 4.4444  (refit, stop at 2)
+    epoch  2  loss 4.2159  (refit, stop at 2)
+[hetero_sage t1 fold 117] E* = 2, val 0.4776, test 0.5571, 6s
+[hetero_sage t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2405  val AUROC 0.8365 (avg 0.8365)  *
+    epoch  2  loss 0.1874  val AUROC 0.8409 (avg 0.8387)  *
+[hetero_sage t2 t0=0 plain fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 0.2457  (refit, stop at 2)
+    epoch  2  loss 0.1854  (refit, stop at 2)
+[hetero_sage t2 fold 117] E* = 2, val 0.8387, test 0.8131, 10s
+[hetero_sage t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2560  val AUROC 0.8377 (avg 0.8377)  *
+    epoch  2  loss 0.1892  val AUROC 0.8461 (avg 0.8419)  *
+[hetero_sage t2 t0=0 plain fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 0.2535  (refit, stop at 2)
+    epoch  2  loss 0.1967  (refit, stop at 2)
+[hetero_sage t2 fold 117] E* = 2, val 0.8419, test 0.8066, 11s
+
+G1 HeteroSAGE: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol          model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G1 HeteroSAGE     0  Recall@20           2     frozen     clean     7.6000 0.5094 0.5758
+1   117   t1   0   stream  G1 HeteroSAGE     1  Recall@20           2     frozen     clean     6.2000 0.5018 0.5571
+2   117   t2   0    plain  G1 HeteroSAGE     0      AUROC           2     frozen     clean     9.9000 0.8409 0.8131
+3   117   t2   0    plain  G1 HeteroSAGE     1      AUROC           2     frozen     clean    11.1000 0.8461 0.8066

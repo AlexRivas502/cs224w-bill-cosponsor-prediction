@@ -1,0 +1,119 @@
+{
+ "model": "rgcn",
+ "task": "t2",
+ "fold": 117,
+ "t0": 0,
+ "protocol": "stream",
+ "tuned_on": [
+  114,
+  115,
+  116
+ ],
+ "role": "val",
+ "tol": 0.01,
+ "chosen": {},
+ "best_val": 0.7892572323119179,
+ "runs": [
+  {
+   "overrides": {},
+   "val_metric": 0.7892572323119179,
+   "val_per_congress": [
+    0.7679177201343639,
+    0.8013958700744439,
+    0.798458106726946
+   ],
+   "best_epochs": [
+    9,
+    4,
+    5
+   ],
+   "seconds": 149.09228897094727,
+   "adopted": true,
+   "note": "apriori"
+  },
+  {
+   "overrides": {
+    "model.num_bases": 2
+   },
+   "factor": "model.num_bases",
+   "value": 2,
+   "val_metric": 0.7901641834535414,
+   "val_per_congress": [
+    0.7711171542233632,
+    0.8037357282694869,
+    0.7956396678677738
+   ],
+   "best_epochs": [
+    9,
+    6,
+    5
+   ],
+   "seconds": 150.70693922042847,
+   "gain": 0.0009069511416235354,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "model.num_bases": 8
+   },
+   "factor": "model.num_bases",
+   "value": 8,
+   "val_metric": 0.7955088721273048,
+   "val_per_congress": [
+    0.7848067419471066,
+    0.8041438130216788,
+    0.7975760614131286
+   ],
+   "best_epochs": [
+    9,
+    4,
+    6
+   ],
+   "seconds": 155.62178206443787,
+   "gain": 0.0062516398153869,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "train.lr": 0.01
+   },
+   "factor": "train.lr",
+   "value": 0.01,
+   "val_metric": 0.7896942809077734,
+   "val_per_congress": [
+    0.7691746505594956,
+    0.8027263027701225,
+    0.797181889393702
+   ],
+   "best_epochs": [
+    9,
+    4,
+    5
+   ],
+   "seconds": 141.7564742565155,
+   "gain": 0.0004370485958554715,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "model.layers": 3
+   },
+   "factor": "model.layers",
+   "value": 3,
+   "val_metric": 0.7926606361397345,
+   "val_per_congress": [
+    0.7761690299112517,
+    0.8044403935590924,
+    0.7973724849488596
+   ],
+   "best_epochs": [
+    9,
+    5,
+    5
+   ],
+   "seconds": 300.92434096336365,
+   "gain": 0.0034034038278165646,
+   "adopted": false
+  }
+ ]
+}

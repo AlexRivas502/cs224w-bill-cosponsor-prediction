@@ -1,0 +1,39 @@
+fold 116 t0=0 val  : Congresses 109-115, fit on 109-114, 4s
+fold 116 t0=0 refit: Congresses 109-116, fit on 109-115, 4s
+
+Graph for target Congress 116 (t0 = 0, history window [113, 114, 115])
+  nodes:
+    leg       1,452  x: (1452, 21)
+    hbill    36,256  x: (36256, 82)
+    comm         41  x: (41, 4)
+    tbill    14,340  x: (14340, 88)
+  edges (src -> dst):
+    leg   -[sponsors]-> hbill     36,256  (history)
+    leg   -[cosp_orig]-> hbill    187,368  (history)
+    leg   -[cosp_later]-> hbill    280,429  (history)
+    hbill -[referred]-> comm      44,753  (history)
+    hbill -[rev_sponsors]-> leg       36,256  (reverse)
+    hbill -[rev_cosp_orig]-> leg      187,368  (reverse)
+    hbill -[rev_cosp_later]-> leg      280,429  (reverse)
+    comm  -[rev_referred]-> hbill     44,753  (reverse)
+    leg   -[sponsors_t]-> tbill     14,340  (target, incoming only)
+    leg   -[cosp_t]-> tbill     69,500  (target, incoming only)
+    comm  -[referred_t]-> tbill     18,057  (target, incoming only)
+eligibility: {'blocks': 2, 'bills': 5391, 'sponsors_excluded': 5391, 'seen_excluded': 48494, 'positives': 36888}
+allowlist: {'leg': 21, 'hbill': 82, 'comm': 4, 'tbill': 88, 'phi': 22, 'patterns': 13}
+hist_depth per Congress: {109: 1, 110: 2, 111: 3, 112: 3, 113: 3, 114: 3, 115: 3, 116: 3}
+caucus_pit uses Congresses < k only: {'k': 116, 'n_other': 254}
+censored bills never in EB denominators: {'congress': 115, 'denominator': 9679, 'uncensored': 9679, 'censored': 1735}
+stream truncation test (cutoff day, bills with that cutoff): [(17961, 54, 28), (18242, 47, 16), (18521, 37, 13)] -> identical features
+tbill: 1 of 24 columns shift > 0.5 sd on validation Congress 115
+         hist_depth_3
+shift_sd       0.7340
+flag           >0.5sd
+leg: 1 of 21 columns shift > 0.5 sd on validation Congress 115
+         hist_depth_3
+shift_sd       0.7071
+flag           >0.5sd
+phi: 1 of 22 columns shift > 0.5 sd on validation Congress 115
+         hist_depth_3
+shift_sd       0.6928
+flag           >0.5sd

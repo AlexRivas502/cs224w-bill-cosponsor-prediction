@@ -1,0 +1,93 @@
+[hetero_sage t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.2976  val Recall@20 0.3173  *
+    epoch  2  loss 5.0414  val Recall@20 0.3503  *
+    epoch  3  loss 4.9535  val Recall@20 0.3563  *
+    epoch  4  loss 4.9343  val Recall@20 0.3623  *
+    epoch  5  loss 4.9075  val Recall@20 0.3712  *
+    epoch  6  loss 4.8911  val Recall@20 0.3663
+    epoch  7  loss 4.8758  val Recall@20 0.3744  *
+    epoch  8  loss 4.8685  val Recall@20 0.3715
+    epoch  9  loss 4.8486  val Recall@20 0.3675
+    epoch 10  loss 4.8399  val Recall@20 0.3755  *
+    epoch 11  loss 4.8212  val Recall@20 0.3658
+    epoch 12  loss 4.8085  val Recall@20 0.3708
+    epoch 13  loss 4.7894  val Recall@20 0.3697
+    epoch 14  loss 4.7649  val Recall@20 0.3697
+[hetero_sage t1 t0=0 stream fold 117] refit 109-116, stop at E* = 10
+    epoch  1  loss 5.3015  (refit, stop at 10)
+    epoch  2  loss 5.0193  (refit, stop at 10)
+    epoch  3  loss 4.9412  (refit, stop at 10)
+    epoch  4  loss 4.9021  (refit, stop at 10)
+    epoch  5  loss 4.8844  (refit, stop at 10)
+    epoch  6  loss 4.8770  (refit, stop at 10)
+    epoch  7  loss 4.8634  (refit, stop at 10)
+    epoch  8  loss 4.8414  (refit, stop at 10)
+    epoch  9  loss 4.8329  (refit, stop at 10)
+    epoch 10  loss 4.8118  (refit, stop at 10)
+[hetero_sage t1 fold 117] E* = 10, val 0.3755, test 0.3938, 331s
+[hetero_sage t1 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.3576  val Recall@20 0.2964  *
+    epoch  2  loss 5.1026  val Recall@20 0.3173  *
+    epoch  3  loss 5.0448  val Recall@20 0.3137
+    epoch  4  loss 5.0120  val Recall@20 0.3210  *
+    epoch  5  loss 4.9921  val Recall@20 0.3316  *
+    epoch  6  loss 4.9726  val Recall@20 0.3299
+    epoch  7  loss 4.9519  val Recall@20 0.3303
+    epoch  8  loss 4.9446  val Recall@20 0.3298
+    epoch  9  loss 4.9253  val Recall@20 0.3319  *
+    epoch 10  loss 4.9068  val Recall@20 0.3326  *
+    epoch 11  loss 4.8853  val Recall@20 0.3235
+    epoch 12  loss 4.8792  val Recall@20 0.3367  *
+    epoch 13  loss 4.8457  val Recall@20 0.3296
+    epoch 14  loss 4.8227  val Recall@20 0.3279
+    epoch 15  loss 4.8069  val Recall@20 0.3271
+    epoch 16  loss 4.7837  val Recall@20 0.3252
+[hetero_sage t1 t0=0 plain fold 117] refit 109-116, stop at E* = 12
+    epoch  1  loss 5.3684  (refit, stop at 12)
+    epoch  2  loss 5.1039  (refit, stop at 12)
+    epoch  3  loss 5.0490  (refit, stop at 12)
+    epoch  4  loss 5.0071  (refit, stop at 12)
+    epoch  5  loss 4.9780  (refit, stop at 12)
+    epoch  6  loss 4.9667  (refit, stop at 12)
+    epoch  7  loss 4.9398  (refit, stop at 12)
+    epoch  8  loss 4.9239  (refit, stop at 12)
+    epoch  9  loss 4.9060  (refit, stop at 12)
+    epoch 10  loss 4.8881  (refit, stop at 12)
+    epoch 11  loss 4.8637  (refit, stop at 12)
+    epoch 12  loss 4.8428  (refit, stop at 12)
+[hetero_sage t1 fold 117] E* = 12, val 0.3367, test 0.3510, 303s
+[hetero_sage t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3033  val AUROC 0.7679 (avg 0.7679)  *
+    epoch  2  loss 0.2067  val AUROC 0.7734 (avg 0.7707)  *
+    epoch  3  loss 0.1971  val AUROC 0.7925 (avg 0.7779)  *
+    epoch  4  loss 0.1915  val AUROC 0.8031 (avg 0.7897)  *
+    epoch  5  loss 0.1875  val AUROC 0.7913 (avg 0.7956)  *
+    epoch  6  loss 0.1843  val AUROC 0.7908 (avg 0.7951)
+    epoch  7  loss 0.1804  val AUROC 0.7926 (avg 0.7916)
+    epoch  8  loss 0.1771  val AUROC 0.8017 (avg 0.7950)
+    epoch  9  loss 0.1708  val AUROC 0.7962 (avg 0.7968)  *
+    epoch 10  loss 0.1646  val AUROC 0.7987 (avg 0.7989)  *
+    epoch 11  loss 0.1585  val AUROC 0.7821 (avg 0.7923)
+    epoch 12  loss 0.1529  val AUROC 0.7932 (avg 0.7913)
+    epoch 13  loss 0.1456  val AUROC 0.7823 (avg 0.7859)
+    epoch 14  loss 0.1437  val AUROC 0.7837 (avg 0.7864)
+    epoch 15  loss 0.1355  val AUROC 0.7885 (avg 0.7848)
+    epoch 16  loss 0.1326  val AUROC 0.7869 (avg 0.7864)
+[hetero_sage t2 t0=0 plain fold 117] refit 109-116, stop at E* = 10
+    epoch  1  loss 0.2604  (refit, stop at 10)
+    epoch  2  loss 0.1907  (refit, stop at 10)
+    epoch  3  loss 0.1854  (refit, stop at 10)
+    epoch  4  loss 0.1785  (refit, stop at 10)
+    epoch  5  loss 0.1782  (refit, stop at 10)
+    epoch  6  loss 0.1712  (refit, stop at 10)
+    epoch  7  loss 0.1662  (refit, stop at 10)
+    epoch  8  loss 0.1619  (refit, stop at 10)
+    epoch  9  loss 0.1605  (refit, stop at 10)
+    epoch 10  loss 0.1551  (refit, stop at 10)
+[hetero_sage t2 fold 117] E* = 10, val 0.7989, test 0.8078, 189s
+
+G1 HeteroSAGE: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol          model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G1 HeteroSAGE     0  Recall@20          10     frozen     clean   331.0000 0.3755 0.3938
+1   117   t1   0    plain  G1 HeteroSAGE     0  Recall@20          12     frozen     clean   303.4000 0.3367 0.3510
+2   117   t2   0    plain  G1 HeteroSAGE     0      AUROC          10     frozen     clean   189.2000 0.7987 0.8078

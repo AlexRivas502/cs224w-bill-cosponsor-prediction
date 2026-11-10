@@ -1,0 +1,881 @@
+mode simple -> folds [117] | tasks ('t1', 't2') | t0 (0,) | Task-1 protocols ('stream',)
+models ('hetero_sage', 'rgcn', 'lightgcn', 'pair_mlp') (implemented: ['pair_mlp', 'hetero_sage', 'rgcn', 'lightgcn']) | seeds (0, 1, 2) | cpu, 8 threads
+repo: /Users/alex_rivas/Documents/Stanford/CS224W/Final Project/cs224w-bill-cosponsor-prediction
+legislators coded: 1,452; law-capable bills 108-118: 128,791; Task-2 rows (uncensored): 110,802; cache: /Users/alex_rivas/Documents/Stanford/CS224W/Final Project/cs224w-bill-cosponsor-prediction/derived/cache/baselines
+load timings (s): {'tables': 2.2, 'roster_majority': 0.1, 'engine': 1.7, 'total': 3.9}
+          law_capable  t1_bills  t1_positives  pool_house  pool_senate  t2_bills  t2_pos_rate
+congress                                                                                     
+108              8621      2941         22647         434           96      7533       0.0804
+109             10697      3124         24663         435           96      9494       0.0552
+110             11224      3906         30855         436           97      9784       0.0778
+111             10770      3637         25753         437           96      9382       0.0473
+112             10612      3230         22857         437           96      9592       0.0432
+113              9083      3459         26606         437           96      7727       0.0578
+114             10223      3812         25487         436           96      8948       0.0730
+115             11414      4072         25199         436           96      9679       0.0867
+116             14340      5391         36888         435           96     11866       0.0414
+117             15242      5101         30129         436           96     12953       0.0281
+fold 117 t0=0 val  : Congresses 109-116, fit on 109-115, 4s
+fold 117 t0=0 refit: Congresses 109-117, fit on 109-116, 5s
+
+Graph for target Congress 117 (t0 = 0, history window [114, 115, 116])
+  nodes:
+    leg       1,452  x: (1452, 21)
+    hbill    42,220  x: (42220, 82)
+    comm         41  x: (41, 4)
+    tbill    15,242  x: (15242, 88)
+  edges (src -> dst):
+    leg   -[sponsors]-> hbill     42,220  (history)
+    leg   -[cosp_orig]-> hbill    228,331  (history)
+    leg   -[cosp_later]-> hbill    315,629  (history)
+    hbill -[referred]-> comm      52,596  (history)
+    hbill -[rev_sponsors]-> leg       42,220  (reverse)
+    hbill -[rev_cosp_orig]-> leg      228,331  (reverse)
+    hbill -[rev_cosp_later]-> leg      315,629  (reverse)
+    comm  -[rev_referred]-> hbill     52,596  (reverse)
+    leg   -[sponsors_t]-> tbill     15,231  (target, incoming only)
+    leg   -[cosp_t]-> tbill     81,018  (target, incoming only)
+    comm  -[referred_t]-> tbill     19,175  (target, incoming only)
+eligibility: {'blocks': 2, 'bills': 5101, 'sponsors_excluded': 5101, 'seen_excluded': 54649, 'positives': 30129}
+allowlist: {'leg': 21, 'hbill': 82, 'comm': 4, 'tbill': 88, 'phi': 22, 'patterns': 13}
+hist_depth per Congress: {109: 1, 110: 2, 111: 3, 112: 3, 113: 3, 114: 3, 115: 3, 116: 3, 117: 3}
+caucus_pit uses Congresses < k only: {'k': 117, 'n_other': 176}
+censored bills never in EB denominators: {'congress': 116, 'denominator': 11866, 'uncensored': 11866, 'censored': 2474}
+stream truncation test (cutoff day, bills with that cutoff): [(18696, 100, 40), (18963, 33, 14), (19242, 10, 1)] -> identical features
+tbill: 1 of 24 columns shift > 0.5 sd on validation Congress 116
+         hist_depth_3
+shift_sd       0.6486
+flag           >0.5sd
+leg: 2 of 21 columns shift > 0.5 sd on validation Congress 116
+         hist_depth_3 sponsor_eb_rate
+shift_sd       0.6325          0.8244
+flag           >0.5sd          >0.5sd
+phi: 1 of 22 columns shift > 0.5 sd on validation Congress 116
+         hist_depth_3
+shift_sd       0.6097
+flag           >0.5sd
+Reference bars (fold 117, t0 = 0) vs digest_D.md:
+   task protocol  role           model  reference  value    diff      n    ok
+0    t1    plain  test      popularity     0.1375 0.1375 -0.0000   5101  True
+1    t1    plain  test       party+pop     0.1905 0.1905 -0.0000   5101  True
+2    t1    plain  test    sponsor_hist     0.2615 0.2615  0.0000   5101  True
+3    t1    plain  test          rw2hop     0.2629 0.2629 -0.0000   5101  True
+4    t1    plain  test    svd_r512_hl1     0.2832 0.2832  0.0000   5101  True
+5    t1   stream  test    sponsor_hist     0.3071 0.3071 -0.0000   5101  True
+6    t1   stream  test          rw2hop     0.3080 0.3075 -0.0005   5101  True
+7    t1    plain   val    sponsor_hist     0.2542 0.2542 -0.0000   5391  True
+8    t1   stream   val    sponsor_hist     0.2884 0.2884  0.0000   5391  True
+9    t1    plain   val    svd_r512_hl1     0.2757 0.2757 -0.0000   5391  True
+10   t2    plain  test     chamber_maj     0.5449 0.5449  0.0000  12953  True
+11   t2    plain  test  eb_rate_t0safe     0.5598 0.5598 -0.0000  12953  True
+12   t2    plain  test         eb_rate     0.6924 0.6924  0.0000  12953  True
+
+Task 1, fold 117, test Congress 117, t0 = 0:
+metric                                         Recall@10                Recall@20                  NDCG@20     n
+protocol kind      model                                                                                        
+plain    heuristic cosup         0.1701 [0.1589, 0.1812]  0.2607 [0.2447, 0.2776]  0.1658 [0.1576, 0.1745]  5101
+                   party+pop     0.1126 [0.1018, 0.1240]  0.1905 [0.1743, 0.2077]  0.1152 [0.1070, 0.1235]  5101
+                   popularity    0.0856 [0.0754, 0.0959]  0.1375 [0.1240, 0.1521]  0.0854 [0.0774, 0.0934]  5101
+                   rw2hop        0.1703 [0.1582, 0.1828]  0.2629 [0.2473, 0.2812]  0.1649 [0.1557, 0.1747]  5101
+                   sh_hl1        0.1923 [0.1795, 0.2070]  0.2845 [0.2668, 0.3035]  0.1835 [0.1739, 0.1932]  5101
+                   sponsor_hist  0.1727 [0.1609, 0.1845]  0.2615 [0.2448, 0.2792]  0.1662 [0.1567, 0.1758]  5101
+                   svd_r512_hl1  0.1906 [0.1779, 0.2046]  0.2832 [0.2652, 0.3025]  0.1816 [0.1716, 0.1913]  5101
+stream   heuristic cosup         0.1855 [0.1738, 0.1987]  0.2809 [0.2638, 0.2968]  0.1785 [0.1704, 0.1875]  5101
+                   party+pop     0.1171 [0.1066, 0.1288]  0.1950 [0.1787, 0.2120]  0.1218 [0.1135, 0.1302]  5101
+                   popularity    0.0876 [0.0769, 0.0982]  0.1403 [0.1268, 0.1551]  0.0912 [0.0821, 0.0998]  5101
+                   rw2hop        0.1986 [0.1881, 0.2122]  0.3075 [0.2914, 0.3248]  0.1915 [0.1831, 0.1998]  5101
+                   sponsor_hist  0.2035 [0.1924, 0.2173]  0.3071 [0.2906, 0.3246]  0.1931 [0.1847, 0.2016]  5101
+
+Task 2, fold 117, test Congress 117:
+metric                                                     AUROC                       AP                  AP_lift      n
+protocol kind            model                                                                                           
+plain    heuristic       chamber_maj     0.5449 [0.5106, 0.5864]  0.0307 [0.0261, 0.0361]  1.0929 [1.0071, 1.2241]  12953
+                         eb_committee    0.7258 [0.6876, 0.7607]  0.0788 [0.0557, 0.1105]  2.8035 [2.1942, 3.7208]  12953
+                         eb_rate_t0safe  0.5598 [0.5255, 0.5982]  0.0358 [0.0293, 0.0467]  1.2747 [1.1188, 1.6172]  12953
+                         prior           0.5000 [0.5000, 0.5000]  0.0281 [0.0236, 0.0325]  1.0000 [1.0000, 1.0000]  12953
+         reference_leaky eb_rate         0.6924 [0.6534, 0.7257]  0.0623 [0.0438, 0.0945]  2.2153 [1.7292, 3.1336]  12953
+[hetero_sage t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.2954  val Recall@20 0.3160 (avg 0.3160)  *
+    epoch  2  loss 5.0365  val Recall@20 0.3541 (avg 0.3351)  *
+    epoch  3  loss 4.9566  val Recall@20 0.3558 (avg 0.3420)  *
+    epoch  4  loss 4.9270  val Recall@20 0.3699 (avg 0.3600)  *
+    epoch  5  loss 4.9025  val Recall@20 0.3683 (avg 0.3647)  *
+    epoch  6  loss 4.8894  val Recall@20 0.3670 (avg 0.3684)  *
+    epoch  7  loss 4.8699  val Recall@20 0.3719 (avg 0.3691)  *
+    epoch  8  loss 4.8568  val Recall@20 0.3718 (avg 0.3702)  *
+    epoch  9  loss 4.8387  val Recall@20 0.3718 (avg 0.3719)  *
+    epoch 10  loss 4.8347  val Recall@20 0.3771 (avg 0.3736)  *
+    epoch 11  loss 4.8146  val Recall@20 0.3639 (avg 0.3709)
+    epoch 12  loss 4.8014  val Recall@20 0.3689 (avg 0.3700)
+    epoch 13  loss 4.7818  val Recall@20 0.3678 (avg 0.3669)
+    epoch 14  loss 4.7624  val Recall@20 0.3670 (avg 0.3679)
+[hetero_sage t1 t0=0 stream fold 117] refit 109-116, stop at E* = 10
+    epoch  1  loss 5.2774  (refit, stop at 10)
+    epoch  2  loss 5.0176  (refit, stop at 10)
+    epoch  3  loss 4.9413  (refit, stop at 10)
+    epoch  4  loss 4.9047  (refit, stop at 10)
+    epoch  5  loss 4.8869  (refit, stop at 10)
+    epoch  6  loss 4.8781  (refit, stop at 10)
+    epoch  7  loss 4.8651  (refit, stop at 10)
+    epoch  8  loss 4.8463  (refit, stop at 10)
+    epoch  9  loss 4.8389  (refit, stop at 10)
+    epoch 10  loss 4.8198  (refit, stop at 10)
+[hetero_sage t1 fold 117] E* = 10, val 0.3736, test 0.3930, 202s
+[hetero_sage t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.4418  val Recall@20 0.3067 (avg 0.3067)  *
+    epoch  2  loss 5.0371  val Recall@20 0.3541 (avg 0.3304)  *
+    epoch  3  loss 4.9458  val Recall@20 0.3557 (avg 0.3388)  *
+    epoch  4  loss 4.9300  val Recall@20 0.3650 (avg 0.3583)  *
+    epoch  5  loss 4.8984  val Recall@20 0.3666 (avg 0.3624)  *
+    epoch  6  loss 4.8949  val Recall@20 0.3648 (avg 0.3655)  *
+    epoch  7  loss 4.8705  val Recall@20 0.3700 (avg 0.3671)  *
+    epoch  8  loss 4.8501  val Recall@20 0.3651 (avg 0.3666)
+    epoch  9  loss 4.8452  val Recall@20 0.3732 (avg 0.3694)  *
+    epoch 10  loss 4.8294  val Recall@20 0.3750 (avg 0.3711)  *
+    epoch 11  loss 4.8118  val Recall@20 0.3722 (avg 0.3735)  *
+    epoch 12  loss 4.7937  val Recall@20 0.3704 (avg 0.3725)
+    epoch 13  loss 4.7765  val Recall@20 0.3680 (avg 0.3702)
+    epoch 14  loss 4.7575  val Recall@20 0.3706 (avg 0.3697)
+    epoch 15  loss 4.7392  val Recall@20 0.3664 (avg 0.3683)
+[hetero_sage t1 t0=0 stream fold 117] refit 109-116, stop at E* = 11
+    epoch  1  loss 5.4235  (refit, stop at 11)
+    epoch  2  loss 5.0150  (refit, stop at 11)
+    epoch  3  loss 4.9430  (refit, stop at 11)
+    epoch  4  loss 4.9212  (refit, stop at 11)
+    epoch  5  loss 4.8929  (refit, stop at 11)
+    epoch  6  loss 4.8751  (refit, stop at 11)
+    epoch  7  loss 4.8678  (refit, stop at 11)
+    epoch  8  loss 4.8415  (refit, stop at 11)
+    epoch  9  loss 4.8312  (refit, stop at 11)
+    epoch 10  loss 4.8252  (refit, stop at 11)
+    epoch 11  loss 4.7971  (refit, stop at 11)
+[hetero_sage t1 fold 117] E* = 11, val 0.3735, test 0.3904, 219s
+[hetero_sage t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.2875  val Recall@20 0.3199 (avg 0.3199)  *
+    epoch  2  loss 5.0409  val Recall@20 0.3493 (avg 0.3346)  *
+    epoch  3  loss 4.9533  val Recall@20 0.3620 (avg 0.3438)  *
+    epoch  4  loss 4.9276  val Recall@20 0.3639 (avg 0.3584)  *
+    epoch  5  loss 4.8992  val Recall@20 0.3692 (avg 0.3650)  *
+    epoch  6  loss 4.8904  val Recall@20 0.3699 (avg 0.3677)  *
+    epoch  7  loss 4.8672  val Recall@20 0.3667 (avg 0.3686)  *
+    epoch  8  loss 4.8585  val Recall@20 0.3715 (avg 0.3694)  *
+    epoch  9  loss 4.8481  val Recall@20 0.3712 (avg 0.3698)  *
+    epoch 10  loss 4.8247  val Recall@20 0.3720 (avg 0.3716)  *
+    epoch 11  loss 4.8220  val Recall@20 0.3703 (avg 0.3712)
+    epoch 12  loss 4.8017  val Recall@20 0.3747 (avg 0.3723)  *
+    epoch 13  loss 4.7806  val Recall@20 0.3690 (avg 0.3713)
+    epoch 14  loss 4.7682  val Recall@20 0.3721 (avg 0.3719)
+    epoch 15  loss 4.7472  val Recall@20 0.3701 (avg 0.3704)
+    epoch 16  loss 4.7359  val Recall@20 0.3712 (avg 0.3711)
+[hetero_sage t1 t0=0 stream fold 117] refit 109-116, stop at E* = 12
+    epoch  1  loss 5.2600  (refit, stop at 12)
+    epoch  2  loss 5.0086  (refit, stop at 12)
+    epoch  3  loss 4.9402  (refit, stop at 12)
+    epoch  4  loss 4.9048  (refit, stop at 12)
+    epoch  5  loss 4.8943  (refit, stop at 12)
+    epoch  6  loss 4.8753  (refit, stop at 12)
+    epoch  7  loss 4.8607  (refit, stop at 12)
+    epoch  8  loss 4.8415  (refit, stop at 12)
+    epoch  9  loss 4.8316  (refit, stop at 12)
+    epoch 10  loss 4.8142  (refit, stop at 12)
+    epoch 11  loss 4.7996  (refit, stop at 12)
+    epoch 12  loss 4.7868  (refit, stop at 12)
+[hetero_sage t1 fold 117] E* = 12, val 0.3723, test 0.3967, 201s
+[hetero_sage t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2873  val AUROC 0.7691 (avg 0.7691)  *
+    epoch  2  loss 0.1952  val AUROC 0.7740 (avg 0.7716)  *
+    epoch  3  loss 0.1856  val AUROC 0.7918 (avg 0.7783)  *
+    epoch  4  loss 0.1802  val AUROC 0.8017 (avg 0.7892)  *
+    epoch  5  loss 0.1773  val AUROC 0.7914 (avg 0.7950)  *
+    epoch  6  loss 0.1735  val AUROC 0.7931 (avg 0.7954)  *
+    epoch  7  loss 0.1677  val AUROC 0.7963 (avg 0.7936)
+    epoch  8  loss 0.1667  val AUROC 0.7982 (avg 0.7959)  *
+    epoch  9  loss 0.1623  val AUROC 0.7953 (avg 0.7966)  *
+    epoch 10  loss 0.1544  val AUROC 0.7970 (avg 0.7968)  *
+    epoch 11  loss 0.1489  val AUROC 0.7798 (avg 0.7907)
+    epoch 12  loss 0.1520  val AUROC 0.7854 (avg 0.7874)
+    epoch 13  loss 0.1416  val AUROC 0.7788 (avg 0.7813)
+    epoch 14  loss 0.1358  val AUROC 0.7888 (avg 0.7844)
+    epoch 15  loss 0.1288  val AUROC 0.7813 (avg 0.7830)
+    epoch 16  loss 0.1234  val AUROC 0.7807 (avg 0.7836)
+[hetero_sage t2 t0=0 plain fold 117] refit 109-116, stop at E* = 10
+    epoch  1  loss 0.2770  (refit, stop at 10)
+    epoch  2  loss 0.1879  (refit, stop at 10)
+    epoch  3  loss 0.1831  (refit, stop at 10)
+    epoch  4  loss 0.1751  (refit, stop at 10)
+    epoch  5  loss 0.1752  (refit, stop at 10)
+    epoch  6  loss 0.1692  (refit, stop at 10)
+    epoch  7  loss 0.1637  (refit, stop at 10)
+    epoch  8  loss 0.1615  (refit, stop at 10)
+    epoch  9  loss 0.1577  (refit, stop at 10)
+    epoch 10  loss 0.1513  (refit, stop at 10)
+[hetero_sage t2 fold 117] E* = 10, val 0.7968, test 0.8105, 179s
+[hetero_sage t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2905  val AUROC 0.7718 (avg 0.7718)  *
+    epoch  2  loss 0.1943  val AUROC 0.7858 (avg 0.7788)  *
+    epoch  3  loss 0.1860  val AUROC 0.7969 (avg 0.7848)  *
+    epoch  4  loss 0.1809  val AUROC 0.7966 (avg 0.7931)  *
+    epoch  5  loss 0.1745  val AUROC 0.8033 (avg 0.7989)  *
+    epoch  6  loss 0.1709  val AUROC 0.7954 (avg 0.7984)
+    epoch  7  loss 0.1668  val AUROC 0.8052 (avg 0.8013)  *
+    epoch  8  loss 0.1673  val AUROC 0.7931 (avg 0.7979)
+    epoch  9  loss 0.1579  val AUROC 0.8004 (avg 0.7996)
+    epoch 10  loss 0.1550  val AUROC 0.7994 (avg 0.7976)
+    epoch 11  loss 0.1483  val AUROC 0.7777 (avg 0.7925)
+    epoch 12  loss 0.1477  val AUROC 0.7901 (avg 0.7891)
+    epoch 13  loss 0.1432  val AUROC 0.7897 (avg 0.7858)
+[hetero_sage t2 t0=0 plain fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 0.2751  (refit, stop at 7)
+    epoch  2  loss 0.1911  (refit, stop at 7)
+    epoch  3  loss 0.1833  (refit, stop at 7)
+    epoch  4  loss 0.1769  (refit, stop at 7)
+    epoch  5  loss 0.1732  (refit, stop at 7)
+    epoch  6  loss 0.1671  (refit, stop at 7)
+    epoch  7  loss 0.1640  (refit, stop at 7)
+[hetero_sage t2 fold 117] E* = 7, val 0.8013, test 0.8030, 118s
+[hetero_sage t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3012  val AUROC 0.7736 (avg 0.7736)  *
+    epoch  2  loss 0.1958  val AUROC 0.7848 (avg 0.7792)  *
+    epoch  3  loss 0.1842  val AUROC 0.8031 (avg 0.7872)  *
+    epoch  4  loss 0.1802  val AUROC 0.8033 (avg 0.7970)  *
+    epoch  5  loss 0.1774  val AUROC 0.8020 (avg 0.8028)  *
+    epoch  6  loss 0.1719  val AUROC 0.8001 (avg 0.8018)
+    epoch  7  loss 0.1681  val AUROC 0.7922 (avg 0.7981)
+    epoch  8  loss 0.1637  val AUROC 0.7973 (avg 0.7965)
+    epoch  9  loss 0.1625  val AUROC 0.7988 (avg 0.7961)
+    epoch 10  loss 0.1562  val AUROC 0.7866 (avg 0.7943)
+    epoch 11  loss 0.1512  val AUROC 0.7973 (avg 0.7943)
+[hetero_sage t2 t0=0 plain fold 117] refit 109-116, stop at E* = 5
+    epoch  1  loss 0.2835  (refit, stop at 5)
+    epoch  2  loss 0.1903  (refit, stop at 5)
+    epoch  3  loss 0.1824  (refit, stop at 5)
+    epoch  4  loss 0.1739  (refit, stop at 5)
+    epoch  5  loss 0.1724  (refit, stop at 5)
+[hetero_sage t2 fold 117] E* = 5, val 0.8028, test 0.8010, 96s
+
+G1 HeteroSAGE: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol          model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G1 HeteroSAGE     0  Recall@20          10     frozen     clean   201.6000 0.3771 0.3930
+1   117   t1   0   stream  G1 HeteroSAGE     1  Recall@20          11     frozen     clean   219.2000 0.3722 0.3904
+2   117   t1   0   stream  G1 HeteroSAGE     2  Recall@20          12     frozen     clean   200.6000 0.3747 0.3967
+3   117   t2   0    plain  G1 HeteroSAGE     0      AUROC          10     frozen     clean   178.7000 0.7970 0.8105
+4   117   t2   0    plain  G1 HeteroSAGE     1      AUROC           7     frozen     clean   118.4000 0.8052 0.8030
+5   117   t2   0    plain  G1 HeteroSAGE     2      AUROC           5     frozen     clean    95.8000 0.8020 0.8010
+[rgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.2995  val Recall@20 0.3228 (avg 0.3228)  *
+    epoch  2  loss 5.0416  val Recall@20 0.3495 (avg 0.3362)  *
+    epoch  3  loss 4.9469  val Recall@20 0.3623 (avg 0.3449)  *
+    epoch  4  loss 4.9178  val Recall@20 0.3651 (avg 0.3590)  *
+    epoch  5  loss 4.8877  val Recall@20 0.3682 (avg 0.3652)  *
+    epoch  6  loss 4.8762  val Recall@20 0.3716 (avg 0.3683)  *
+    epoch  7  loss 4.8619  val Recall@20 0.3705 (avg 0.3701)  *
+    epoch  8  loss 4.8474  val Recall@20 0.3683 (avg 0.3701)  *
+    epoch  9  loss 4.8237  val Recall@20 0.3695 (avg 0.3694)
+    epoch 10  loss 4.8083  val Recall@20 0.3732 (avg 0.3703)  *
+    epoch 11  loss 4.7895  val Recall@20 0.3664 (avg 0.3697)
+    epoch 12  loss 4.7693  val Recall@20 0.3670 (avg 0.3689)
+    epoch 13  loss 4.7433  val Recall@20 0.3678 (avg 0.3671)
+    epoch 14  loss 4.7222  val Recall@20 0.3641 (avg 0.3663)
+[rgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 10
+    epoch  1  loss 5.2952  (refit, stop at 10)
+    epoch  2  loss 5.0173  (refit, stop at 10)
+    epoch  3  loss 4.9292  (refit, stop at 10)
+    epoch  4  loss 4.9003  (refit, stop at 10)
+    epoch  5  loss 4.8741  (refit, stop at 10)
+    epoch  6  loss 4.8592  (refit, stop at 10)
+    epoch  7  loss 4.8451  (refit, stop at 10)
+    epoch  8  loss 4.8222  (refit, stop at 10)
+    epoch  9  loss 4.8092  (refit, stop at 10)
+    epoch 10  loss 4.7925  (refit, stop at 10)
+[rgcn t1 fold 117] E* = 10, val 0.3703, test 0.3982, 129s
+[rgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.4676  val Recall@20 0.3040 (avg 0.3040)  *
+    epoch  2  loss 5.0468  val Recall@20 0.3486 (avg 0.3263)  *
+    epoch  3  loss 4.9359  val Recall@20 0.3587 (avg 0.3371)  *
+    epoch  4  loss 4.9126  val Recall@20 0.3693 (avg 0.3588)  *
+    epoch  5  loss 4.8868  val Recall@20 0.3711 (avg 0.3663)  *
+    epoch  6  loss 4.8687  val Recall@20 0.3614 (avg 0.3673)  *
+    epoch  7  loss 4.8511  val Recall@20 0.3681 (avg 0.3669)
+    epoch  8  loss 4.8287  val Recall@20 0.3653 (avg 0.3649)
+    epoch  9  loss 4.8207  val Recall@20 0.3708 (avg 0.3680)  *
+    epoch 10  loss 4.7964  val Recall@20 0.3695 (avg 0.3685)  *
+    epoch 11  loss 4.7711  val Recall@20 0.3704 (avg 0.3702)  *
+    epoch 12  loss 4.7534  val Recall@20 0.3729 (avg 0.3709)  *
+    epoch 13  loss 4.7314  val Recall@20 0.3649 (avg 0.3694)
+    epoch 14  loss 4.7091  val Recall@20 0.3650 (avg 0.3676)
+    epoch 15  loss 4.6881  val Recall@20 0.3630 (avg 0.3643)
+    epoch 16  loss 4.6725  val Recall@20 0.3628 (avg 0.3636)
+[rgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 12
+    epoch  1  loss 5.4503  (refit, stop at 12)
+    epoch  2  loss 5.0059  (refit, stop at 12)
+    epoch  3  loss 4.9390  (refit, stop at 12)
+    epoch  4  loss 4.9107  (refit, stop at 12)
+    epoch  5  loss 4.8814  (refit, stop at 12)
+    epoch  6  loss 4.8691  (refit, stop at 12)
+    epoch  7  loss 4.8482  (refit, stop at 12)
+    epoch  8  loss 4.8241  (refit, stop at 12)
+    epoch  9  loss 4.8025  (refit, stop at 12)
+    epoch 10  loss 4.7968  (refit, stop at 12)
+    epoch 11  loss 4.7638  (refit, stop at 12)
+    epoch 12  loss 4.7546  (refit, stop at 12)
+[rgcn t1 fold 117] E* = 12, val 0.3709, test 0.3935, 151s
+[rgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.3092  val Recall@20 0.3292 (avg 0.3292)  *
+    epoch  2  loss 5.0281  val Recall@20 0.3521 (avg 0.3406)  *
+    epoch  3  loss 4.9526  val Recall@20 0.3642 (avg 0.3485)  *
+    epoch  4  loss 4.9168  val Recall@20 0.3694 (avg 0.3619)  *
+    epoch  5  loss 4.8892  val Recall@20 0.3728 (avg 0.3688)  *
+    epoch  6  loss 4.8786  val Recall@20 0.3721 (avg 0.3714)  *
+    epoch  7  loss 4.8524  val Recall@20 0.3725 (avg 0.3724)  *
+    epoch  8  loss 4.8379  val Recall@20 0.3763 (avg 0.3736)  *
+    epoch  9  loss 4.8179  val Recall@20 0.3686 (avg 0.3725)
+    epoch 10  loss 4.7991  val Recall@20 0.3767 (avg 0.3739)  *
+    epoch 11  loss 4.7860  val Recall@20 0.3694 (avg 0.3716)
+    epoch 12  loss 4.7590  val Recall@20 0.3715 (avg 0.3725)
+    epoch 13  loss 4.7295  val Recall@20 0.3695 (avg 0.3702)
+    epoch 14  loss 4.7121  val Recall@20 0.3707 (avg 0.3706)
+[rgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 10
+    epoch  1  loss 5.2734  (refit, stop at 10)
+    epoch  2  loss 5.0065  (refit, stop at 10)
+    epoch  3  loss 4.9314  (refit, stop at 10)
+    epoch  4  loss 4.9026  (refit, stop at 10)
+    epoch  5  loss 4.8813  (refit, stop at 10)
+    epoch  6  loss 4.8607  (refit, stop at 10)
+    epoch  7  loss 4.8438  (refit, stop at 10)
+    epoch  8  loss 4.8209  (refit, stop at 10)
+    epoch  9  loss 4.8037  (refit, stop at 10)
+    epoch 10  loss 4.7773  (refit, stop at 10)
+[rgcn t1 fold 117] E* = 10, val 0.3739, test 0.3888, 128s
+[rgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3120  val AUROC 0.7614 (avg 0.7614)  *
+    epoch  2  loss 0.1916  val AUROC 0.7788 (avg 0.7701)  *
+    epoch  3  loss 0.1843  val AUROC 0.7911 (avg 0.7771)  *
+    epoch  4  loss 0.1744  val AUROC 0.8008 (avg 0.7902)  *
+    epoch  5  loss 0.1715  val AUROC 0.7959 (avg 0.7959)  *
+    epoch  6  loss 0.1673  val AUROC 0.7894 (avg 0.7954)
+    epoch  7  loss 0.1601  val AUROC 0.7887 (avg 0.7913)
+    epoch  8  loss 0.1576  val AUROC 0.7894 (avg 0.7892)
+    epoch  9  loss 0.1521  val AUROC 0.7914 (avg 0.7898)
+    epoch 10  loss 0.1421  val AUROC 0.7855 (avg 0.7887)
+    epoch 11  loss 0.1340  val AUROC 0.7812 (avg 0.7860)
+[rgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 5
+    epoch  1  loss 0.3009  (refit, stop at 5)
+    epoch  2  loss 0.1862  (refit, stop at 5)
+    epoch  3  loss 0.1773  (refit, stop at 5)
+    epoch  4  loss 0.1705  (refit, stop at 5)
+    epoch  5  loss 0.1685  (refit, stop at 5)
+[rgcn t2 fold 117] E* = 5, val 0.7959, test 0.8088, 80s
+[rgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2993  val AUROC 0.7712 (avg 0.7712)  *
+    epoch  2  loss 0.1905  val AUROC 0.7933 (avg 0.7823)  *
+    epoch  3  loss 0.1842  val AUROC 0.7991 (avg 0.7879)  *
+    epoch  4  loss 0.1789  val AUROC 0.7998 (avg 0.7974)  *
+    epoch  5  loss 0.1716  val AUROC 0.8009 (avg 0.7999)  *
+    epoch  6  loss 0.1648  val AUROC 0.7939 (avg 0.7982)
+    epoch  7  loss 0.1638  val AUROC 0.8102 (avg 0.8017)  *
+    epoch  8  loss 0.1560  val AUROC 0.7948 (avg 0.7996)
+    epoch  9  loss 0.1492  val AUROC 0.7981 (avg 0.8010)
+    epoch 10  loss 0.1496  val AUROC 0.8009 (avg 0.7979)
+    epoch 11  loss 0.1361  val AUROC 0.7987 (avg 0.7992)
+    epoch 12  loss 0.1331  val AUROC 0.7941 (avg 0.7979)
+    epoch 13  loss 0.1374  val AUROC 0.8026 (avg 0.7984)
+[rgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 0.2850  (refit, stop at 7)
+    epoch  2  loss 0.1874  (refit, stop at 7)
+    epoch  3  loss 0.1781  (refit, stop at 7)
+    epoch  4  loss 0.1757  (refit, stop at 7)
+    epoch  5  loss 0.1723  (refit, stop at 7)
+    epoch  6  loss 0.1645  (refit, stop at 7)
+    epoch  7  loss 0.1596  (refit, stop at 7)
+[rgcn t2 fold 117] E* = 7, val 0.8017, test 0.8077, 97s
+[rgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3291  val AUROC 0.7642 (avg 0.7642)  *
+    epoch  2  loss 0.1961  val AUROC 0.7902 (avg 0.7772)  *
+    epoch  3  loss 0.1844  val AUROC 0.8027 (avg 0.7857)  *
+    epoch  4  loss 0.1776  val AUROC 0.8054 (avg 0.7994)  *
+    epoch  5  loss 0.1723  val AUROC 0.8068 (avg 0.8050)  *
+    epoch  6  loss 0.1667  val AUROC 0.8001 (avg 0.8041)
+    epoch  7  loss 0.1626  val AUROC 0.7951 (avg 0.8007)
+    epoch  8  loss 0.1566  val AUROC 0.7986 (avg 0.7979)
+    epoch  9  loss 0.1540  val AUROC 0.7903 (avg 0.7946)
+    epoch 10  loss 0.1534  val AUROC 0.7749 (avg 0.7879)
+    epoch 11  loss 0.1448  val AUROC 0.7897 (avg 0.7850)
+[rgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 5
+    epoch  1  loss 0.3036  (refit, stop at 5)
+    epoch  2  loss 0.1914  (refit, stop at 5)
+    epoch  3  loss 0.1794  (refit, stop at 5)
+    epoch  4  loss 0.1735  (refit, stop at 5)
+    epoch  5  loss 0.1689  (refit, stop at 5)
+[rgcn t2 fold 117] E* = 5, val 0.8050, test 0.8120, 77s
+
+G2 R-GCN: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol     model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G2 R-GCN     0  Recall@20          10     frozen     clean   128.7000 0.3732 0.3982
+1   117   t1   0   stream  G2 R-GCN     1  Recall@20          12     frozen     clean   151.1000 0.3729 0.3935
+2   117   t1   0   stream  G2 R-GCN     2  Recall@20          10     frozen     clean   128.3000 0.3767 0.3888
+3   117   t2   0    plain  G2 R-GCN     0      AUROC           5     frozen     clean    79.9000 0.7959 0.8088
+4   117   t2   0    plain  G2 R-GCN     1      AUROC           7     frozen     clean    96.5000 0.8102 0.8077
+5   117   t2   0    plain  G2 R-GCN     2      AUROC           5     frozen     clean    76.8000 0.8068 0.8120
+[lightgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.2415  val Recall@20 0.3344 (avg 0.3344)  *
+    epoch  2  loss 4.9635  val Recall@20 0.3603 (avg 0.3473)  *
+    epoch  3  loss 4.8883  val Recall@20 0.3721 (avg 0.3556)  *
+    epoch  4  loss 4.8452  val Recall@20 0.3701 (avg 0.3675)  *
+    epoch  5  loss 4.8077  val Recall@20 0.3764 (avg 0.3729)  *
+    epoch  6  loss 4.7720  val Recall@20 0.3730 (avg 0.3732)  *
+    epoch  7  loss 4.7291  val Recall@20 0.3708 (avg 0.3734)  *
+    epoch  8  loss 4.6882  val Recall@20 0.3668 (avg 0.3702)
+    epoch  9  loss 4.6483  val Recall@20 0.3675 (avg 0.3684)
+    epoch 10  loss 4.5942  val Recall@20 0.3642 (avg 0.3662)
+    epoch 11  loss 4.5449  val Recall@20 0.3611 (avg 0.3643)
+[lightgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 5.2264  (refit, stop at 7)
+    epoch  2  loss 4.9371  (refit, stop at 7)
+    epoch  3  loss 4.8694  (refit, stop at 7)
+    epoch  4  loss 4.8300  (refit, stop at 7)
+    epoch  5  loss 4.7964  (refit, stop at 7)
+    epoch  6  loss 4.7667  (refit, stop at 7)
+    epoch  7  loss 4.7245  (refit, stop at 7)
+[lightgcn t1 fold 117] E* = 7, val 0.3734, test 0.4005, 148s
+[lightgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.3902  val Recall@20 0.3228 (avg 0.3228)  *
+    epoch  2  loss 4.9586  val Recall@20 0.3688 (avg 0.3458)  *
+    epoch  3  loss 4.8873  val Recall@20 0.3674 (avg 0.3530)  *
+    epoch  4  loss 4.8459  val Recall@20 0.3712 (avg 0.3691)  *
+    epoch  5  loss 4.8092  val Recall@20 0.3703 (avg 0.3696)  *
+    epoch  6  loss 4.7684  val Recall@20 0.3762 (avg 0.3726)  *
+    epoch  7  loss 4.7288  val Recall@20 0.3712 (avg 0.3726)  *
+    epoch  8  loss 4.6884  val Recall@20 0.3679 (avg 0.3718)
+    epoch  9  loss 4.6448  val Recall@20 0.3627 (avg 0.3673)
+    epoch 10  loss 4.5910  val Recall@20 0.3558 (avg 0.3622)
+    epoch 11  loss 4.5448  val Recall@20 0.3525 (avg 0.3570)
+[lightgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 5.3616  (refit, stop at 7)
+    epoch  2  loss 4.9323  (refit, stop at 7)
+    epoch  3  loss 4.8689  (refit, stop at 7)
+    epoch  4  loss 4.8298  (refit, stop at 7)
+    epoch  5  loss 4.7914  (refit, stop at 7)
+    epoch  6  loss 4.7540  (refit, stop at 7)
+    epoch  7  loss 4.7170  (refit, stop at 7)
+[lightgcn t1 fold 117] E* = 7, val 0.3726, test 0.3992, 146s
+[lightgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.2262  val Recall@20 0.3433 (avg 0.3433)  *
+    epoch  2  loss 4.9573  val Recall@20 0.3618 (avg 0.3525)  *
+    epoch  3  loss 4.8888  val Recall@20 0.3693 (avg 0.3581)  *
+    epoch  4  loss 4.8506  val Recall@20 0.3742 (avg 0.3684)  *
+    epoch  5  loss 4.8094  val Recall@20 0.3702 (avg 0.3712)  *
+    epoch  6  loss 4.7737  val Recall@20 0.3676 (avg 0.3707)
+    epoch  7  loss 4.7345  val Recall@20 0.3692 (avg 0.3690)
+    epoch  8  loss 4.6918  val Recall@20 0.3651 (avg 0.3673)
+    epoch  9  loss 4.6496  val Recall@20 0.3646 (avg 0.3663)
+[lightgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 5
+    epoch  1  loss 5.2109  (refit, stop at 5)
+    epoch  2  loss 4.9332  (refit, stop at 5)
+    epoch  3  loss 4.8684  (refit, stop at 5)
+    epoch  4  loss 4.8288  (refit, stop at 5)
+    epoch  5  loss 4.7960  (refit, stop at 5)
+[lightgcn t1 fold 117] E* = 5, val 0.3712, test 0.3993, 112s
+[lightgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3404  val AUROC 0.7396 (avg 0.7396)  *
+    epoch  2  loss 0.2052  val AUROC 0.7845 (avg 0.7620)  *
+    epoch  3  loss 0.1943  val AUROC 0.7982 (avg 0.7741)  *
+    epoch  4  loss 0.1883  val AUROC 0.8019 (avg 0.7948)  *
+    epoch  5  loss 0.1830  val AUROC 0.7998 (avg 0.7999)  *
+    epoch  6  loss 0.1763  val AUROC 0.8072 (avg 0.8030)  *
+    epoch  7  loss 0.1717  val AUROC 0.8075 (avg 0.8048)  *
+    epoch  8  loss 0.1644  val AUROC 0.8035 (avg 0.8061)  *
+    epoch  9  loss 0.1608  val AUROC 0.7907 (avg 0.8006)
+    epoch 10  loss 0.1562  val AUROC 0.8118 (avg 0.8020)
+    epoch 11  loss 0.1516  val AUROC 0.7943 (avg 0.7989)
+    epoch 12  loss 0.1472  val AUROC 0.7963 (avg 0.8008)
+    epoch 13  loss 0.1420  val AUROC 0.8000 (avg 0.7969)
+    epoch 14  loss 0.1361  val AUROC 0.7936 (avg 0.7967)
+[lightgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 8
+    epoch  1  loss 0.3165  (refit, stop at 8)
+    epoch  2  loss 0.1897  (refit, stop at 8)
+    epoch  3  loss 0.1801  (refit, stop at 8)
+    epoch  4  loss 0.1746  (refit, stop at 8)
+    epoch  5  loss 0.1680  (refit, stop at 8)
+    epoch  6  loss 0.1627  (refit, stop at 8)
+    epoch  7  loss 0.1584  (refit, stop at 8)
+    epoch  8  loss 0.1545  (refit, stop at 8)
+[lightgcn t2 fold 117] E* = 8, val 0.8061, test 0.8263, 80s
+[lightgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3254  val AUROC 0.7382 (avg 0.7382)  *
+    epoch  2  loss 0.2039  val AUROC 0.7704 (avg 0.7543)  *
+    epoch  3  loss 0.1948  val AUROC 0.7765 (avg 0.7617)  *
+    epoch  4  loss 0.1877  val AUROC 0.7943 (avg 0.7804)  *
+    epoch  5  loss 0.1818  val AUROC 0.7887 (avg 0.7865)  *
+    epoch  6  loss 0.1767  val AUROC 0.7821 (avg 0.7883)  *
+    epoch  7  loss 0.1691  val AUROC 0.8104 (avg 0.7937)  *
+    epoch  8  loss 0.1651  val AUROC 0.8019 (avg 0.7981)  *
+    epoch  9  loss 0.1587  val AUROC 0.7930 (avg 0.8018)  *
+    epoch 10  loss 0.1557  val AUROC 0.7935 (avg 0.7961)
+    epoch 11  loss 0.1503  val AUROC 0.7845 (avg 0.7903)
+    epoch 12  loss 0.1447  val AUROC 0.7886 (avg 0.7889)
+    epoch 13  loss 0.1404  val AUROC 0.7930 (avg 0.7887)
+    epoch 14  loss 0.1340  val AUROC 0.7885 (avg 0.7900)
+    epoch 15  loss 0.1282  val AUROC 0.7882 (avg 0.7899)
+[lightgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 9
+    epoch  1  loss 0.3024  (refit, stop at 9)
+    epoch  2  loss 0.1893  (refit, stop at 9)
+    epoch  3  loss 0.1797  (refit, stop at 9)
+    epoch  4  loss 0.1722  (refit, stop at 9)
+    epoch  5  loss 0.1672  (refit, stop at 9)
+    epoch  6  loss 0.1627  (refit, stop at 9)
+    epoch  7  loss 0.1585  (refit, stop at 9)
+    epoch  8  loss 0.1520  (refit, stop at 9)
+    epoch  9  loss 0.1475  (refit, stop at 9)
+[lightgcn t2 fold 117] E* = 9, val 0.8018, test 0.8266, 87s
+[lightgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3528  val AUROC 0.7446 (avg 0.7446)  *
+    epoch  2  loss 0.2053  val AUROC 0.7708 (avg 0.7577)  *
+    epoch  3  loss 0.1950  val AUROC 0.7936 (avg 0.7697)  *
+    epoch  4  loss 0.1882  val AUROC 0.8042 (avg 0.7895)  *
+    epoch  5  loss 0.1822  val AUROC 0.8030 (avg 0.8003)  *
+    epoch  6  loss 0.1770  val AUROC 0.8073 (avg 0.8048)  *
+    epoch  7  loss 0.1709  val AUROC 0.7977 (avg 0.8027)
+    epoch  8  loss 0.1662  val AUROC 0.8061 (avg 0.8037)
+    epoch  9  loss 0.1605  val AUROC 0.7916 (avg 0.7985)
+    epoch 10  loss 0.1569  val AUROC 0.7840 (avg 0.7939)
+    epoch 11  loss 0.1546  val AUROC 0.7911 (avg 0.7889)
+    epoch 12  loss 0.1466  val AUROC 0.7872 (avg 0.7874)
+[lightgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 6
+    epoch  1  loss 0.3296  (refit, stop at 6)
+    epoch  2  loss 0.1905  (refit, stop at 6)
+    epoch  3  loss 0.1802  (refit, stop at 6)
+    epoch  4  loss 0.1736  (refit, stop at 6)
+    epoch  5  loss 0.1683  (refit, stop at 6)
+    epoch  6  loss 0.1626  (refit, stop at 6)
+[lightgcn t2 fold 117] E* = 6, val 0.8048, test 0.8227, 65s
+
+G3 LightGCN-feat: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol             model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G3 LightGCN-feat     0  Recall@20           7     frozen     clean   148.3000 0.3708 0.4005
+1   117   t1   0   stream  G3 LightGCN-feat     1  Recall@20           7     frozen     clean   145.8000 0.3712 0.3992
+2   117   t1   0   stream  G3 LightGCN-feat     2  Recall@20           5     frozen     clean   111.8000 0.3702 0.3993
+3   117   t2   0    plain  G3 LightGCN-feat     0      AUROC           8     frozen     clean    79.7000 0.8035 0.8263
+4   117   t2   0    plain  G3 LightGCN-feat     1      AUROC           9     frozen     clean    87.2000 0.7930 0.8266
+5   117   t2   0    plain  G3 LightGCN-feat     2      AUROC           6     frozen     clean    65.5000 0.8073 0.8227
+[pair_mlp t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.3238  val Recall@20 0.3089 (avg 0.3089)  *
+    epoch  2  loss 5.0595  val Recall@20 0.3492 (avg 0.3290)  *
+    epoch  3  loss 4.9558  val Recall@20 0.3557 (avg 0.3379)  *
+    epoch  4  loss 4.9225  val Recall@20 0.3594 (avg 0.3547)  *
+    epoch  5  loss 4.8973  val Recall@20 0.3583 (avg 0.3578)  *
+    epoch  6  loss 4.8845  val Recall@20 0.3661 (avg 0.3613)  *
+    epoch  7  loss 4.8657  val Recall@20 0.3673 (avg 0.3639)  *
+    epoch  8  loss 4.8559  val Recall@20 0.3631 (avg 0.3655)  *
+    epoch  9  loss 4.8406  val Recall@20 0.3602 (avg 0.3635)
+    epoch 10  loss 4.8333  val Recall@20 0.3639 (avg 0.3624)
+    epoch 11  loss 4.8166  val Recall@20 0.3575 (avg 0.3605)
+    epoch 12  loss 4.8051  val Recall@20 0.3636 (avg 0.3616)
+[pair_mlp t1 t0=0 stream fold 117] refit 109-116, stop at E* = 8
+    epoch  1  loss 5.3196  (refit, stop at 8)
+    epoch  2  loss 5.0425  (refit, stop at 8)
+    epoch  3  loss 4.9506  (refit, stop at 8)
+    epoch  4  loss 4.9132  (refit, stop at 8)
+    epoch  5  loss 4.8958  (refit, stop at 8)
+    epoch  6  loss 4.8761  (refit, stop at 8)
+    epoch  7  loss 4.8628  (refit, stop at 8)
+    epoch  8  loss 4.8484  (refit, stop at 8)
+[pair_mlp t1 fold 117] E* = 8, val 0.3655, test 0.3857, 20s
+[pair_mlp t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.5123  val Recall@20 0.3031 (avg 0.3031)  *
+    epoch  2  loss 5.0770  val Recall@20 0.3411 (avg 0.3221)  *
+    epoch  3  loss 4.9588  val Recall@20 0.3498 (avg 0.3313)  *
+    epoch  4  loss 4.9276  val Recall@20 0.3576 (avg 0.3495)  *
+    epoch  5  loss 4.8999  val Recall@20 0.3638 (avg 0.3570)  *
+    epoch  6  loss 4.8924  val Recall@20 0.3621 (avg 0.3612)  *
+    epoch  7  loss 4.8693  val Recall@20 0.3662 (avg 0.3640)  *
+    epoch  8  loss 4.8564  val Recall@20 0.3669 (avg 0.3651)  *
+    epoch  9  loss 4.8564  val Recall@20 0.3665 (avg 0.3665)  *
+    epoch 10  loss 4.8343  val Recall@20 0.3668 (avg 0.3667)  *
+    epoch 11  loss 4.8165  val Recall@20 0.3688 (avg 0.3674)  *
+    epoch 12  loss 4.8062  val Recall@20 0.3697 (avg 0.3684)  *
+    epoch 13  loss 4.7955  val Recall@20 0.3657 (avg 0.3681)
+    epoch 14  loss 4.7853  val Recall@20 0.3641 (avg 0.3665)
+    epoch 15  loss 4.7771  val Recall@20 0.3655 (avg 0.3651)
+    epoch 16  loss 4.7670  val Recall@20 0.3660 (avg 0.3652)
+[pair_mlp t1 t0=0 stream fold 117] refit 109-116, stop at E* = 12
+    epoch  1  loss 5.4694  (refit, stop at 12)
+    epoch  2  loss 5.0629  (refit, stop at 12)
+    epoch  3  loss 4.9539  (refit, stop at 12)
+    epoch  4  loss 4.9170  (refit, stop at 12)
+    epoch  5  loss 4.8944  (refit, stop at 12)
+    epoch  6  loss 4.8828  (refit, stop at 12)
+    epoch  7  loss 4.8803  (refit, stop at 12)
+    epoch  8  loss 4.8549  (refit, stop at 12)
+    epoch  9  loss 4.8416  (refit, stop at 12)
+    epoch 10  loss 4.8356  (refit, stop at 12)
+    epoch 11  loss 4.8174  (refit, stop at 12)
+    epoch 12  loss 4.8112  (refit, stop at 12)
+[pair_mlp t1 fold 117] E* = 12, val 0.3684, test 0.3896, 28s
+[pair_mlp t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.3250  val Recall@20 0.3238 (avg 0.3238)  *
+    epoch  2  loss 5.0565  val Recall@20 0.3386 (avg 0.3312)  *
+    epoch  3  loss 4.9731  val Recall@20 0.3539 (avg 0.3387)  *
+    epoch  4  loss 4.9293  val Recall@20 0.3577 (avg 0.3501)  *
+    epoch  5  loss 4.9023  val Recall@20 0.3594 (avg 0.3570)  *
+    epoch  6  loss 4.8978  val Recall@20 0.3676 (avg 0.3615)  *
+    epoch  7  loss 4.8742  val Recall@20 0.3646 (avg 0.3638)  *
+    epoch  8  loss 4.8601  val Recall@20 0.3673 (avg 0.3665)  *
+    epoch  9  loss 4.8470  val Recall@20 0.3664 (avg 0.3661)
+    epoch 10  loss 4.8342  val Recall@20 0.3706 (avg 0.3681)  *
+    epoch 11  loss 4.8293  val Recall@20 0.3677 (avg 0.3682)  *
+    epoch 12  loss 4.8139  val Recall@20 0.3687 (avg 0.3690)  *
+    epoch 13  loss 4.7963  val Recall@20 0.3654 (avg 0.3673)
+    epoch 14  loss 4.7886  val Recall@20 0.3633 (avg 0.3658)
+    epoch 15  loss 4.7770  val Recall@20 0.3627 (avg 0.3638)
+    epoch 16  loss 4.7690  val Recall@20 0.3654 (avg 0.3638)
+[pair_mlp t1 t0=0 stream fold 117] refit 109-116, stop at E* = 12
+    epoch  1  loss 5.2986  (refit, stop at 12)
+    epoch  2  loss 5.0297  (refit, stop at 12)
+    epoch  3  loss 4.9454  (refit, stop at 12)
+    epoch  4  loss 4.9156  (refit, stop at 12)
+    epoch  5  loss 4.8970  (refit, stop at 12)
+    epoch  6  loss 4.8804  (refit, stop at 12)
+    epoch  7  loss 4.8618  (refit, stop at 12)
+    epoch  8  loss 4.8474  (refit, stop at 12)
+    epoch  9  loss 4.8383  (refit, stop at 12)
+    epoch 10  loss 4.8201  (refit, stop at 12)
+    epoch 11  loss 4.8104  (refit, stop at 12)
+    epoch 12  loss 4.8003  (refit, stop at 12)
+[pair_mlp t1 fold 117] E* = 12, val 0.3690, test 0.3840, 28s
+[pair_mlp t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3412  val AUROC 0.7572 (avg 0.7572)  *
+    epoch  2  loss 0.1977  val AUROC 0.7712 (avg 0.7642)  *
+    epoch  3  loss 0.1873  val AUROC 0.7761 (avg 0.7682)  *
+    epoch  4  loss 0.1831  val AUROC 0.7825 (avg 0.7766)  *
+    epoch  5  loss 0.1798  val AUROC 0.7813 (avg 0.7799)  *
+    epoch  6  loss 0.1756  val AUROC 0.7889 (avg 0.7842)  *
+    epoch  7  loss 0.1727  val AUROC 0.7891 (avg 0.7864)  *
+    epoch  8  loss 0.1704  val AUROC 0.7777 (avg 0.7852)
+    epoch  9  loss 0.1659  val AUROC 0.7782 (avg 0.7817)
+    epoch 10  loss 0.1631  val AUROC 0.7834 (avg 0.7798)
+    epoch 11  loss 0.1600  val AUROC 0.7905 (avg 0.7841)
+    epoch 12  loss 0.1594  val AUROC 0.7796 (avg 0.7845)
+    epoch 13  loss 0.1556  val AUROC 0.7791 (avg 0.7831)
+[pair_mlp t2 t0=0 plain fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 0.3236  (refit, stop at 7)
+    epoch  2  loss 0.1901  (refit, stop at 7)
+    epoch  3  loss 0.1813  (refit, stop at 7)
+    epoch  4  loss 0.1780  (refit, stop at 7)
+    epoch  5  loss 0.1741  (refit, stop at 7)
+    epoch  6  loss 0.1709  (refit, stop at 7)
+    epoch  7  loss 0.1677  (refit, stop at 7)
+[pair_mlp t2 fold 117] E* = 7, val 0.7864, test 0.8050, 5s
+[pair_mlp t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3276  val AUROC 0.7678 (avg 0.7678)  *
+    epoch  2  loss 0.1972  val AUROC 0.7795 (avg 0.7737)  *
+    epoch  3  loss 0.1867  val AUROC 0.7781 (avg 0.7751)  *
+    epoch  4  loss 0.1820  val AUROC 0.7869 (avg 0.7815)  *
+    epoch  5  loss 0.1783  val AUROC 0.7814 (avg 0.7822)  *
+    epoch  6  loss 0.1754  val AUROC 0.7871 (avg 0.7851)  *
+    epoch  7  loss 0.1720  val AUROC 0.7919 (avg 0.7868)  *
+    epoch  8  loss 0.1684  val AUROC 0.7779 (avg 0.7856)
+    epoch  9  loss 0.1651  val AUROC 0.7851 (avg 0.7850)
+    epoch 10  loss 0.1610  val AUROC 0.7849 (avg 0.7826)
+    epoch 11  loss 0.1603  val AUROC 0.7818 (avg 0.7839)
+    epoch 12  loss 0.1573  val AUROC 0.7803 (avg 0.7823)
+    epoch 13  loss 0.1558  val AUROC 0.7909 (avg 0.7843)
+[pair_mlp t2 t0=0 plain fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 0.3100  (refit, stop at 7)
+    epoch  2  loss 0.1897  (refit, stop at 7)
+    epoch  3  loss 0.1818  (refit, stop at 7)
+    epoch  4  loss 0.1778  (refit, stop at 7)
+    epoch  5  loss 0.1756  (refit, stop at 7)
+    epoch  6  loss 0.1713  (refit, stop at 7)
+    epoch  7  loss 0.1673  (refit, stop at 7)
+[pair_mlp t2 fold 117] E* = 7, val 0.7868, test 0.8027, 5s
+[pair_mlp t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3577  val AUROC 0.7648 (avg 0.7648)  *
+    epoch  2  loss 0.1979  val AUROC 0.7739 (avg 0.7694)  *
+    epoch  3  loss 0.1866  val AUROC 0.7840 (avg 0.7742)  *
+    epoch  4  loss 0.1828  val AUROC 0.7865 (avg 0.7815)  *
+    epoch  5  loss 0.1788  val AUROC 0.7849 (avg 0.7851)  *
+    epoch  6  loss 0.1753  val AUROC 0.7869 (avg 0.7861)  *
+    epoch  7  loss 0.1717  val AUROC 0.7881 (avg 0.7866)  *
+    epoch  8  loss 0.1689  val AUROC 0.7894 (avg 0.7881)  *
+    epoch  9  loss 0.1664  val AUROC 0.7825 (avg 0.7867)
+    epoch 10  loss 0.1641  val AUROC 0.7900 (avg 0.7873)
+    epoch 11  loss 0.1609  val AUROC 0.7889 (avg 0.7871)
+    epoch 12  loss 0.1581  val AUROC 0.7920 (avg 0.7903)  *
+    epoch 13  loss 0.1537  val AUROC 0.7959 (avg 0.7923)  *
+    epoch 14  loss 0.1508  val AUROC 0.7850 (avg 0.7910)
+    epoch 15  loss 0.1496  val AUROC 0.7891 (avg 0.7900)
+    epoch 16  loss 0.1464  val AUROC 0.7880 (avg 0.7874)
+    epoch 17  loss 0.1443  val AUROC 0.7924 (avg 0.7898)
+    epoch 18  loss 0.1419  val AUROC 0.7777 (avg 0.7860)
+    epoch 19  loss 0.1388  val AUROC 0.7878 (avg 0.7859)
+[pair_mlp t2 t0=0 plain fold 117] refit 109-116, stop at E* = 13
+    epoch  1  loss 0.3216  (refit, stop at 13)
+    epoch  2  loss 0.1884  (refit, stop at 13)
+    epoch  3  loss 0.1805  (refit, stop at 13)
+    epoch  4  loss 0.1776  (refit, stop at 13)
+    epoch  5  loss 0.1732  (refit, stop at 13)
+    epoch  6  loss 0.1706  (refit, stop at 13)
+    epoch  7  loss 0.1667  (refit, stop at 13)
+    epoch  8  loss 0.1645  (refit, stop at 13)
+    epoch  9  loss 0.1615  (refit, stop at 13)
+    epoch 10  loss 0.1582  (refit, stop at 13)
+    epoch 11  loss 0.1569  (refit, stop at 13)
+    epoch 12  loss 0.1517  (refit, stop at 13)
+    epoch 13  loss 0.1503  (refit, stop at 13)
+[pair_mlp t2 fold 117] E* = 13, val 0.7923, test 0.7964, 8s
+
+PairMLP: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol    model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  PairMLP     0  Recall@20           8     frozen     clean    20.4000 0.3631 0.3857
+1   117   t1   0   stream  PairMLP     1  Recall@20          12     frozen     clean    28.0000 0.3697 0.3896
+2   117   t1   0   stream  PairMLP     2  Recall@20          12     frozen     clean    27.9000 0.3687 0.3840
+3   117   t2   0    plain  PairMLP     0      AUROC           7     frozen     clean     5.1000 0.7891 0.8050
+4   117   t2   0    plain  PairMLP     1      AUROC           7     frozen     clean     5.1000 0.7919 0.8027
+5   117   t2   0    plain  PairMLP     2      AUROC          13     frozen     clean     8.1000 0.7959 0.7964
+
+Tabular references (Task 2):
+   fold task  t0 protocol      model  seed metric best_epoch config_set selection  runtime_s    val   test
+0   117   t2   0    plain    TabGBDT     0  AUROC       None    apriori     clean     6.5000 0.7958 0.8211
+1   117   t2   0    plain  TabLogReg     0  AUROC       None    apriori     clean     6.5000 0.7706 0.7966
+2   117   t2   0    plain    TabGBDT     1  AUROC       None    apriori     clean     3.9000 0.7888 0.8160
+3   117   t2   0    plain  TabLogReg     1  AUROC       None    apriori     clean     3.9000 0.7706 0.7966
+4   117   t2   0    plain    TabGBDT     2  AUROC       None    apriori     clean     3.8000 0.7923 0.8231
+5   117   t2   0    plain  TabLogReg     2  AUROC       None    apriori     clean     3.8000 0.7706 0.7966
+
+Task 1, fold 117 (validation 116, test 117), t0 = 0: Recall@20 [95% CI]
+                                          val Recall@20                     test Recall@20 seeds test Recall@10 test NDCG@20  n test
+protocol kind        model                                                                                                          
+plain    heuristic   cosup                       0.2453            0.2607 [0.2447, 0.2776]     -         0.1701       0.1658    5101
+                     party+pop                   0.2037            0.1905 [0.1743, 0.2077]     -         0.1126       0.1152    5101
+                     popularity                  0.1620            0.1375 [0.1240, 0.1521]     -         0.0856       0.0854    5101
+                     rw2hop                      0.2533            0.2629 [0.2473, 0.2812]     -         0.1703       0.1649    5101
+                     sh_hl1                      0.2775            0.2845 [0.2668, 0.3035]     -         0.1923       0.1835    5101
+                     sponsor_hist                0.2542            0.2615 [0.2448, 0.2792]     -         0.1727       0.1662    5101
+                     svd_r512_hl1                0.2757            0.2832 [0.2652, 0.3025]     -         0.1906       0.1816    5101
+stream   heuristic   cosup                       0.2686            0.2809 [0.2638, 0.2968]     -         0.1855       0.1785    5101
+                     party+pop                   0.2106            0.1950 [0.1787, 0.2120]     -         0.1171       0.1218    5101
+                     popularity                  0.1673            0.1403 [0.1268, 0.1551]     -         0.0876       0.0912    5101
+                     rw2hop                      0.2863            0.3075 [0.2914, 0.3248]     -         0.1986       0.1915    5101
+                     sponsor_hist                0.2884            0.3071 [0.2906, 0.3246]     -         0.2035       0.1931    5101
+         learned_ref PairMLP           0.3672 +- 0.0035  0.3864 +- 0.0029 [0.3686, 0.4068]     3         0.2514       0.2413    5101
+         gnn         G1 HeteroSAGE     0.3746 +- 0.0024  0.3934 +- 0.0032 [0.3744, 0.4141]     3         0.2541       0.2446    5101
+                     G2 R-GCN          0.3743 +- 0.0021  0.3935 +- 0.0047 [0.3745, 0.4147]     3         0.2569       0.2453    5101
+                     G3 LightGCN-feat  0.3708 +- 0.0005  0.3997 +- 0.0007 [0.3813, 0.4195]     3         0.2604       0.2487    5101
+
+Task 2, fold 117 (validation 116, test 117): AUROC [95% CI]
+                                                  val AUROC                         test AUROC seeds test AP  n test
+protocol kind            model                                                                                      
+plain    heuristic       chamber_maj                 0.5350            0.5449 [0.5106, 0.5864]     -  0.0307   12953
+                         eb_committee                0.7712            0.7258 [0.6876, 0.7607]     -  0.0788   12953
+                         eb_rate_t0safe              0.5688            0.5598 [0.5255, 0.5982]     -  0.0358   12953
+                         prior                       0.5000            0.5000 [0.5000, 0.5000]     -  0.0281   12953
+         reference_leaky eb_rate                     0.6875            0.6924 [0.6534, 0.7257]     -  0.0623   12953
+         learned_ref     PairMLP           0.7923 +- 0.0034  0.8014 +- 0.0045 [0.7675, 0.8294]     3  0.1350   12953
+                         TabGBDT           0.7923 +- 0.0035  0.8201 +- 0.0036 [0.7916, 0.8455]     3  0.1515   12953
+                         TabLogReg         0.7706 +- 0.0000  0.7966 +- 0.0000 [0.7645, 0.8240]     3  0.1281   12953
+         gnn             G1 HeteroSAGE     0.8014 +- 0.0041  0.8048 +- 0.0050 [0.7703, 0.8328]     3  0.1509   12953
+                         G2 R-GCN          0.8043 +- 0.0075  0.8095 +- 0.0022 [0.7761, 0.8383]     3  0.1543   12953
+                         G3 LightGCN-feat  0.8013 +- 0.0074  0.8252 +- 0.0022 [0.7968, 0.8499]     3  0.1618   12953
+population identity (check 7): {'units': 4, 'results_checked': 94}
+
+Paired test differences a - b over 3 seed(s) (real = |seed-mean diff| >= MDE and every seed's CI excludes 0):
+    fold task  t0 protocol             model                vs     metric  diff_mean  diff_sd  ci_low_min  ci_high_max  seeds    mde   real
+0    117   t1   0   stream     G1 HeteroSAGE            rw2hop  Recall@20     0.0859   0.0032      0.0718       0.1003      3 0.0100   True
+1    117   t1   0   stream     G1 HeteroSAGE             cosup  Recall@20     0.1125   0.0032      0.0972       0.1290      3 0.0100   True
+2    117   t1   0   stream     G1 HeteroSAGE           PairMLP  Recall@20     0.0070   0.0060     -0.0059       0.0183      3 0.0100  False
+3    117   t1   0   stream     G1 HeteroSAGE          G2 R-GCN  Recall@20    -0.0001   0.0071     -0.0104       0.0146      3 0.0100  False
+4    117   t1   0   stream     G1 HeteroSAGE  G3 LightGCN-feat  Recall@20    -0.0063   0.0033     -0.0149       0.0040      3 0.0100  False
+5    117   t2   0    plain     G1 HeteroSAGE      eb_committee      AUROC     0.0790   0.0050      0.0550       0.1106      3 0.0100   True
+6    117   t2   0    plain     G1 HeteroSAGE           TabGBDT      AUROC    -0.0153   0.0060     -0.0383       0.0049      3 0.0100  False
+7    117   t2   0    plain     G1 HeteroSAGE          G2 R-GCN      AUROC    -0.0047   0.0064     -0.0195       0.0136      3 0.0100  False
+8    117   t2   0    plain     G1 HeteroSAGE  G3 LightGCN-feat      AUROC    -0.0204   0.0041     -0.0423      -0.0018      3 0.0100   True
+9    117   t1   0   stream          G2 R-GCN            rw2hop  Recall@20     0.0860   0.0047      0.0696       0.1027      3 0.0100   True
+10   117   t1   0   stream          G2 R-GCN             cosup  Recall@20     0.1126   0.0047      0.0952       0.1305      3 0.0100   True
+11   117   t1   0   stream          G2 R-GCN           PairMLP  Recall@20     0.0071   0.0047     -0.0030       0.0185      3 0.0100  False
+12   117   t1   0   stream          G2 R-GCN  G3 LightGCN-feat  Recall@20    -0.0061   0.0042     -0.0177       0.0046      3 0.0100  False
+13   117   t2   0    plain          G2 R-GCN      eb_committee      AUROC     0.0837   0.0022      0.0602       0.1101      3 0.0100   True
+14   117   t2   0    plain          G2 R-GCN           TabGBDT      AUROC    -0.0106   0.0021     -0.0285       0.0061      3 0.0100  False
+15   117   t2   0    plain          G2 R-GCN  G3 LightGCN-feat      AUROC    -0.0157   0.0044     -0.0358       0.0040      3 0.0100  False
+16   117   t1   0   stream  G3 LightGCN-feat            rw2hop  Recall@20     0.0921   0.0007      0.0812       0.1039      3 0.0100   True
+17   117   t1   0   stream  G3 LightGCN-feat             cosup  Recall@20     0.1188   0.0007      0.1062       0.1324      3 0.0100   True
+18   117   t1   0   stream  G3 LightGCN-feat           PairMLP  Recall@20     0.0132   0.0032      0.0024       0.0219      3 0.0100   True
+19   117   t2   0    plain  G3 LightGCN-feat      eb_committee      AUROC     0.0994   0.0022      0.0711       0.1303      3 0.0100   True
+20   117   t2   0    plain  G3 LightGCN-feat           TabGBDT      AUROC     0.0051   0.0055     -0.0156       0.0279      3 0.0100  False
+
+Hit@20 on positives from new legislators (no cosponsorship in 108..k-1) vs returning ones:
+    fold  t0 protocol             model   seed  new_hit20  new_positives  returning_hit20  new_share_of_positives
+5    117   0    plain        popularity    NaN     0.0000           3814           0.1337                  0.1266
+7    117   0    plain      sponsor_hist    NaN     0.0000           3814           0.2246                  0.1266
+8    117   0    plain            rw2hop    NaN     0.0000           3814           0.2258                  0.1266
+9    117   0    plain            sh_hl1    NaN     0.0000           3814           0.2439                  0.1266
+10   117   0    plain      svd_r512_hl1    NaN     0.0000           3814           0.2436                  0.1266
+11   117   0    plain             cosup    NaN     0.0000           3814           0.2298                  0.1266
+6    117   0    plain         party+pop    NaN     0.0037           3814           0.1792                  0.1266
+0    117   0   stream        popularity    NaN     0.0000           3814           0.1362                  0.1266
+4    117   0   stream             cosup    NaN     0.0021           3814           0.2476                  0.1266
+1    117   0   stream         party+pop    NaN     0.0042           3814           0.1824                  0.1266
+2    117   0   stream      sponsor_hist    NaN     0.0490           3814           0.2498                  0.1266
+3    117   0   stream            rw2hop    NaN     0.0517           3814           0.2492                  0.1266
+16   117   0   stream          G2 R-GCN 1.0000     0.1924           3814           0.2947                  0.1266
+20   117   0   stream  G3 LightGCN-feat 2.0000     0.2040           3814           0.2926                  0.1266
+22   117   0   stream           PairMLP 1.0000     0.2079           3814           0.2902                  0.1266
+12   117   0   stream     G1 HeteroSAGE 0.0000     0.2139           3814           0.2896                  0.1266
+19   117   0   stream  G3 LightGCN-feat 1.0000     0.2189           3814           0.2926                  0.1266
+23   117   0   stream           PairMLP 2.0000     0.2378           3814           0.2809                  0.1266
+18   117   0   stream  G3 LightGCN-feat 0.0000     0.2381           3814           0.2914                  0.1266
+21   117   0   stream           PairMLP 0.0000     0.2383           3814           0.2844                  0.1266
+15   117   0   stream          G2 R-GCN 0.0000     0.2404           3814           0.2877                  0.1266
+14   117   0   stream     G1 HeteroSAGE 2.0000     0.2451           3814           0.2862                  0.1266
+17   117   0   stream          G2 R-GCN 2.0000     0.2646           3814           0.2812                  0.1266
+13   117   0   stream     G1 HeteroSAGE 1.0000     0.2664           3814           0.2773                  0.1266
+
+Learned models: best epoch, validation and test metric, runtime:
+    fold task  t0 protocol             model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0    117   t1   0   stream     G1 HeteroSAGE     0  Recall@20     10.0000     frozen     clean   201.6000 0.3771 0.3930
+1    117   t1   0   stream     G1 HeteroSAGE     1  Recall@20     11.0000     frozen     clean   219.2000 0.3722 0.3904
+2    117   t1   0   stream     G1 HeteroSAGE     2  Recall@20     12.0000     frozen     clean   200.6000 0.3747 0.3967
+3    117   t2   0    plain     G1 HeteroSAGE     0      AUROC     10.0000     frozen     clean   178.7000 0.7970 0.8105
+4    117   t2   0    plain     G1 HeteroSAGE     1      AUROC      7.0000     frozen     clean   118.4000 0.8052 0.8030
+5    117   t2   0    plain     G1 HeteroSAGE     2      AUROC      5.0000     frozen     clean    95.8000 0.8020 0.8010
+6    117   t1   0   stream          G2 R-GCN     0  Recall@20     10.0000     frozen     clean   128.7000 0.3732 0.3982
+7    117   t1   0   stream          G2 R-GCN     1  Recall@20     12.0000     frozen     clean   151.1000 0.3729 0.3935
+8    117   t1   0   stream          G2 R-GCN     2  Recall@20     10.0000     frozen     clean   128.3000 0.3767 0.3888
+9    117   t2   0    plain          G2 R-GCN     0      AUROC      5.0000     frozen     clean    79.9000 0.7959 0.8088
+10   117   t2   0    plain          G2 R-GCN     1      AUROC      7.0000     frozen     clean    96.5000 0.8102 0.8077
+11   117   t2   0    plain          G2 R-GCN     2      AUROC      5.0000     frozen     clean    76.8000 0.8068 0.8120
+12   117   t1   0   stream  G3 LightGCN-feat     0  Recall@20      7.0000     frozen     clean   148.3000 0.3708 0.4005
+13   117   t1   0   stream  G3 LightGCN-feat     1  Recall@20      7.0000     frozen     clean   145.8000 0.3712 0.3992
+14   117   t1   0   stream  G3 LightGCN-feat     2  Recall@20      5.0000     frozen     clean   111.8000 0.3702 0.3993
+15   117   t2   0    plain  G3 LightGCN-feat     0      AUROC      8.0000     frozen     clean    79.7000 0.8035 0.8263
+16   117   t2   0    plain  G3 LightGCN-feat     1      AUROC      9.0000     frozen     clean    87.2000 0.7930 0.8266
+17   117   t2   0    plain  G3 LightGCN-feat     2      AUROC      6.0000     frozen     clean    65.5000 0.8073 0.8227
+18   117   t1   0   stream           PairMLP     0  Recall@20      8.0000     frozen     clean    20.4000 0.3631 0.3857
+19   117   t1   0   stream           PairMLP     1  Recall@20     12.0000     frozen     clean    28.0000 0.3697 0.3896
+20   117   t1   0   stream           PairMLP     2  Recall@20     12.0000     frozen     clean    27.9000 0.3687 0.3840
+21   117   t2   0    plain           PairMLP     0      AUROC      7.0000     frozen     clean     5.1000 0.7891 0.8050
+22   117   t2   0    plain           PairMLP     1      AUROC      7.0000     frozen     clean     5.1000 0.7919 0.8027
+23   117   t2   0    plain           PairMLP     2      AUROC     13.0000     frozen     clean     8.1000 0.7959 0.7964
+24   117   t2   0    plain           TabGBDT     0      AUROC         NaN    apriori     clean     6.5000 0.7958 0.8211
+25   117   t2   0    plain         TabLogReg     0      AUROC         NaN    apriori     clean     6.5000 0.7706 0.7966
+26   117   t2   0    plain           TabGBDT     1      AUROC         NaN    apriori     clean     3.9000 0.7888 0.8160
+27   117   t2   0    plain         TabLogReg     1      AUROC         NaN    apriori     clean     3.9000 0.7706 0.7966
+28   117   t2   0    plain           TabGBDT     2      AUROC         NaN    apriori     clean     3.8000 0.7923 0.8231
+29   117   t2   0    plain         TabLogReg     2      AUROC         NaN    apriori     clean     3.8000 0.7706 0.7966
+
+Timing (seconds / minutes per stage):
+                       seconds  minutes
+stage                                  
+data                       4.1      0.1
+graphs + features          8.9      0.1
+checks                     3.9      0.1
+heuristics                 5.9      0.1
+G1 HeteroSAGE           1014.4     16.9
+G2 R-GCN                 661.3     11.0
+G3 LightGCN-feat         638.2     10.6
+PairMLP                   94.6      1.6
+TabGBDT / TabLogReg       29.5      0.5
+total (sum of stages)   2460.8     41.0
+results written to /Users/alex_rivas/Documents/Stanford/CS224W/Final Project/cs224w-bill-cosponsor-prediction/notebooks/baselines_build/out/final_simple_3seeds/results.csv
+cached 3-seed reference not shown (missing, or this run already has several seeds).
+simple mode without the locked test: nothing to do here (set MODE = 'rolling' or LOCKED_118 = True).
+RUN_SEARCH is False: using the FROZEN settings in baselines/config.py.

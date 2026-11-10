@@ -1,0 +1,2 @@
+mode simple -> folds [117] | tasks ('t1', 't2') | t0 (0,) | Task-1 protocols ('stream',)
+models ('hetero_sage', 'rgcn', 'lightgcn', 'pair_mlp') (implemented: ['pair_mlp', 'hetero_sage', 'rgcn', 'lightgcn']) | seeds (0,) | cpu, 8 threads

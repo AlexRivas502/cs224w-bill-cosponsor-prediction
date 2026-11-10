@@ -1,0 +1,37 @@
+{
+ "run": "g2_quick",
+ "sections": [
+  {
+   "file": "00_config.py",
+   "ok": true,
+   "cells": 2,
+   "seconds": 1.9,
+   "error": null
+  },
+  {
+   "file": "10_data.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 4.7,
+   "error": null
+  },
+  {
+   "file": "50_rgcn.py",
+   "ok": true,
+   "cells": 1,
+   "seconds": 40.2,
+   "error": null
+  }
+ ],
+ "ok": true,
+ "env": {
+  "BASELINES_QUICK": "1",
+  "BASELINES_THREADS": "4",
+  "BASELINES_MODELS": "rgcn"
+ },
+ "seconds_total": 46.9,
+ "timing_s": {
+  "data": 4.7,
+  "G2 R-GCN": 40.2
+ }
+}

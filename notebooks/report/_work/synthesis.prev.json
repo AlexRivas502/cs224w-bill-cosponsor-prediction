@@ -1,0 +1,543 @@
+{
+  "title": "Choosing a train / validation / test split for temporal graph learning on the U.S. Congress (108-118): evidence, interpretation and recommendation",
+  "executive_summary": "**The question.** Both tasks predict the future from the past. Task 1 asks which legislators will cosponsor a new bill within 30 days (temporal link prediction, scored with Recall@K and NDCG). Task 2 asks whether a law-capable bill will be reported out of committee within 180 days (node classification, scored with AUROC and average precision). The split decides whether the reported numbers say anything about a future Congress. The notebook `split_analysis.ipynb` tested this in four steps. Section A asked whether labels and features drift between Congresses. Section B asked whether the graph seen at test time matches the one seen in training. Section C asked whether Congress boundaries are clean cut points and whether information leaks from the future. Section D trained and scored simple baselines (not GNNs) under nine candidate splits. A final section combined 100 de-duplicated checks into explicit decision rules.\n\n**What the evidence says.** (1) Random and within-Congress splits are invalid. A random bill split inflates Task-1 Recall@20 by **+0.075** over a temporal split on the same bills (D7), and 45.2% of its evaluation bills have a later twin bill in training (C20). The within-Congress split loses 80.8% of its Task-2 test bills to censoring (C6b). (2) One test Congress is too imprecise to compare models. For a real +0.020 AUROC Task-2 difference, a single test Congress fails to confirm the direction in **3 of 7** Congresses (43%; very imprecise with n = 7, and it never reverses the sign) (D9). For Task 1 a single Congress passes the formal check (worst Task-1 miss 1 of 7), so the Task-1 case for several folds is about precision and representativeness, not validity. (3) Letting the model see the evaluation Congress's own edges dated up to the prediction time (`+stream`) is leakage-free and raises Task-1 Recall@20 from 0.259 to 0.296, higher in 7 of 7 folds (D13). (4) On plain (non-streaming) rolling folds, validation on the previous Congress picks near-best Task-1 models and predicts the Task-1 score level (D11, D21, D23, D1, D14). For Task 2 it reliably separates models that are far apart (D6) but barely ranks near-ties (hit rate 14-29%), and it does not predict the AUROC level, which moves between Congresses by more than sampling noise (D2b, D4).\n\n**What stays uncertain.** All evidence comes from count and rate baselines, not GNNs. Model selection was never tested under streaming, and the full recommended recipe (expanding window + streaming + recency weighting) was never run as a whole. Both must be checked on the development folds before GNN work. For Task 2, neither the notebook's streaming variant (which feeds back the labels of same-Congress bills whose 180-day window had already closed: +0.008 AUROC on 7 folds, driven by one fold) nor expanding vs sliding windows (-0.009, also driven by one fold) is resolved. Six dependent folds detect only fairly large differences: with 80% power, about 0.012-0.015 for a single Task-1 comparison and about 0.017-0.036 AUROC for Task 2 (and more for highly heterogeneous pairs), because Task-2 differences vary more between Congresses. Holm correction across several candidates raises these further. Comparisons are therefore decided by a t(5) test on the six per-fold differences (Holm-adjusted when several candidates compete), and differences it does not resolve are ties. Congress 118 has already been looked at during this baseline analysis.\n\n**Recommendation:** use **rolling-origin, by-Congress folds with a recency-weighted expanding window**: for each test Congress c = 112..117, train on 108..c-2, tune on c-1, refit on 108..c-1 and test on c; then score Congress 118 once as a locked final test and use 119 as a prospective check. Build every graph strictly as of each bill's prediction time: Task 1 also sees the current Congress's earlier cosponsorships (**+stream**), while Task 2's primary result uses only earlier Congresses plus the bill's own edges (**plain S3**).",
+  "key_findings": [
+    {
+      "finding": "A random bill split is leaky and optimistic. It inflates Task-1 Recall@20 by +0.0745 (about 29% of the temporal level of 0.259), and 45.2% of its evaluation bills have a later twin bill in training. It is usable only as a labelled upper bound.",
+      "evidence": [
+        "D7",
+        "D-c124-txt",
+        "C20",
+        "C-c106-txt",
+        "decision-c147-txt"
+      ]
+    },
+    {
+      "finding": "Splitting inside a Congress (S4) is invalid for Task 2 and fails the Task-1 censoring check. Its test slice at the end of each Congress loses 80.8% of Task-2 test bills to the 180-day window. Its higher Task-1 score (0.311) comes from a small, late, censored slice (about 777 bills per fold). No break inside a Congress justifies cutting there: the only located break (House original-cosponsor share, January 2021) falls exactly at the start of Congress 117.",
+      "evidence": [
+        "C5",
+        "C6b",
+        "C-c82-txt",
+        "D8",
+        "C23",
+        "C-c80-txt"
+      ]
+    },
+    {
+      "finding": "One test Congress cannot settle Task-2 comparisons, and is imprecise for Task 1. For the deployable Task-2 pair (eb_rate_t0safe minus chamber_maj, mean +0.020 AUROC, twice the MDE), 3 of 7 single test Congresses fail to confirm the direction (exact 95% binomial CI roughly 10-82%; it is never reversed). The D9 FAIL for single-Congress splits comes only from Task-2 pairs. On Task-1 pairs the worst single-Congress miss is 1 of 7 (sh_hl1 vs sh_none+caucus, which also flips sign once), under the 0.20 bar.",
+      "evidence": [
+        "D9",
+        "D-c128-txt",
+        "D-c128-o1"
+      ]
+    },
+    {
+      "finding": "Averaging over folds sharpens the *average* effect but not the *next-Congress* effect. These are different quantities: the single-Congress miss share is empirical and includes Congress-by-model heterogeneity, while the k-fold miss is a power calculation for the mean. The 95% prediction interval for one new Congress's paired difference is 2.4x the MDE for stream vs plain, 3.1x for eb_rate_t0safe vs chamber_maj, and up to 15x overall (D9b), whatever k is. Per-fold results must therefore be reported next to the mean.",
+      "evidence": [
+        "D9",
+        "D9b",
+        "D-c128-txt"
+      ]
+    },
+    {
+      "finding": "The notebook's 6-fold miss risk (0.115, D27) relies on a normal approximation that treats fold differences as independent with known spread. Recomputing from the per-fold differences on 112-117 with a t distribution on 5 degrees of freedom (noncentral t), the worst relevant pair (eb_m20_t0s vs eb_nomaj_m20_t0s) misses with probability about 0.28, and sh_hl1 vs sh_none+caucus moves from 0.08 to about 0.24. Both are above the 0.20 bar, but for different reasons. The eb_m20 pair is a **large** effect (mean about +0.08 AUROC) whose size and even direction vary strongly between Congresses (between-Congress sd about 0.06). The problem is heterogeneity, not a small effect. The sh_hl1 pair is a small effect near the detection limit. More generally, the smallest difference six folds detect with 80% power depends on the pair's between-Congress spread. It is about 0.0115-0.0145 for typical Task-1 pairs (sd 0.008-0.010) and about 0.017-0.036 AUROC for Task-2 pairs (sd 0.012-0.025, D-c128-txt). With Holm correction over 3-5 candidates it rises to about 0.015-0.021 (Task 1) and 0.022-0.054 (Task 2). These detectable differences are our Monte Carlo computations, not notebook outputs.",
+      "evidence": [
+        "D27",
+        "D-c140-txt",
+        "D-c140-o1",
+        "D-c128-txt"
+      ]
+    },
+    {
+      "finding": "For Task 1, validation on the previous Congress picks near-best models within each family and predicts the test level (all on plain S3). Mean regret is 0.0028 Recall@20 for sponsor_hist, 0.0002 for rw2hop and 0.0007 for the learned SVD, all under the 0.005 tolerance. Kendall tau between validation and test orderings is 0.86-0.94, and the mean |val-test| gap is 0.61x the test CI half-width.",
+      "evidence": [
+        "D11",
+        "D21",
+        "D23",
+        "D1",
+        "D14",
+        "D-c119-txt",
+        "D-c140-txt",
+        "decision-c147-txt"
+      ]
+    },
+    {
+      "finding": "For Task 2, validation separates models that are far apart (main baselines keep their order in 7 of 7 folds, D6) but does not rank near-ties: hit rate 14-29%, Kendall tau 0.24-0.33. Regret is small only because the candidates nearly tie. Single-validation regret exceeds MDE/2 for the policy-area family (0.0078 on 7 folds) and for the at-introduction family on the development folds (0.0053). Both pass only because the regret is significant in fewer than 2 folds. Selecting on the mean of the last three validation Congresses brings Task-2 regret to at most 0.0019 (D17, 7 folds). Validation also does not predict the AUROC level: fold means fall from 0.655 (112-115) to 0.583 (116-118), the gap is 1.28x the CI half-width, and a precise level would need about 13 test Congresses.",
+      "evidence": [
+        "D6",
+        "D12",
+        "D12b",
+        "D17",
+        "D2b",
+        "D4",
+        "D15",
+        "D-c119-txt",
+        "D-c124-txt",
+        "D-c140-txt",
+        "D-c115-txt"
+      ]
+    },
+    {
+      "finding": "Streaming the evaluation Congress's own edges dated up to introduction + t0 is legitimate and strongly helps Task 1: +0.037 Recall@20 (+0.026 to +0.053 per fold, 7/7 positive; +0.034 on 112-117). It cuts the share of positives from legislators unseen in training from about 20% to at most 0.7%. For Task 2 the notebook's streaming variant is a different mechanism: it adds the *labels* of same-Congress bills whose 180-day window had closed by the scored bill's introduction, not same-Congress edges. Its gain (+0.0077 on 7 folds, +0.0114 on 112-117) is positive in only 4 of 7 folds and comes mostly from c = 112 (+0.051; without it the remaining six folds average about +0.001). The notebook's rules pick plain S3 for Task 2. Streaming same-Congress *edges* into Task 2 was never tested.",
+      "evidence": [
+        "D13",
+        "D14",
+        "D-c126-txt",
+        "B1",
+        "B1b",
+        "B-c45-txt",
+        "B-c47-txt",
+        "R3-T1",
+        "R3-T2",
+        "decision-c149-o0",
+        "decision-c152-txt",
+        "D-c125-md"
+      ]
+    },
+    {
+      "finding": "For Task 1, old Congresses hurt only unweighted models. Unweighted, the expanding window loses 0.0124 Recall@20 to a 3-Congress sliding window (sliding significantly better in 6 of 7 folds). With a one-Congress recency half-life the difference is -0.0008, and for the learned SVD -0.0003. This was tested for Task 1 only. No recency-weighted Task-2 window comparison was run, although recency weighting itself helps Task 2 (+0.0096, better in 2 folds, worse in 0; D26).",
+      "evidence": [
+        "D10",
+        "D-c130-txt",
+        "D26",
+        "D-c132-txt",
+        "R5",
+        "decision-c151-txt"
+      ]
+    },
+    {
+      "finding": "Refitting on train + validation before testing helps the baselines. Under the recommended streaming protocol it adds about +0.025 Recall@20 (7/7 folds). Without streaming it adds about +0.06, mostly because refitting adds the most recent Congress's counts. It does not hurt Task 2 (+0.005). For a GNN, refitting with a transferred epoch budget and no early-stopping signal is untested.",
+      "evidence": [
+        "D19",
+        "D-c138-txt"
+      ]
+    },
+    {
+      "finding": "Graphs must be time-masked at evaluation, and the target bill's own future edges must be excluded in training. About 52% of an evaluation Congress's final cosponsor graph does not exist yet at t0 (B10). Training with the target bill's own future edges costs a simple ranker 1.8 Recall@20 points (95% CI -3.1 to -0.3). Training on the final graph *minus* those edges shows no measurable harm (+0.007, CI -0.005 to +0.017), so full as-of-t0 training snapshots are recommended for consistency but not shown to be necessary. This test is small (2 folds, 3,000 training bills, a logistic count ranker). 42.7% of related-bill links point to later bills, and non-referral committee edges encode the Task-2 label (0 of 92,423 bills without one advanced).",
+      "evidence": [
+        "B10",
+        "B-c65-txt",
+        "B12",
+        "B-c67-txt",
+        "B6b",
+        "B-c57-txt",
+        "B7",
+        "B-c59-txt"
+      ]
+    },
+    {
+      "finding": "Recent Congresses are off-distribution in task-specific ways. The Task-2 label weakens in 116-117 (58-61% of chamber-passed bills have no committee report within 180 days). Task-1 positive density drops in 118 (about 40-47% below the training mean), and late cosponsors arrive later there (median lag 92 vs 62-75 days). The share of cosponsors who are original (day 0) breaks upward in 117-118 (0.460 and 0.466 vs 0.330-0.394 in 108-115, A4 FAIL). That leaves less to predict after day 0, which matters most for Task 1 at t0 = 0. These are drifts to report and remedy. They do not invalidate the forward split.",
+      "evidence": [
+        "A1b",
+        "A2",
+        "A3",
+        "A4",
+        "A8",
+        "A13",
+        "A-c13-txt",
+        "A-c17-txt",
+        "C3",
+        "C-c77-txt",
+        "decision-c151-txt"
+      ]
+    },
+    {
+      "finding": "Congress 118 is not untouched. Every backtest number used to choose the protocol includes 118. On folds 112-117 alone the Task-1 conclusions hold, while the Task-2 streaming and window differences cross the 0.01 MDE, but they remain unresolved under the t(5) interval because they are driven by c = 112. For sponsor_hist, 118 falls outside the development prediction interval. The other three models' 118 levels, and 8 of 9 relevant paired differences, fall inside it.",
+      "evidence": [
+        "D27",
+        "D-c140-txt",
+        "decision-c149-o0",
+        "decision-c151-txt"
+      ]
+    }
+  ],
+  "recommendation": {
+    "headline": "Use rolling-origin, by-Congress folds with an expanding training window and graphs built strictly as of each bill's prediction time. The window is recency-weighted: validated for Task 1, and a tuned choice still to be checked for Task 2. Develop and compare models on test Congresses 112-117 (train 108..c-2, validate c-1, refit 108..c-1, test c), score Congress 118 once as the locked final test, and check on 119 prospectively.",
+    "plain_explanation": "Think of it as replaying history one Congress at a time. To test on, say, the 115th Congress, the model learns from Congresses 108-113, has its settings tuned on 114, is retrained on 108-114 with those settings, and is then scored on 115. Repeating this for every Congress from 112 to 117 gives six honest 'next Congress' forecasts. When predicting who will cosponsor a bill, the model may use everything that had happened by that moment, including earlier cosponsorships in the same Congress. For the committee-report task, the main version uses only earlier Congresses plus the bill's own sponsor, committees and early cosponsors. Nothing dated later is ever used. Older Congresses are kept but down-weighted, so recent behaviour counts more. For the GNN, the oldest Congress (108) serves only as background history, never as a training example, because a bill from 108 has no earlier Congresses to learn from. The simple baselines stay as in the notebook (fit on 108..c-1), so the bars the GNN must beat do not change.\n\nModels are compared on all six forecasts together, because one Congress is too noisy: for a real Task-2 difference, a single Congress failed to confirm it in 3 of the 7 Congresses tried. Even six Congresses only resolve fairly large differences: roughly 0.012-0.015 for Task 1, and 0.017-0.036 AUROC for Task 2 (more for pairs whose gap swings a lot), because Task-2 results swing more between Congresses. So a model 'wins' only if its advantage holds up consistently across the six Congresses under a formal test. Otherwise it is a tie and the simpler model is kept. Each Congress's result is shown, not just the average. When the design is final, the frozen recipe is run once on Congress 118 and that is the headline number. Congress 119, still in progress, is a true out-of-sample check, compared like-for-like on bills introduced early in a Congress. The alternatives fail in concrete ways. The random split peeks at the future. The within-Congress split loses most Task-2 labels to censoring. A single test Congress is too imprecise. A short sliding window is no better for Task 1 once old data is down-weighted.",
+    "split_table": [
+      {
+        "role": "Development fold k (6 folds; all model / feature / architecture choices)",
+        "congresses": "for c = 112..117: train 108..c-2 | validate c-1 | refit 108..c-1 | test c. Concretely: (112) train 108-110, val 111, test 112; (113) 108-111 / 112 / 113; (114) 108-112 / 113 / 114; (115) 108-113 / 114 / 115; (116) 108-114 / 115 / 116; (117) 108-115 / 116 / 117",
+        "notes": "25,065 Task-1 and 60,765 Task-2 test bills in total (the 7-fold totals 30,203 / 74,609 minus 118's 5,138 / 13,844). **GNN burn-in:** Congress 108 stays in the temporal graph as message-passing history but is not used for supervision, so training examples come from 109..c-2 and refit examples from 109..c-1 (fold 112 then supervises on 109-110 only; report it separately). Task 1: early-stop and tune on c-1. Task 2: choose hyperparameters on the mean validation score of folds c-2, c-1 and c, i.e. validation Congresses c-3..c-1, each fit on its own expanding window 108..(val-1) (D17). Folds 112 and 113 use only the validation Congresses available (111; 111-112). The 3-validation rule reuses earlier folds' validation scores only if each shortlisted candidate was also run on the two preceding folds. A candidate without those scores falls back to c-1-only selection, with the D12b caveat (regret 0.0053, above tolerance) disclosed. Each test Congress is a later fold's validation Congress, so the fold mean is a development number, not the final result."
+      },
+      {
+        "role": "Locked final test (scored once)",
+        "congresses": "train 108-116 (supervise 109-116) | validate 117 (epoch budget / 3-val rule with 115-117, frozen recipe) | refit 108-117 (supervise 109-117) | test 118",
+        "notes": "Same recipe as the development folds, no changes after seeing it. 118 already informed the baseline-level protocol choice, so it is locked against GNN tuning, not pristine. C24 finds no missing labels, but 118 records are still being maintained (withdrawn rows 0.34% vs 0.04-0.12% earlier, 29.2% of records edited in the past year, C14), so treat its labels as provisional. Report its shifted Task-1 density and timing (A3, C3)."
+      },
+      {
+        "role": "Prospective check",
+        "congresses": "refit 108-118 | test 119 bills whose 30-day / 180-day windows have closed (at the 2026-10-17 snapshot, roughly the first 20 months of introductions for Task 1 and the first 15 for Task 2)",
+        "notes": "The only fully held-out confirmation. Compare like-for-like: score every development fold on bills introduced in the same days-since-Congress-start window, build the prediction interval from those truncated folds, and report 119 as provisional until the Congress ends. Never tune on it."
+      },
+      {
+        "role": "Deployment model",
+        "congresses": "refit 108-118 (later 108-119)",
+        "notes": "So the fit set contains the post-2021 regime (C23b)."
+      },
+      {
+        "role": "Sensitivity analyses (reported, not used to pick the main model)",
+        "congresses": "same folds with (a) 3-Congress sliding window (refit c-3..c-1), for Task 1 and for a recency-weighted Task-2 model; (b) Task 2 with label-feedback +stream (resolved same-Congress labels; same-Congress edge streaming only as a separate, labelled variant); (c) Task 2 with label_alt (reported OR passed origin chamber); (d) GNN without refit (best validation checkpoint) on one fold",
+        "notes": "These cover the unresolved choices: S2 vs S3 (untested for Task 2 under recency weighting), stream vs plain for Task 2, label validity in 116-117 (A1b), and the GNN refit."
+      },
+      {
+        "role": "Debugging only",
+        "congresses": "train 108-115 | val 116 | test 117 (S1a)",
+        "notes": "Fast single split for pipeline checks. Never for model comparison (imprecise; D9 for Task 2)."
+      }
+    ],
+    "protocol": [
+      "**Fix the prediction times.** Task 1: t0 = 0 and t0 = 7 days after introduction, label window (t0, t0+30]. Task 2: primary at introduction (t0 = 0, policy area masked), with a 'one month after introduction' variant (t0 = 30, policy area allowed, bills already reported by t0 removed from evaluation) (C25, D16).",
+      "**Time-mask at evaluation (required, B10).** The cutoff is **inclusive at day resolution**: an edge or feature is visible if and only if its date is <= introduced_date + t0. This matches the notebook's `lag_days <= t0`; using '<' would silently drop day-0 original cosponsors. Each example's input is built from up to three parts: (i) all edges from Congresses before the example's own, cut at the cutoff; (ii) the example's own bill's edges dated <= cutoff: sponsor, referral committees, and cosponsors with lag in [0, t0]; (iii) task-specific same-Congress information, used only under +stream. **Plain S3** = (i) + (ii), with no other bill, edge or label from the example's own Congress. **+stream** = (i) + (ii) + (iii), where (iii) differs by task, matching what the notebook tested: **Task 1 +stream** adds the other same-Congress bills' sponsorships and cosponsorships dated <= cutoff (the notebook's `_stream_mats` / `_rw_stream`, D13). **Task 2 +stream (label feedback)** adds the outcomes of same-Congress bills whose 180-day window is **fully resolved** by the cutoff (their intro + 180 <= the scored bill's intro + t0; the notebook's `_grp(..., stream=True)`, D-c125-md), either as extra supervised examples, as label-bearing nodes, or as updated rate features. Never use the report status or non-referral committee edges of same-Congress bills whose window is still open: those encode the label (B7) and are biased by censoring. Task 1's mechanism applied to Task 2 (*same-Congress edge streaming*) is a separate variant that the notebook **never tested**; if run, label it as such. The +0.008 AUROC Task-2 stream figure refers only to label feedback. Part (ii) is the graph analogue of the bill attributes the plain-S3 rate baselines used, so plain S3 does not remove the bill's own signal. Never use the evaluation Congress's final graph. **Training examples are built exactly like evaluation examples**: under plain S3, a training bill in Congress j sees nothing else from Congress j; under +stream it sees only the part (iii) information available at its own cutoff. Task 1 uses +stream. The Task-2 primary uses plain S3, with label-feedback +stream as a sensitivity row.",
+      "**Mask in training too.** Excluding the target bill's own future cosponsor edges from message passing is required (-1.8 Recall@20 points if kept, B12). Building every training example from a full as-of-(intro + t0) snapshot is recommended so training and evaluation inputs match, but it is not shown to be necessary (+0.007, CI -0.005 to +0.017, on only 2 folds).",
+      "**PyG implementation.** A per-seed cutoff rules out full-batch R-GCN/HGT on one static HeteroData graph, even per Congress, because later bills' edges would be visible to earlier bills. Use temporal mini-batch sampling: `NeighborLoader` / `LinkNeighborLoader` with edge-level timestamps (`time_attr`) on every relation type including reverse edges, per-seed `input_time` (`edge_label_time` for link loaders) = intro + t0, and a `temporal_strategy`, so the cutoff applies at every hop. PyG keeps edges with time <= seed time, which is the inclusive convention of step 2. **Plain S3 cannot be expressed by time filtering alone**: a Congress-start mask would also delete the seed's own in-Congress edges (part ii), PyG's temporal sampler has only an upper time bound per seed, and with reverse relations the path seed bill -> sponsor -> another earlier same-Congress bill would reach part (iii) at two hops. A construction that works: for supervision or evaluation Congress j, build a graph G_j that holds all edges from Congresses < j (with reverse relations), and attach each Congress-j target bill only through **one-directional incoming** relations (legislator -> bill sponsor/cosponsor, committee -> bill referral) with no reverse relation, so no other Congress-j bill is reachable; temporal sampling with the seed's cutoff then trims the seed's own edges to lag <= t0. Training bills from Congress j use G_j in the same way. Under +stream (Task 1), Congress-j edges get reverse relations and are time-filtered at the cutoff. The alternative is snapshot bucketing (for example weekly) with the bucket boundary at or before each seed's t0. **Node features follow the same split**: under plain S3, compute legislator, committee and normaliser features (activity, degree, per-Congress normalisers (A8), committee membership, tenure) as of the start of the example's Congress; only under +stream compute them as of the cutoff. Normalising with full-Congress statistics is a leak in either case. Add a unit test that under plain S3 no sampled node other than the seed bill has a timestamp inside the seed's Congress. **For Task 1**, the target bill's sponsor edge and its cosponsors with lag in [0, t0] are input (message-passing) edges at both t0 = 0 (the original cosponsors, 33-47% of all cosponsorships, A4) and t0 = 7. Labels are cosponsors with lag in (t0, t0+30], and they are never message-passing edges. Remove the sponsor and the already-seen cosponsors from the candidate and negative pool (the notebook's `Excl` mask), draw negatives from the remaining members eligible at intro + t0, and evaluate only bills with at least one remaining positive, as the notebook does. Supply training negatives explicitly (a custom sampler restricted to the same-chamber pool eligible at the cutoff, minus `Excl`); do not use `LinkNeighborLoader`'s default `neg_sampling`, which draws uniformly from all legislators. At evaluation, score and rank **every** eligible candidate for each bill, not a sampled subset; the notebook's Recall@K and NDCG, and so the 0.296 bar, rank the full pool. Add unit tests asserting that every sampled edge and feature timestamp is <= its seed's cutoff, that the seed bill's day-0 cosponsors are present in its input, and that no label edge appears in message passing.",
+      "**Filter leaky relations.** Keep only referral committee edges dated <= t0 (B7). Keep related-bill links only to bills introduced <= intro + t0 (B6b). Never use legislative subjects or CRS summaries (B5b, C13, C15a). Mask policy area at t0 <= 7 with an explicit 'not yet assigned' state, applied identically in training (C18). Rebuild count and outcome fields as of t0 (C11).",
+      "**Use point-in-time entities.** Use the as-of-Congress party (`party_code_asof`, C10). The Task-1 candidate pool is the members in office at intro + t0, including delegates (C17). Legislator nodes get inductive features (party, chamber, state, committees, tenure, majority and sponsor-in-majority flags) rather than ID-only embeddings, because about 20% of positives come from legislators unseen in training (B1, R2).",
+      "**Weight recency.** Apply an edge-time decay or per-Congress sample weight to the expanding window, and tune its half-life on validation (start at 1 Congress; D10, D26). For Task 1 this is validated and subsumes the sliding-window question (D10). For Task 2 recency weighting helps the rate baseline (+0.0096 AUROC, better in 2 folds, worse in 0, D26), but it is a tuned choice: the window comparison and the selection-regret checks were not run with it. Run recency-weighted S3 vs S2 as a sensitivity row, and include the half-life in the step-12 selection checks.",
+      "**Burn-in for history depth.** With per-seed cutoffs, a training example from Congress 108 sees no earlier Congress and one from 109 sees only one, while test bills in 112 see at least four. The count and rate baselines never faced this, because they aggregated 108..c-1 and scored only Congress c. So use Congress 108 as message-passing history only: supervise on 109..c-2 (training) and 109..c-1 (refit), keeping 108's edges in the temporal graph. Optionally also drop 109 from supervision if validation favours it. Add history-depth features (number of earlier Congresses visible, days since the Congress started), which also cover thin in-Congress history for early-session bills under +stream. Report fold 112 separately, because it has the least supervision (109-110) and also drives the Task-2 streaming and window results.",
+      "**Run the six development folds.** For each c in 112..117: train on 108..c-2, tune on c-1, refit on 108..c-1 and score c (supervision subject to the burn-in step). For the GNN refit, fix the number of gradient steps (or epochs scaled to data size) from the validation run, and check the no-refit checkpoint on one fold, because the refit gain (+0.025 under streaming) was measured on parameter-free baselines (D19). For Task 2, pick hyperparameters on the mean of validation Congresses c-3..c-1 (D17; c-1-only regret on the development folds is 0.0053, above tolerance, D27). This reuses earlier folds' validation scores, at no extra training cost, only if each shortlisted candidate has also been run on the two preceding folds. Otherwise run it there first, or fall back to c-1-only selection and disclose the D12b caveat. The 3-validation rule's regret on the 6 development folds was not separately verified.",
+      "**Compare models with one inference rule.** Use the same test bills for all models. Per fold, compute the paired difference with a sponsor-cluster bootstrap CI (1.2-2.6x wider than a bill-level bootstrap, D-c128-txt). Across folds there is **one decision rule**. Candidate A beats B only if their 6-fold mean paired difference favours A **and** an interval excluding 0 confirms it. Use a t interval on the six per-fold differences (df = 5), or a two-stage bootstrap that resamples Congresses and then sponsors, whichever is wider. When more than two candidates compete, apply Holm to the t(5) p-values of the pairwise differences (or report Bonferroni-adjusted intervals if intervals are shown). If the adjusted test does not confirm the difference, the candidates are tied. Call a resolved difference practically relevant only if it is also at least the 0.01 MDE. Report the number of configurations compared. *Planning guide, not a threshold:* with six folds, the smallest difference detectable with 80% power depends on the pair's between-Congress spread. For one Task-1 comparison (sd 0.008-0.010) it is about 0.0115-0.0145; for Task 2 (sd 0.012-0.025) it is about 0.017-0.036 AUROC. With Holm over 3-5 candidates, the first-step critical t rises from 2.57 to about 3.5-4.0 (3.53 for 3 candidates, 4.03 for 5), and these grow to about 0.015-0.021 (Task 1) and 0.022-0.054 (Task 2). Expect most GNN architecture comparisons to end as ties. **Pre-register the tie-break**: among statistically tied candidates, pick the simplest or cheapest (fewest parameters, lowest training cost), not the nominal best. Report per-fold values and the next-Congress prediction interval (D9b) next to the mean.",
+      "**Beat the right baselines, under the same protocol.** Task 1 under S3+stream: at least unweighted sponsor_hist 0.296 Recall@20 at t0 = 0 (0.275 at t0 = 7) and rw2hop 0.295 (7-fold means, D13). Run recency-weighted sponsor history and the learned SVD under S3+stream first; that higher number becomes the bar. Non-streaming references (sh_hl1 0.282, SVD 0.280 under plain S3) are not the bar. Task 2: recency-weighted (half-life 1) eb_rate_t0safe under plain S3, about 0.63 AUROC (0.624 unweighted + 0.0096 from D26; compute the exact value on the development folds). Keep 0.624 as the unweighted reference, and list S2 (0.632) and label-feedback S3+stream (0.631) as sensitivity references (7-fold means, decision-c152-txt). Report baselines for 112-117 and for 118 separately, as for the GNN.",
+      "**Close the untested gaps before GNN work.** Re-run the selection checks (D11/D17 for Task 1, D12b/D17 for Task 2) on the streaming folds with the GNN's own hyperparameter grid, including the recency half-life for Task 2 (and, for Task 2, under the label-feedback +stream definition of step 2). Back-test the full expanding + streaming + recency recipe, with burn-in, on the development folds.",
+      "**Freeze and score 118 once.** Freeze features, architecture, half-life and tuning rule. Run the identical recipe on the 118 fold (train 108-116, tune on 117, refit 108-117) and report it as the headline result next to the development fold mean.",
+      "**Check prospectively and redeploy.** Score closed-window 119 bills with a model refit on 108-118, against a prediction interval from development folds truncated to the same introduction-date window. Re-run the notebook's validity and drift checks when a Congress completes."
+    ],
+    "justification": [
+      {
+        "reason": "It is the only family with no validity failure for either task and enough test data (25,065 Task-1 and 60,765 Task-2 development test bills). Random (D7), within-Congress (C5, C6b) and pooled 117+118 (D1, D20) splits fail validity checks. Single-Congress splits fail D9 only through Task-2 pairs. For Task 1 they pass D9 (worst miss 1 of 7) but are still rejected for precision and representativeness (next reason and alternatives).",
+        "evidence": [
+          "D7",
+          "C5",
+          "C6b",
+          "D1",
+          "D20",
+          "D9",
+          "D-c128-txt",
+          "decision-c147-txt",
+          "decision-c151-txt"
+        ]
+      },
+      {
+        "reason": "Several test Congresses give a usable estimate of the average effect: the median 95% half-width of a paired mean difference is about 0.008 at k = 6 under the notebook's normal approximation (about 0.010 with a t(5) interval). One Congress cannot resolve near-MDE Task-1 choices (sh_hl1 vs sh_none+caucus flips sign in 1 of 7 Congresses; expanding vs sliding misses in 1 of 7), and its level would be specific to that Congress, which is off-distribution for 117 (Task 2) or 118 (Task-1 density). Averaging does not reduce next-Congress variability (D9b), so per-fold results are reported too.",
+        "evidence": [
+          "D9",
+          "D9b",
+          "D27",
+          "D-c128-txt",
+          "D-c140-txt",
+          "A3",
+          "A1b",
+          "C3"
+        ]
+      },
+      {
+        "reason": "On plain S3 folds, validation on the next Congress picks near-best Task-1 models (regret at most 0.0032, tau 0.86-0.94) and costs little for Task 2 when the mean of three validation Congresses is used (regret at most 0.0019). Refitting on train + validation adds +0.025 Recall@20 under streaming without hurting Task 2. So 'tune on c-1, refit, test on c' is honest and efficient for baselines; the GNN refit is checked separately.",
+        "evidence": [
+          "D11",
+          "D21",
+          "D23",
+          "D17",
+          "D12",
+          "D12b",
+          "D19",
+          "D-c119-txt",
+          "D-c138-txt",
+          "D-c140-txt"
+        ]
+      },
+      {
+        "reason": "Streaming is leakage-free under the time-masking rules, matches what is known when a prediction is made, adds +0.037 Recall@20 in 7/7 folds for Task 1, and nearly removes cold start. For Task 2 the notebook's split-ranking rules pick plain S3, and its Task-2 streaming variant is label feedback from resolved same-Congress bills, not edge streaming. Plain and label-feedback +stream are statistically indistinguishable there, and selection and level calibration are less well supported under streaming (val-test gap 1.64x vs 1.28x the CI half-width; selection checks not run). The notebook also suggests one shared S3+stream pipeline for both tasks (decision-c152-txt). We keep plain S3 as the Task-2 primary because selection and level calibration were verified only there, and report +stream as a sensitivity row.",
+        "evidence": [
+          "D13",
+          "D14",
+          "B1b",
+          "R3-T1",
+          "R3-T2",
+          "decision-c147-txt",
+          "decision-c152-txt",
+          "D-c125-md"
+        ]
+      },
+      {
+        "reason": "For Task 1, an expanding window with recency weighting matches the sliding window (-0.0008 Recall@20), so recency weighting is validated there (D10). It gives a data-hungry GNN more examples, and the tuned half-life lets validation decide how much old data matters. For Task 2, recency weighting helps the rate baseline (+0.0096 AUROC, D26), but it is a tuned choice that the window comparison and the selection-regret checks have not yet covered, so it is checked on the development folds. As a tie-breaker only: the expanding window keeps every chamber majority in training (the sliding window covers both majorities for only 57% of units, C8), though regime-matched weighting adds nothing measurable (D26, +0.0011).",
+        "evidence": [
+          "D10",
+          "D26",
+          "C8",
+          "R4b",
+          "R5",
+          "D-c130-txt",
+          "C-c85-txt"
+        ]
+      },
+      {
+        "reason": "A locked final Congress protects the headline number from the selection bias of comparing architectures on the development folds. That is the main reason to reserve 118. The cost: the D27 sizing pass is fragile. Under t(5), the worst relevant pair misses with probability about 0.28 (0.115 under the normal approximation). The cause is not a small effect. That pair is a large difference (about +0.08 AUROC) whose size and direction vary between Congresses (sd about 0.06). Six folds also detect only about 0.012-0.015 for Task 1 and 0.017-0.036 AUROC for Task 2 (more for heterogeneous pairs). So comparisons are judged with the t(5) test (Holm-adjusted across candidates), unresolved ones are ties, and 118 is kept locked anyway.",
+        "evidence": [
+          "D27",
+          "R7",
+          "D-c140-txt",
+          "D-c140-o1"
+        ]
+      }
+    ],
+    "alternatives_rejected": [
+      {
+        "option": "Single expanding split: train 108-115 / val 116 / test 117 (S1a), or train 108-116 / val 117 / test 118 (S1b)",
+        "reason": "For Task 2, one test Congress fails to confirm a real +0.020 AUROC difference in 3 of 7 Congresses (43%; very imprecise with n = 7, never reversed): D9 FAIL. For Task 1 it passes D9 (worst Task-1 miss 1 of 7) but cannot resolve near-MDE choices, and each candidate test Congress is off-distribution (117 for the Task-2 label, 118 for Task-1 density and timing), so a single number would mostly reflect that Congress. Acceptable for debugging only.",
+        "evidence": [
+          "D9",
+          "D-c128-txt",
+          "A-c17-txt",
+          "A-c13-txt",
+          "C3",
+          "decision-c147-txt"
+        ]
+      },
+      {
+        "option": "Pooled test: train 108-115 / val 116 / test 117+118 with one refit on 108-116 (S1pool)",
+        "reason": "Fails D1, D20 and D9. It scores 118 with a model one Congress stale: 21.7% of 118 bills have a sponsor with no training history (bound 14.4%), 31.4% of positives are cold, and the pooled score (0.222) is below both of its components scored separately.",
+        "evidence": [
+          "D1",
+          "D20",
+          "D9",
+          "B2",
+          "B-c49-txt",
+          "decision-c147-txt"
+        ]
+      },
+      {
+        "option": "Within-Congress temporal split (S4: first 60% / next 20% / last 20% of each Congress)",
+        "reason": "Fails the Task-1 censoring check (C5) and loses 80.8% of Task-2 test bills to censoring (C6b). Its higher Task-1 score (0.311) comes from a small, late slice (about 777 bills per fold). No break lies inside a Congress, so nothing justifies cutting inside one.",
+        "evidence": [
+          "C5",
+          "C6b",
+          "C-c82-txt",
+          "C23",
+          "D8",
+          "decision-c147-txt"
+        ]
+      },
+      {
+        "option": "Random bill split 70/15/15 (S5)",
+        "reason": "Direct future leakage: +0.0745 Recall@20 optimism (D7), and 45.2% of evaluation bills have a later twin in training (C20). It also hides all drift between history and deployment. Use only as a labelled leaky upper bound.",
+        "evidence": [
+          "D7",
+          "C20",
+          "C19",
+          "D-c124-txt",
+          "C-c106-txt"
+        ]
+      },
+      {
+        "option": "3-Congress sliding window (S2) as the main protocol",
+        "reason": "Not invalid, and kept as a sensitivity analysis. For Task 1 with recency weighting it is no better than the expanding window (-0.0008) and gives the GNN less data. The Task-2 S3-vs-S2 gap (-0.009 / -0.011) comes almost entirely from one fold (c = 112: -0.058) and was not tested with recency weighting. Missing chamber majorities in 43% of its units is a tie-breaker, not a demonstrated loss.",
+        "evidence": [
+          "D10",
+          "C8",
+          "D26",
+          "R4b",
+          "R5",
+          "decision-c149-o0",
+          "decision-c152-txt"
+        ]
+      },
+      {
+        "option": "Plain by-Congress graph for Task 1 (S3 without +stream), or a static full-graph transductive GNN",
+        "reason": "Without streaming, Task 1 loses 0.037 Recall@20 and about 20% of positives come from legislators unseen in training. A full-graph setup evaluates on the evaluation Congress's final graph, about 52% of which does not exist at t0 (B10), and full-batch training on a static graph lets each bill see its own future edges, which costs 1.8 Recall@20 points (B12).",
+        "evidence": [
+          "D13",
+          "B1",
+          "B1b",
+          "B10",
+          "B12",
+          "R2"
+        ]
+      }
+    ],
+    "risks_and_mitigations": [
+      {
+        "risk": "Congress 118 already informed the protocol choice at the baseline level, so the 'locked' test is not pristine.",
+        "mitigation": "Lock 118 against all GNN tuning from now on, disclose its prior use, and treat 119 (closed windows, like-for-like comparison) as the clean prospective confirmation."
+      },
+      {
+        "risk": "Model selection was never tested under streaming (D11/D12b/D17 ran on plain S3 only), and the full expanding + streaming + recency recipe was never run as a whole.",
+        "mitigation": "Re-run the selection-regret checks on the streaming folds with the GNN's own grid, and back-test recency-weighted sponsor history under S3+stream, before GNN work. If regret exceeds tolerance, select on plain-S3 validation or the 3-validation mean."
+      },
+      {
+        "risk": "Six dependent folds give little power. Under t(5) the worst relevant pair's miss risk is about 0.28, driven by between-Congress heterogeneity of a large effect. Overlapping training windows and correlated adjacent Congresses make the effective k smaller than 6.",
+        "mitigation": "Use the t(5) test on per-fold differences (Holm-adjusted across candidates) or the two-stage bootstrap as the only decision rule (protocol step 10). Treat 'k of 6' patterns as descriptive, report per-fold values and next-Congress prediction intervals, and pick the simplest candidate among statistical ties."
+      },
+      {
+        "risk": "The development fold mean becomes optimistic as more architectures are compared on it, because each test Congress is also a later fold's validation Congress.",
+        "mitigation": "Report it as a development number and report the number of configurations compared. Apply Holm correction across more than two candidates. If no candidate wins after correction, pick the simplest or cheapest of the tied candidates (a pre-registered rule), not the nominal best. Make the single 118 score the headline."
+      },
+      {
+        "risk": "Task-2 validation does not rank near-tie models (hit rate 14-29%), and a GNN grid may be more spread out than the baseline families.",
+        "mitigation": "Select on the mean of three validation Congresses (D17). Treat Task-2 differences that the (Holm-adjusted) t(5) test does not confirm as ties; for Task 2 this typically means differences below about 0.017-0.036 AUROC, more for heterogeneous pairs."
+      },
+      {
+        "risk": "The Task-2 AUROC level shifts between Congresses (fold means 0.655 to 0.583), and in 116-117 the label misses many chamber-passed bills.",
+        "mitigation": "Report Task-2 AUROC and AP (with prevalence) per Congress and per chamber, never one pooled level. Report the label_alt sensitivity. If calibrated probabilities are needed, recalibrate on the evaluation Congress's already-resolved bills, not on c-1."
+      },
+      {
+        "risk": "A naive PyG implementation leaks future edges or features (static full-batch graphs, per-Congress normalisers, legislator features computed over the whole Congress).",
+        "mitigation": "Temporal neighbour sampling with inclusive per-seed cutoffs on all relations, identical example construction in training and evaluation, as-of-Congress-start features under plain S3 and as-of-cutoff features under +stream, one-directional attachment of current-Congress target bills under plain S3, explicit eligible-pool negatives, the target's seen cosponsors as inputs and excluded from candidates, disjoint supervision and message-passing edges, and unit tests on sampled timestamps (protocol step 4)."
+      },
+      {
+        "risk": "Refitting a GNN reuses an epoch budget chosen on less data, with no early-stopping signal; the refit gain was measured only on parameter-free baselines.",
+        "mitigation": "Fix gradient steps (or scale epochs to data size) and compare against the no-refit checkpoint on one fold."
+      },
+      {
+        "risk": "Running six folds per configuration is expensive for a GNN.",
+        "mitigation": "Use the single debug split for early iterations. Run all six folds only for shortlisted configurations, and run each shortlisted candidate on every fold so the 3-validation rule can reuse earlier folds' scores; otherwise fall back to c-1 selection with the D12b caveat. Reuse per-fold time-filtered loaders across configurations."
+      },
+      {
+        "risk": "With per-seed cutoffs, GNN training examples from the earliest Congresses have almost no history, unlike test bills, a shift the baselines never faced. It is largest in fold 112.",
+        "mitigation": "Burn-in (protocol step 8): use 108 as message-passing history only, add history-depth features, and report fold 112 separately for both the GNN and the baselines."
+      },
+      {
+        "risk": "Cold start remains for bills introduced in the first weeks of a new Congress, when freshmen have little in-Congress history even with streaming.",
+        "mitigation": "Rely on inductive legislator features. Stratify Task-1 results by legislator novelty (D24) and by introduction date within the Congress."
+      }
+    ],
+    "what_would_change_this": [
+      "If selection checks re-run on streaming folds show validation regret above tolerance, select models on plain-S3 validation (or the mean of several validation Congresses) and use streaming only at test time.",
+      "If a GNN without recency weighting is used, switch the main window to the 3-Congress sliding window (S2). Also switch if S2+stream beats S3+stream with decay on the 6-fold mean with a t(5) test (Holm-adjusted if several candidates) that confirms the difference. For Task 2, the same rule applies to the recency-weighted S3 vs S2 sensitivity row.",
+      "If a recency-weighted Task-2 model with label-feedback +stream (step 2: labels of same-Congress bills whose 180-day window is fully resolved) beats plain S3 on the 6-fold mean with a t(5) test (Holm-adjusted if several candidates) that confirms the difference, and the selection checks pass under it, make label-feedback +stream the Task-2 primary. A raw mean gain is not enough: a +0.015 AUROC gain with a between-Congress sd of 0.022 gives a t(5) p-value of about 0.16. Same-Congress edge streaming for Task 2 is untested; it needs the same test before it can be adopted, and it must never include open-window bills' report status.",
+      "If 119 falls outside the prediction interval built from development folds truncated to the same introduction-date window, treat recent drift as structural: add 118 to every final fit and shorten the recency half-life.",
+      "If Task 2 is redefined (for example t0 = 30 with policy area, or label_alt as the primary label), re-run Section D's Task-2 checks, because the streaming and window verdicts were borderline for the current definition.",
+      "If compute allows only one split, use train 108-116 / val 117 / test 118 (S1b) and report it as a single-Congress estimate with explicitly wide uncertainty, not as a model comparison."
+    ]
+  },
+  "per_task": [
+    {
+      "task": "Cosponsor prediction (Task 1)",
+      "recommendation": "Rolling-origin S3 folds with **+stream** (the evaluation Congress's edges dated <= introduced_date + t0 in message passing, via temporal neighbour sampling) and a recency half-life tuned on validation. Tune and early-stop on c-1, refit on 108..c-1, test on c for c = 112..117, then score 118 once. Single-Congress splits do not fail a validity check for Task 1 (D9 passes on Task-1 pairs, worst miss 1 of 7). The case for rolling folds is precision and representativeness: one Congress cannot resolve near-MDE choices, and 118 is off-distribution in density and timing. The stream gain is +0.037 Recall@20 in 7/7 folds (+0.034 on 112-117). Validation predicts the score level under streaming (D14) and picks near-best models on plain S3 (D11, D21, D23); selection under streaming still has to be checked. The legislator encoder must be inductive. The target bill's sponsor and cosponsors with lag in [0, t0] are inputs at both t0 = 0 and t0 = 7, and they are removed from the ranked candidates. Labels are cosponsors with lag in (t0, t0+30].",
+      "reporting": "Recall@K (K = 20 primary, plus other K) and NDCG, for t0 = 0 and t0 = 7 separately. Give per-Congress scores for 112-117, their paired mean with a t(5) or two-stage-bootstrap interval, and the locked 118 score separately. Compare against random, popularity, party+popularity, and count baselines run under the same S3+stream protocol: at least sponsor_hist 0.296 (t0 = 0) / 0.275 (t0 = 7) and rw2hop 0.295, plus recency-weighted sponsor history and the learned SVD once run with streaming. 118 has about 40% lower positive density, and in 117-118 a larger share of cosponsors are original (A4), so less remains to predict after day 0 at t0 = 0. Do not read raw recall drops across Congresses as model failure (A3, A4). Decide comparisons with the t(5) test on per-fold differences (Holm-adjusted across several candidates); for a single pairwise comparison, about 0.012-0.015 Recall@20 is the smallest difference six folds reliably detect. Stratify by new vs returning legislators (D24) and by number of positives."
+    },
+    {
+      "task": "Bill advancement (Task 2)",
+      "recommendation": "The same S3 folds, with the prediction time fixed at introduction and policy area masked. The primary result is **plain S3**, as the notebook's split-ranking rules pick. For a GNN, plain S3 means every example, in training and evaluation alike, sees all earlier Congresses' edges cut at its own cutoff plus its own bill's edges dated <= intro + t0 (sponsor, referral committees, cosponsors in [0, t0]), and no other same-Congress bills or edges. +stream is a sensitivity row. For Task 2, +stream means **label feedback** as the notebook ran it: same-Congress bills whose 180-day label is fully resolved by the cutoff (intro + 180 <= scored bill's intro + t0) contribute their labels, as extra supervised examples, label-bearing nodes or rate features. It is statistically indistinguishable from plain (+0.008 AUROC, 4 of 7 folds positive, driven by c = 112) and less well supported for selection and level calibration. Never use open-window bills' report status or non-referral committee edges (B7). Streaming same-Congress *edges* into Task 2 (Task 1's mechanism) was never tested and would be a separate, labelled variant. The notebook also suggests one shared S3+stream pipeline for both tasks (decision-c152-txt); we keep plain S3 primary because selection and level calibration were verified only there. Choose hyperparameters on the mean of validation Congresses c-3..c-1 (D17), because single-validation regret reaches 0.0053-0.0078 and validation does not rank near-ties (hit rate 14-29%). Recency weighting is a tuned choice here (+0.0096, D26), not yet covered by the window or selection checks. The evidence is weaker than for Task 1: non-rolling splits are excluded through D9 (R1-T2 borderline), and expanding vs sliding (-0.009 / -0.011, one fold) is unresolved and untested with recency weighting. Six folds detect only Task-2 differences of about 0.017-0.036 AUROC (more for highly heterogeneous pairs), so expect many ties.",
+      "reporting": "AUROC and average precision, with each Congress's prevalence (or AP / prevalence), per Congress and per chamber, plus the fold mean with a t(5) interval and the spread. Never quote one AUROC level or a validation AUROC as the expected test level (D2b; about 13 Congresses would be needed for a precise level, D15). Baseline to beat: recency-weighted eb_rate_t0safe under plain S3 (about 0.63; 0.624 unweighted + 0.0096, D26), with unweighted 0.624, S2 0.632 and label-feedback S3+stream 0.631 as references. The at-introduction model is the primary result. The t0 = 30 policy-area model is a labelled variant, because policy area at introduction inflates AUROC by about 0.10 (D16). Report label_alt (reported OR passed origin chamber within 180 days) as a sensitivity analysis for 116-117 (A1b)."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Rolling-origin (forward-chaining) evaluation",
+      "definition": "Repeatedly train on everything before a cut point, test on the next period, then move the cut point forward. Here, each Congress 112-117 is one test fold."
+    },
+    {
+      "term": "Expanding vs sliding window",
+      "definition": "Expanding: training always starts at Congress 108 and grows (S3). Sliding: training uses only the last 3 Congresses (S2)."
+    },
+    {
+      "term": "Refit",
+      "definition": "After choosing hyperparameters on validation Congress c-1, retrain on 108..c-1 (training plus validation) with those settings before testing on c."
+    },
+    {
+      "term": "+stream (streaming protocol)",
+      "definition": "Adding same-Congress information that was known at prediction time, defined per task as the notebook tested it. Task 1: the other same-Congress bills' sponsorship and cosponsorship edges dated up to the bill's introduction date + t0. Task 2 (*label feedback*): the outcomes of same-Congress bills whose 180-day window had fully closed by the cutoff; open-window bills are never used. Streaming same-Congress edges into Task 2 is a separate, untested variant. 'Plain' (plain S3) gives each example only earlier Congresses plus its own bill's edges up to the cutoff. Training examples are built the same way as evaluation examples in both variants."
+    },
+    {
+      "term": "Time-masking",
+      "definition": "Removing every node, edge or feature value dated after the prediction time from the model's input."
+    },
+    {
+      "term": "Temporal neighbour sampling",
+      "definition": "Mini-batch message passing in which each seed node only samples neighbours through edges whose timestamp is at or before that seed's prediction time, at every hop."
+    },
+    {
+      "term": "t0",
+      "definition": "Prediction time, measured in days after a bill's introduction (0 or 7 for Task 1)."
+    },
+    {
+      "term": "Locked test",
+      "definition": "A held-back Congress (118) that is scored exactly once after all design decisions are frozen."
+    },
+    {
+      "term": "Prospective test",
+      "definition": "Evaluation on data that did not exist when the protocol was chosen (Congress 119)."
+    },
+    {
+      "term": "MDE (minimum detectable effect)",
+      "definition": "The smallest difference treated as worth acting on, fixed by convention at 0.01 Recall@20 or 0.01 AUROC. It is not the same as the smallest difference six folds can detect (see next entry)."
+    },
+    {
+      "term": "Detectable difference (80% power)",
+      "definition": "The smallest true difference that a test on six per-fold values would confirm 80% of the time. It grows with the between-Congress spread of the difference and with Holm correction: about 0.012-0.015 for a single Task-1 comparison and 0.017-0.036 AUROC for a Task-2 comparison, and more for highly heterogeneous pairs or with Holm correction."
+    },
+    {
+      "term": "Miss risk",
+      "definition": "The probability that a test set fails to confirm the direction of a real model difference. For one Congress the notebook measures it as an empirical share of Congresses; for k folds it is a power calculation for the mean. The two are not directly comparable."
+    },
+    {
+      "term": "Next-Congress prediction interval (D9b)",
+      "definition": "The range in which one new Congress's paired difference should fall, from the spread across past Congresses. It does not shrink as more folds are averaged."
+    },
+    {
+      "term": "t interval (df = 5)",
+      "definition": "A confidence interval for the mean of six per-fold values that accounts for estimating their spread from only six numbers; it is about 31% wider than the normal-approximation interval."
+    },
+    {
+      "term": "Holm correction",
+      "definition": "A step-down adjustment of p-values that keeps the chance of any false 'winner' at 5% when several comparisons are made. It acts on p-values; when intervals are reported for several comparisons, Bonferroni-adjusted intervals are the matching choice."
+    },
+    {
+      "term": "Selection regret",
+      "definition": "How much test score is lost by picking the model that is best on validation instead of the one that is best on test."
+    },
+    {
+      "term": "Hit rate / Kendall tau",
+      "definition": "Hit rate: share of folds where the validation-best candidate is also test-best. Kendall tau: rank agreement between validation and test orderings (1 = identical)."
+    },
+    {
+      "term": "Sponsor-cluster bootstrap",
+      "definition": "Resampling bills in groups by sponsor to estimate uncertainty, which respects the correlation between bills from the same legislator."
+    },
+    {
+      "term": "Paired comparison",
+      "definition": "Comparing two models on the same test bills, so Congress-level difficulty cancels out of the difference."
+    },
+    {
+      "term": "Recall@K",
+      "definition": "The share of a bill's true future cosponsors that appear among the model's top K ranked legislators."
+    },
+    {
+      "term": "NDCG",
+      "definition": "Normalized discounted cumulative gain: a ranking score that rewards placing true cosponsors near the top."
+    },
+    {
+      "term": "AUROC",
+      "definition": "The probability that a randomly chosen advancing bill is scored above a randomly chosen non-advancing bill. 0.5 is chance level."
+    },
+    {
+      "term": "Average precision (AP)",
+      "definition": "The area under the precision-recall curve. It depends on prevalence, so report it together with the base rate."
+    },
+    {
+      "term": "Cold start",
+      "definition": "A legislator (node) that has no history in the training graph, so an ID-based embedding cannot score it."
+    },
+    {
+      "term": "Inductive vs transductive",
+      "definition": "An inductive model computes node representations from features and neighbours, so it handles unseen nodes. A transductive model learns a fixed embedding per training node."
+    },
+    {
+      "term": "Censoring",
+      "definition": "A label that cannot be observed yet because its outcome window (30 or 180 days) has not closed by the data snapshot."
+    },
+    {
+      "term": "Regime",
+      "definition": "Which party controls the House and the Senate in a given Congress."
+    },
+    {
+      "term": "Burn-in",
+      "definition": "Keeping the earliest Congress (108) in the graph as history while excluding its bills from supervision, so every training example has at least one earlier Congress of history."
+    },
+    {
+      "term": "Original cosponsor",
+      "definition": "A cosponsor who joins on the day the bill is introduced (lag 0). Original cosponsors are known at t0 = 0, so they are inputs, not labels."
+    }
+  ],
+  "methods_note": "The evidence comes from the executed notebook `notebooks/split_analysis.ipynb` on Congresses 108-118 (173,437 bills, 145,738 law-capable; 2.1M cosponsorship events; snapshot 2026-10-17). Sections A-C ran distribution, graph-structure, boundary and leakage checks against 95% prediction intervals built from 6-8 training Congresses, with Holm correction within some checks. Section D trained transparent baselines under nine candidate splits and scored them with 500-resample sponsor-cluster bootstraps and paired CIs. The Task-1 baselines were popularity, party+popularity, sponsor history, a 2-hop random walk and a truncated-SVD embedding; the Task-2 baselines were smoothed rates. The final section de-duplicated 102 checks to 100 and applied explicit rules (R1-R8) to rank splits per task. This synthesis weighs those results independently. It re-attributes the D9 single-Congress verdict by task, and recomputes the 6-fold miss risk with a noncentral t distribution (df = 5) from the notebook's per-fold chart data (D-c140-o1); it also computes 80%-power detectable differences under t(5), with and without Holm, from the notebook's between-Congress spreads (D-c128-txt). These recomputations are ours, not notebook outputs. Multiplicity: many checks use the 5% level without family-wise control, so a few FAILs and PASSes are expected by chance, and many PASSes with n = 6-8 mean 'not detected' rather than 'stable'. The recommendation rests on a few large-effect results (D7, C6b, C20, D13, D19) that survive any reasonable correction. Borderline verdicts (D9 at k = 6, D12, D12b, R3-T2, R5 for Task 2) should be read as inconclusive. Main limitations: (1) all backtests use simple baselines, not GNNs, so GNN-specific behaviour (early stopping, refit, message-passing overfitting) is untested; (2) the 7 rolling folds share most training data and adjacent Congresses are correlated, so the effective number of folds is below 7 and fold counts are descriptive; (3) the 0.01 MDE is a convention; (4) Congress 118 informed the protocol choice, and its records are still being maintained; (5) several figures are proxies, notably policy-area availability at t0 (n = 56 bills of the in-progress 119th); (6) the notebook's Task-2 streaming variant is label feedback from resolved same-Congress bills, so same-Congress edge streaming for Task 2 is untested; model selection under streaming, the recency-weighted Task-2 window comparison, and the full expanding + streaming + recency combination were never directly evaluated; (7) the B12 training-consistency test covers only 2 folds with a logistic count ranker."
+}

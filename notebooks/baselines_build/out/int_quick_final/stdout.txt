@@ -1,0 +1,319 @@
+mode simple -> folds [117] | tasks ('t1', 't2') | t0 (0,) | Task-1 protocols ('stream',)
+models ('hetero_sage', 'rgcn', 'lightgcn', 'pair_mlp') (implemented: ['pair_mlp', 'hetero_sage', 'rgcn', 'lightgcn']) | seeds (0,) | cpu, 8 threads | QUICK smoke test
+repo: /Users/alex_rivas/Documents/Stanford/CS224W/Final Project/cs224w-bill-cosponsor-prediction
+legislators coded: 1,452; law-capable bills 108-118: 128,791; Task-2 rows (uncensored): 110,802; cache: /Users/alex_rivas/Documents/Stanford/CS224W/Final Project/cs224w-bill-cosponsor-prediction/derived/cache/baselines
+load timings (s): {'tables': 1.9, 'roster_majority': 0.1, 'engine': 1.3, 'total': 3.2}
+          law_capable  t1_bills  t1_positives  pool_house  pool_senate  t2_bills  t2_pos_rate
+congress                                                                                     
+108              8621      2941         22647         434           96      7533       0.0804
+109             10697      3124         24663         435           96      9494       0.0552
+110             11224      3906         30855         436           97      9784       0.0778
+111             10770      3637         25753         437           96      9382       0.0473
+112             10612      3230         22857         437           96      9592       0.0432
+113              9083      3459         26606         437           96      7727       0.0578
+114             10223      3812         25487         436           96      8948       0.0730
+115             11414      4072         25199         436           96      9679       0.0867
+116             14340      5391         36888         435           96     11866       0.0414
+117             15242      5101         30129         436           96     12953       0.0281
+fold 117 t0=0 val  : Congresses 109-116, fit on 109-115, 2s
+fold 117 t0=0 refit: Congresses 109-117, fit on 109-116, 2s
+
+Graph for target Congress 117 (t0 = 0, history window [114, 115, 116])
+  nodes:
+    leg       1,452  x: (1452, 21)
+    hbill    42,220  x: (42220, 82)
+    comm         41  x: (41, 4)
+    tbill    15,242  x: (15242, 88)
+  edges (src -> dst):
+    leg   -[sponsors]-> hbill     42,220  (history)
+    leg   -[cosp_orig]-> hbill    228,331  (history)
+    leg   -[cosp_later]-> hbill    315,629  (history)
+    hbill -[referred]-> comm      52,596  (history)
+    hbill -[rev_sponsors]-> leg       42,220  (reverse)
+    hbill -[rev_cosp_orig]-> leg      228,331  (reverse)
+    hbill -[rev_cosp_later]-> leg      315,629  (reverse)
+    comm  -[rev_referred]-> hbill     52,596  (reverse)
+    leg   -[sponsors_t]-> tbill     15,231  (target, incoming only)
+    leg   -[cosp_t]-> tbill     81,018  (target, incoming only)
+    comm  -[referred_t]-> tbill     19,175  (target, incoming only)
+eligibility: {'blocks': 2, 'bills': 5101, 'sponsors_excluded': 5101, 'seen_excluded': 54649, 'positives': 30129}
+allowlist: {'leg': 21, 'hbill': 82, 'comm': 4, 'tbill': 88, 'phi': 22, 'patterns': 13}
+hist_depth per Congress: {109: 1, 110: 2, 111: 3, 112: 3, 113: 3, 114: 3, 115: 3, 116: 3, 117: 3}
+caucus_pit uses Congresses < k only: {'k': 117, 'n_other': 176}
+censored bills never in EB denominators: {'congress': 116, 'denominator': 11866, 'uncensored': 11866, 'censored': 2474}
+stream truncation test (cutoff day, bills with that cutoff): [(18696, 100, 40), (18963, 33, 14), (19242, 10, 1)] -> identical features
+tbill: 1 of 24 columns shift > 0.5 sd on validation Congress 116
+         hist_depth_3
+shift_sd       0.6486
+flag           >0.5sd
+leg: 2 of 21 columns shift > 0.5 sd on validation Congress 116
+         hist_depth_3 sponsor_eb_rate
+shift_sd       0.6325          0.8244
+flag           >0.5sd          >0.5sd
+phi: 2 of 22 columns shift > 0.5 sd on validation Congress 116
+         hist_depth_3 act30_st
+shift_sd       0.6622   0.5294
+flag           >0.5sd   >0.5sd
+
+Task 1, fold 117, test Congress 117, t0 = 0:
+metric                                         Recall@10                Recall@20                  NDCG@20     n
+protocol kind      model                                                                                        
+plain    heuristic cosup         0.1701 [0.1589, 0.1812]  0.2607 [0.2447, 0.2776]  0.1658 [0.1576, 0.1745]  5101
+                   party+pop     0.1126 [0.1018, 0.1240]  0.1905 [0.1743, 0.2077]  0.1152 [0.1070, 0.1235]  5101
+                   popularity    0.0856 [0.0754, 0.0959]  0.1375 [0.1240, 0.1521]  0.0854 [0.0774, 0.0934]  5101
+                   rw2hop        0.1703 [0.1582, 0.1828]  0.2629 [0.2473, 0.2812]  0.1649 [0.1557, 0.1747]  5101
+                   sh_hl1        0.1923 [0.1795, 0.2070]  0.2845 [0.2668, 0.3035]  0.1835 [0.1739, 0.1932]  5101
+                   sponsor_hist  0.1727 [0.1609, 0.1845]  0.2615 [0.2448, 0.2792]  0.1662 [0.1567, 0.1758]  5101
+                   svd_r512_hl1  0.1906 [0.1779, 0.2046]  0.2832 [0.2652, 0.3025]  0.1816 [0.1716, 0.1913]  5101
+stream   heuristic cosup         0.1855 [0.1738, 0.1987]  0.2809 [0.2638, 0.2968]  0.1785 [0.1704, 0.1875]  5101
+                   party+pop     0.1171 [0.1066, 0.1288]  0.1950 [0.1787, 0.2120]  0.1218 [0.1135, 0.1302]  5101
+                   popularity    0.0876 [0.0769, 0.0982]  0.1403 [0.1268, 0.1551]  0.0912 [0.0821, 0.0998]  5101
+                   rw2hop        0.1986 [0.1881, 0.2122]  0.3075 [0.2914, 0.3248]  0.1915 [0.1831, 0.1998]  5101
+                   sponsor_hist  0.2035 [0.1924, 0.2173]  0.3071 [0.2906, 0.3246]  0.1931 [0.1847, 0.2016]  5101
+
+Task 2, fold 117, test Congress 117:
+metric                                                     AUROC                       AP                  AP_lift      n
+protocol kind            model                                                                                           
+plain    heuristic       chamber_maj     0.5449 [0.5106, 0.5864]  0.0307 [0.0261, 0.0361]  1.0929 [1.0071, 1.2241]  12953
+                         eb_committee    0.7258 [0.6876, 0.7607]  0.0788 [0.0557, 0.1105]  2.8035 [2.1942, 3.7208]  12953
+                         eb_rate_t0safe  0.5598 [0.5255, 0.5982]  0.0358 [0.0293, 0.0467]  1.2747 [1.1188, 1.6172]  12953
+                         prior           0.5000 [0.5000, 0.5000]  0.0281 [0.0236, 0.0325]  1.0000 [1.0000, 1.0000]  12953
+         reference_leaky eb_rate         0.6924 [0.6534, 0.7257]  0.0623 [0.0438, 0.0945]  2.2153 [1.7292, 3.1336]  12953
+[hetero_sage t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 4.3108  val Recall@20 0.4907 (avg 0.4907)  *
+    epoch  2  loss 4.1437  val Recall@20 0.5090 (avg 0.4999)  *
+[hetero_sage t1 t0=0 stream fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 4.2570  (refit, stop at 2)
+    epoch  2  loss 4.1304  (refit, stop at 2)
+[hetero_sage t1 fold 117] E* = 2, val 0.4999, test 0.5758, 6s
+[hetero_sage t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2405  val AUROC 0.8365 (avg 0.8365)  *
+    epoch  2  loss 0.1874  val AUROC 0.8409 (avg 0.8387)  *
+[hetero_sage t2 t0=0 plain fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 0.2457  (refit, stop at 2)
+    epoch  2  loss 0.1854  (refit, stop at 2)
+[hetero_sage t2 fold 117] E* = 2, val 0.8387, test 0.8131, 10s
+
+G1 HeteroSAGE: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol          model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G1 HeteroSAGE     0  Recall@20           2     frozen     clean     6.4000 0.5090 0.5758
+1   117   t2   0    plain  G1 HeteroSAGE     0      AUROC           2     frozen     clean     9.6000 0.8409 0.8131
+[rgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 4.3200  val Recall@20 0.4938 (avg 0.4938)  *
+    epoch  2  loss 4.1450  val Recall@20 0.5071 (avg 0.5005)  *
+[rgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 4.2642  (refit, stop at 2)
+    epoch  2  loss 4.1215  (refit, stop at 2)
+[rgcn t1 fold 117] E* = 2, val 0.5005, test 0.5697, 5s
+[rgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2437  val AUROC 0.8334 (avg 0.8334)  *
+    epoch  2  loss 0.1862  val AUROC 0.8410 (avg 0.8372)  *
+[rgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 0.2557  (refit, stop at 2)
+    epoch  2  loss 0.1822  (refit, stop at 2)
+[rgcn t2 fold 117] E* = 2, val 0.8372, test 0.8251, 9s
+
+G2 R-GCN: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol     model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G2 R-GCN     0  Recall@20           2     frozen     clean     5.4000 0.5071 0.5697
+1   117   t2   0    plain  G2 R-GCN     0      AUROC           2     frozen     clean     8.6000 0.8410 0.8251
+[lightgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 4.2019  val Recall@20 0.5339 (avg 0.5339)  *
+    epoch  2  loss 4.0084  val Recall@20 0.5524 (avg 0.5431)  *
+[lightgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 4.1706  (refit, stop at 2)
+    epoch  2  loss 3.9844  (refit, stop at 2)
+[lightgcn t1 fold 117] E* = 2, val 0.5431, test 0.6084, 7s
+[lightgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2778  val AUROC 0.8294 (avg 0.8294)  *
+    epoch  2  loss 0.2060  val AUROC 0.8415 (avg 0.8355)  *
+[lightgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 0.2698  (refit, stop at 2)
+    epoch  2  loss 0.1935  (refit, stop at 2)
+[lightgcn t2 fold 117] E* = 2, val 0.8355, test 0.7906, 4s
+
+G3 LightGCN-feat: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol             model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G3 LightGCN-feat     0  Recall@20           2     frozen     clean     6.7000 0.5524 0.6084
+1   117   t2   0    plain  G3 LightGCN-feat     0      AUROC           2     frozen     clean     4.2000 0.8415 0.7906
+[pair_mlp t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 4.3225  val Recall@20 0.4902 (avg 0.4902)  *
+    epoch  2  loss 4.1687  val Recall@20 0.4968 (avg 0.4935)  *
+[pair_mlp t1 t0=0 stream fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 4.2879  (refit, stop at 2)
+    epoch  2  loss 4.1589  (refit, stop at 2)
+[pair_mlp t1 fold 117] E* = 2, val 0.4935, test 0.5688, 1s
+[pair_mlp t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2627  val AUROC 0.8211 (avg 0.8211)  *
+    epoch  2  loss 0.2029  val AUROC 0.8267 (avg 0.8239)  *
+[pair_mlp t2 t0=0 plain fold 117] refit 109-116, stop at E* = 2
+    epoch  1  loss 0.2803  (refit, stop at 2)
+    epoch  2  loss 0.1922  (refit, stop at 2)
+[pair_mlp t2 fold 117] E* = 2, val 0.8239, test 0.7990, 0s
+
+PairMLP: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol    model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  PairMLP     0  Recall@20           2     frozen     clean     0.5000 0.4968 0.5688
+1   117   t2   0    plain  PairMLP     0      AUROC           2     frozen     clean     0.4000 0.8267 0.7990
+
+Tabular references (Task 2):
+   fold task  t0 protocol      model  seed metric best_epoch config_set selection  runtime_s    val   test
+0   117   t2   0    plain    TabGBDT     0  AUROC       None    apriori     clean     6.2000 0.7958 0.8211
+1   117   t2   0    plain  TabLogReg     0  AUROC       None    apriori     clean     6.2000 0.7706 0.7966
+
+Task 1, fold 117 (validation 116, test 117), t0 = 0: Recall@20 [95% CI]
+                                      val Recall@20           test Recall@20 seeds test Recall@10 test NDCG@20  n test
+protocol kind        model                                                                                            
+plain    heuristic   cosup                   0.2453  0.2607 [0.2447, 0.2776]     -         0.1701       0.1658    5101
+                     party+pop               0.2037  0.1905 [0.1743, 0.2077]     -         0.1126       0.1152    5101
+                     popularity              0.1620  0.1375 [0.1240, 0.1521]     -         0.0856       0.0854    5101
+                     rw2hop                  0.2533  0.2629 [0.2473, 0.2812]     -         0.1703       0.1649    5101
+                     sh_hl1                  0.2775  0.2845 [0.2668, 0.3035]     -         0.1923       0.1835    5101
+                     sponsor_hist            0.2542  0.2615 [0.2448, 0.2792]     -         0.1727       0.1662    5101
+                     svd_r512_hl1            0.2757  0.2832 [0.2652, 0.3025]     -         0.1906       0.1816    5101
+stream   heuristic   cosup                   0.2686  0.2809 [0.2638, 0.2968]     -         0.1855       0.1785    5101
+                     party+pop               0.2106  0.1950 [0.1787, 0.2120]     -         0.1171       0.1218    5101
+                     popularity              0.1673  0.1403 [0.1268, 0.1551]     -         0.0876       0.0912    5101
+                     rw2hop                  0.2863  0.3075 [0.2914, 0.3248]     -         0.1986       0.1915    5101
+                     sponsor_hist            0.2884  0.3071 [0.2906, 0.3246]     -         0.2035       0.1931    5101
+         learned_ref PairMLP                 0.4968  0.5688 [0.5335, 0.6012]     1         0.3577       0.2953    1169
+         gnn         G1 HeteroSAGE           0.5090  0.5758 [0.5422, 0.6117]     1         0.3653       0.2975    1169
+                     G2 R-GCN                0.5071  0.5697 [0.5360, 0.6045]     1         0.3713       0.2966    1169
+                     G3 LightGCN-feat        0.5524  0.6084 [0.5797, 0.6385]     1         0.3858       0.3142    1169
+
+Task 2, fold 117 (validation 116, test 117): AUROC [95% CI]
+                                          val AUROC               test AUROC seeds test AP  n test
+protocol kind            model                                                                    
+plain    heuristic       chamber_maj         0.5350  0.5449 [0.5106, 0.5864]     -  0.0307   12953
+                         eb_committee        0.7712  0.7258 [0.6876, 0.7607]     -  0.0788   12953
+                         eb_rate_t0safe      0.5688  0.5598 [0.5255, 0.5982]     -  0.0358   12953
+                         prior               0.5000  0.5000 [0.5000, 0.5000]     -  0.0281   12953
+         reference_leaky eb_rate             0.6875  0.6924 [0.6534, 0.7257]     -  0.0623   12953
+         learned_ref     PairMLP             0.8267  0.7990 [0.7433, 0.8444]     1  0.1158    4544
+                         TabGBDT             0.7958  0.8211 [0.7929, 0.8466]     1  0.1541   12953
+                         TabLogReg           0.7706  0.7966 [0.7645, 0.8240]     1  0.1281   12953
+         gnn             G1 HeteroSAGE       0.8409  0.8131 [0.7644, 0.8525]     1  0.1252    4544
+                         G2 R-GCN            0.8410  0.8251 [0.7732, 0.8665]     1  0.1349    4544
+                         G3 LightGCN-feat    0.8415  0.7906 [0.7292, 0.8424]     1  0.1237    4544
+population identity (check 7): {'units': 4, 'results_checked': 38}
+
+Paired test differences a - b over 1 seed(s) (real = |seed-mean diff| >= MDE and every seed's CI excludes 0):
+   fold task  t0 protocol             model                vs     metric  diff_mean  diff_sd  ci_low_min  ci_high_max  seeds    mde   real
+0   117   t1   0   stream     G1 HeteroSAGE           PairMLP  Recall@20     0.0070      NaN     -0.0079       0.0231      1 0.0100  False
+1   117   t1   0   stream     G1 HeteroSAGE          G2 R-GCN  Recall@20     0.0061      NaN     -0.0061       0.0191      1 0.0100  False
+2   117   t1   0   stream     G1 HeteroSAGE  G3 LightGCN-feat  Recall@20    -0.0326      NaN     -0.0510      -0.0159      1 0.0100   True
+3   117   t2   0    plain     G1 HeteroSAGE          G2 R-GCN      AUROC    -0.0120      NaN     -0.0218      -0.0014      1 0.0100   True
+4   117   t2   0    plain     G1 HeteroSAGE  G3 LightGCN-feat      AUROC     0.0225      NaN      0.0048       0.0408      1 0.0100   True
+5   117   t1   0   stream          G2 R-GCN           PairMLP  Recall@20     0.0009      NaN     -0.0144       0.0155      1 0.0100  False
+6   117   t1   0   stream          G2 R-GCN  G3 LightGCN-feat  Recall@20    -0.0387      NaN     -0.0537      -0.0245      1 0.0100   True
+7   117   t2   0    plain          G2 R-GCN  G3 LightGCN-feat      AUROC     0.0345      NaN      0.0157       0.0552      1 0.0100   True
+8   117   t1   0   stream  G3 LightGCN-feat           PairMLP  Recall@20     0.0395      NaN      0.0251       0.0562      1 0.0100   True
+NOTE: one seed. Differences between learned models (GNN vs GNN, GNN vs PairMLP / TabGBDT) below about 0.015 are within training noise; run SEEDS = (0, 1, 2) or see the cached 3-seed table below.
+
+Hit@20 on positives from new legislators (no cosponsorship in 108..k-1) vs returning ones:
+    fold  t0 protocol             model   seed  new_hit20  new_positives  returning_hit20  new_share_of_positives
+5    117   0    plain        popularity    NaN     0.0000           3814           0.1337                  0.1266
+7    117   0    plain      sponsor_hist    NaN     0.0000           3814           0.2246                  0.1266
+8    117   0    plain            rw2hop    NaN     0.0000           3814           0.2258                  0.1266
+9    117   0    plain            sh_hl1    NaN     0.0000           3814           0.2439                  0.1266
+10   117   0    plain      svd_r512_hl1    NaN     0.0000           3814           0.2436                  0.1266
+11   117   0    plain             cosup    NaN     0.0000           3814           0.2298                  0.1266
+6    117   0    plain         party+pop    NaN     0.0037           3814           0.1792                  0.1266
+0    117   0   stream        popularity    NaN     0.0000           3814           0.1362                  0.1266
+4    117   0   stream             cosup    NaN     0.0021           3814           0.2476                  0.1266
+1    117   0   stream         party+pop    NaN     0.0042           3814           0.1824                  0.1266
+2    117   0   stream      sponsor_hist    NaN     0.0490           3814           0.2498                  0.1266
+3    117   0   stream            rw2hop    NaN     0.0517           3814           0.2492                  0.1266
+15   117   0   stream           PairMLP 0.0000     0.2849            186           0.5405                  0.0610
+14   117   0   stream  G3 LightGCN-feat 0.0000     0.3656            186           0.5709                  0.0610
+12   117   0   stream     G1 HeteroSAGE 0.0000     0.3710            186           0.5450                  0.0610
+13   117   0   stream          G2 R-GCN 0.0000     0.3763            186           0.5461                  0.0610
+
+Learned models: best epoch, validation and test metric, runtime:
+   fold task  t0 protocol             model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream     G1 HeteroSAGE     0  Recall@20      2.0000     frozen     clean     6.4000 0.5090 0.5758
+1   117   t2   0    plain     G1 HeteroSAGE     0      AUROC      2.0000     frozen     clean     9.6000 0.8409 0.8131
+2   117   t1   0   stream          G2 R-GCN     0  Recall@20      2.0000     frozen     clean     5.4000 0.5071 0.5697
+3   117   t2   0    plain          G2 R-GCN     0      AUROC      2.0000     frozen     clean     8.6000 0.8410 0.8251
+4   117   t1   0   stream  G3 LightGCN-feat     0  Recall@20      2.0000     frozen     clean     6.7000 0.5524 0.6084
+5   117   t2   0    plain  G3 LightGCN-feat     0      AUROC      2.0000     frozen     clean     4.2000 0.8415 0.7906
+6   117   t1   0   stream           PairMLP     0  Recall@20      2.0000     frozen     clean     0.5000 0.4968 0.5688
+7   117   t2   0    plain           PairMLP     0      AUROC      2.0000     frozen     clean     0.4000 0.8267 0.7990
+8   117   t2   0    plain           TabGBDT     0      AUROC         NaN    apriori     clean     6.2000 0.7958 0.8211
+9   117   t2   0    plain         TabLogReg     0      AUROC         NaN    apriori     clean     6.2000 0.7706 0.7966
+
+Timing (seconds / minutes per stage):
+                       seconds  minutes
+stage                                  
+data                       3.3      0.1
+graphs + features          4.2      0.1
+checks                     2.5      0.0
+heuristics                 4.8      0.1
+G1 HeteroSAGE             16.1      0.3
+G2 R-GCN                  14.0      0.2
+G3 LightGCN-feat          10.9      0.2
+PairMLP                    0.9      0.0
+TabGBDT / TabLogReg       12.4      0.2
+total (sum of stages)     69.0      1.2
+results written to /Users/alex_rivas/Documents/Stanford/CS224W/Final Project/cs224w-bill-cosponsor-prediction/notebooks/baselines_build/out/int_quick_final/results.csv
+
+CACHED 3 seeds, t1, fold 117:
+                                          val Recall@20                     test Recall@20 seeds test Recall@10 test NDCG@20  n test
+protocol kind        model                                                                                                          
+plain    heuristic   cosup                       0.2453            0.2607 [0.2447, 0.2776]     -         0.1701       0.1658    5101
+                     party+pop                   0.2037            0.1905 [0.1743, 0.2077]     -         0.1126       0.1152    5101
+                     popularity                  0.1620            0.1375 [0.1240, 0.1521]     -         0.0856       0.0854    5101
+                     rw2hop                      0.2533            0.2629 [0.2473, 0.2812]     -         0.1703       0.1649    5101
+                     sh_hl1                      0.2775            0.2845 [0.2668, 0.3035]     -         0.1923       0.1835    5101
+                     sponsor_hist                0.2542            0.2615 [0.2448, 0.2792]     -         0.1727       0.1662    5101
+                     svd_r512_hl1                0.2757            0.2832 [0.2652, 0.3025]     -         0.1906       0.1816    5101
+stream   heuristic   cosup                       0.2686            0.2809 [0.2638, 0.2968]     -         0.1855       0.1785    5101
+                     party+pop                   0.2106            0.1950 [0.1787, 0.2120]     -         0.1171       0.1218    5101
+                     popularity                  0.1673            0.1403 [0.1268, 0.1551]     -         0.0876       0.0912    5101
+                     rw2hop                      0.2863            0.3075 [0.2914, 0.3248]     -         0.1986       0.1915    5101
+                     sponsor_hist                0.2884            0.3071 [0.2906, 0.3246]     -         0.2035       0.1931    5101
+         learned_ref PairMLP           0.3672 +- 0.0035  0.3864 +- 0.0029 [0.3686, 0.4068]     3         0.2514       0.2413    5101
+         gnn         G1 HeteroSAGE     0.3746 +- 0.0024  0.3934 +- 0.0032 [0.3744, 0.4141]     3         0.2541       0.2446    5101
+                     G2 R-GCN          0.3743 +- 0.0021  0.3935 +- 0.0047 [0.3745, 0.4147]     3         0.2569       0.2453    5101
+                     G3 LightGCN-feat  0.3708 +- 0.0005  0.3997 +- 0.0007 [0.3813, 0.4195]     3         0.2604       0.2487    5101
+
+CACHED 3 seeds, t2, fold 117:
+                                                  val AUROC                         test AUROC seeds test AP  n test
+protocol kind            model                                                                                      
+plain    heuristic       chamber_maj                 0.5350            0.5449 [0.5106, 0.5864]     -  0.0307   12953
+                         eb_committee                0.7712            0.7258 [0.6876, 0.7607]     -  0.0788   12953
+                         eb_rate_t0safe              0.5688            0.5598 [0.5255, 0.5982]     -  0.0358   12953
+                         prior                       0.5000            0.5000 [0.5000, 0.5000]     -  0.0281   12953
+         reference_leaky eb_rate                     0.6875            0.6924 [0.6534, 0.7257]     -  0.0623   12953
+         learned_ref     PairMLP           0.7923 +- 0.0034  0.8014 +- 0.0045 [0.7675, 0.8294]     3  0.1350   12953
+                         TabGBDT           0.7923 +- 0.0035  0.8201 +- 0.0036 [0.7916, 0.8455]     3  0.1515   12953
+                         TabLogReg         0.7706 +- 0.0000  0.7966 +- 0.0000 [0.7645, 0.8240]     3  0.1281   12953
+         gnn             G1 HeteroSAGE     0.8014 +- 0.0041  0.8048 +- 0.0050 [0.7703, 0.8328]     3  0.1509   12953
+                         G2 R-GCN          0.8043 +- 0.0075  0.8095 +- 0.0022 [0.7761, 0.8383]     3  0.1543   12953
+                         G3 LightGCN-feat  0.8013 +- 0.0074  0.8252 +- 0.0022 [0.7968, 0.8499]     3  0.1618   12953
+
+CACHED 3 seeds, paired differences:
+    fold task  t0 protocol             model                vs     metric  diff_mean  diff_sd  ci_low_min  ci_high_max  seeds    mde   real
+0    117   t1   0   stream     G1 HeteroSAGE            rw2hop  Recall@20     0.0859   0.0032      0.0718       0.1003      3 0.0100   True
+1    117   t1   0   stream     G1 HeteroSAGE             cosup  Recall@20     0.1125   0.0032      0.0972       0.1290      3 0.0100   True
+2    117   t1   0   stream     G1 HeteroSAGE           PairMLP  Recall@20     0.0070   0.0060     -0.0059       0.0183      3 0.0100  False
+3    117   t1   0   stream     G1 HeteroSAGE          G2 R-GCN  Recall@20    -0.0001   0.0071     -0.0104       0.0146      3 0.0100  False
+4    117   t1   0   stream     G1 HeteroSAGE  G3 LightGCN-feat  Recall@20    -0.0063   0.0033     -0.0149       0.0040      3 0.0100  False
+5    117   t2   0    plain     G1 HeteroSAGE      eb_committee      AUROC     0.0790   0.0050      0.0550       0.1106      3 0.0100   True
+6    117   t2   0    plain     G1 HeteroSAGE           TabGBDT      AUROC    -0.0153   0.0060     -0.0383       0.0049      3 0.0100  False
+7    117   t2   0    plain     G1 HeteroSAGE          G2 R-GCN      AUROC    -0.0047   0.0064     -0.0195       0.0136      3 0.0100  False
+8    117   t2   0    plain     G1 HeteroSAGE  G3 LightGCN-feat      AUROC    -0.0204   0.0041     -0.0423      -0.0018      3 0.0100   True
+9    117   t1   0   stream          G2 R-GCN            rw2hop  Recall@20     0.0860   0.0047      0.0696       0.1027      3 0.0100   True
+10   117   t1   0   stream          G2 R-GCN             cosup  Recall@20     0.1126   0.0047      0.0952       0.1305      3 0.0100   True
+11   117   t1   0   stream          G2 R-GCN           PairMLP  Recall@20     0.0071   0.0047     -0.0030       0.0185      3 0.0100  False
+12   117   t1   0   stream          G2 R-GCN  G3 LightGCN-feat  Recall@20    -0.0061   0.0042     -0.0177       0.0046      3 0.0100  False
+13   117   t2   0    plain          G2 R-GCN      eb_committee      AUROC     0.0837   0.0022      0.0602       0.1101      3 0.0100   True
+14   117   t2   0    plain          G2 R-GCN           TabGBDT      AUROC    -0.0106   0.0021     -0.0285       0.0061      3 0.0100  False
+15   117   t2   0    plain          G2 R-GCN  G3 LightGCN-feat      AUROC    -0.0157   0.0044     -0.0358       0.0040      3 0.0100  False
+16   117   t1   0   stream  G3 LightGCN-feat            rw2hop  Recall@20     0.0921   0.0007      0.0812       0.1039      3 0.0100   True
+17   117   t1   0   stream  G3 LightGCN-feat             cosup  Recall@20     0.1188   0.0007      0.1062       0.1324      3 0.0100   True
+18   117   t1   0   stream  G3 LightGCN-feat           PairMLP  Recall@20     0.0132   0.0032      0.0024       0.0219      3 0.0100   True
+19   117   t2   0    plain  G3 LightGCN-feat      eb_committee      AUROC     0.0994   0.0022      0.0711       0.1303      3 0.0100   True
+20   117   t2   0    plain  G3 LightGCN-feat           TabGBDT      AUROC     0.0051   0.0055     -0.0156       0.0279      3 0.0100  False
+simple mode without the locked test: nothing to do here (set MODE = 'rolling' or LOCKED_118 = True).
+RUN_SEARCH is False: using the FROZEN settings in baselines/config.py.

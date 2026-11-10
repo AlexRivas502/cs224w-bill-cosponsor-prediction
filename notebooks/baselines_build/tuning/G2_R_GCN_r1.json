@@ -1,0 +1,1198 @@
+{
+ "model": "rgcn",
+ "display": "G2 R-GCN",
+ "round": 1,
+ "fold": 117,
+ "t0": 0,
+ "selection_rule": "one factor at a time from APRIORI; adopt only if the seed-averaged validation gain >= D_TOL (Task 1 0.005 Recall@20, Task 2 0.01 mean AUROC); validation scores only, test never looked at during selection",
+ "threads": 4,
+ "machine_note": "shared machine (load 12-17 on 18 cores during the search); 'seconds' include fold-data construction for the first run of each H and are inflated by contention",
+ "prior_round0_logs": [
+  "rgcn_t1_fold117.json",
+  "rgcn_t2_fold117.json"
+ ],
+ "tasks": {
+  "t1": {
+   "protocol": "stream",
+   "fit": "fit 109-115, validate 116",
+   "metric": "Recall@20 (full eligible pool)",
+   "tuned_on": [
+    116
+   ],
+   "tol": 0.005,
+   "apriori_seed_mean": 0.3734484715214247,
+   "apriori_seed_sd": 0.0029945716430324182,
+   "chosen_overrides": {},
+   "chosen_note": "APRIORI kept: no factor beat the APRIORI seed mean by D_TOL",
+   "summary": [
+    {
+     "overrides": {
+      "model.d": 64,
+      "train.max_epochs": 30,
+      "train.patience": 5
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3759909954944611,
+     "val_sd": null,
+     "gain_vs_apriori_mean": 0.0025425239730363924,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.dropout": 0.1
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3753856767013999,
+     "val_sd": null,
+     "gain_vs_apriori_mean": 0.0019372051799751988,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.decomposition": "block"
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3748607314689775,
+     "val_sd": null,
+     "gain_vs_apriori_mean": 0.0014122599475528408,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.decomposition": "block",
+      "model.dropout": 0.1,
+      "model.pair_hidden": 64
+     },
+     "n_seeds": 2,
+     "val_mean": 0.37475124377814323,
+     "val_sd": 0.0007278720515298568,
+     "gain_vs_apriori_mean": 0.001302772256718543,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.layers": 3
+     },
+     "n_seeds": 2,
+     "val_mean": 0.3742141465609644,
+     "val_sd": 0.0012630972592590779,
+     "gain_vs_apriori_mean": 0.000765675039539726,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.pair_hidden": 64
+     },
+     "n_seeds": 3,
+     "val_mean": 0.3738358982430899,
+     "val_sd": 0.0027163161640498586,
+     "gain_vs_apriori_mean": 0.0003874267216651961,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.drop_edge": 0.4
+     },
+     "n_seeds": 1,
+     "val_mean": 0.37363691520919917,
+     "val_sd": null,
+     "gain_vs_apriori_mean": 0.0001884436877744866,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.d": 64
+     },
+     "n_seeds": 3,
+     "val_mean": 0.3735196625910419,
+     "val_sd": 0.004689083231831222,
+     "gain_vs_apriori_mean": 7.119106961722688e-05,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.sup_half_life": null
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3734745963186936,
+     "val_sd": null,
+     "gain_vs_apriori_mean": 2.6124797268933797e-05,
+     "adopted": false
+    },
+    {
+     "overrides": {},
+     "n_seeds": 3,
+     "val_mean": 0.3734484715214247,
+     "val_sd": 0.0029945716430324182,
+     "gain_vs_apriori_mean": 0.0,
+     "adopted": true
+    },
+    {
+     "overrides": {
+      "train.lr": 0.01
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3733722023402063,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -7.626918121839132e-05,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.drop_edge": 0.0
+     },
+     "n_seeds": 1,
+     "val_mean": 0.37314209421651334,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.00030637730491134274,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "H": 2
+     },
+     "n_seeds": 1,
+     "val_mean": 0.37281129089201326,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0006371806294114268,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.weight_decay": 0.01
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3717313722907112,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0017170992307135036,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.dropout": 0.4
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3717036321328295,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0017448393885952096,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.max_epochs": 10
+     },
+     "n_seeds": 1,
+     "val_mean": 0.37125420277912424,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0021942687423004426,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.layers": 1
+     },
+     "n_seeds": 1,
+     "val_mean": 0.37115424589912643,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0022942256222982516,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.num_bases": 2
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3708604780545556,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0025879934668691096,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.loss": "bpr"
+     },
+     "n_seeds": 1,
+     "val_mean": 0.37045441517420064,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.00299405634722405,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.num_bases": 8
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3697255989752468,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.003722872546177869,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.lr": 0.001
+     },
+     "n_seeds": 1,
+     "val_mean": 0.3681415346684564,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.005306936852968291,
+     "adopted": false
+    }
+   ],
+   "runs": [
+    {
+     "overrides": {},
+     "seed": 0,
+     "note": "apriori",
+     "val_metric": 0.3734745963186936,
+     "val_per_congress": [
+      0.3734745963186936
+     ],
+     "best_epochs": [
+      7
+     ],
+     "seconds": 616.4572458267212,
+     "maxrss_gb": 1.730756608
+    },
+    {
+     "overrides": {},
+     "seed": 1,
+     "note": "seed noise",
+     "val_metric": 0.3704409229487564,
+     "val_per_congress": [
+      0.3704409229487564
+     ],
+     "best_epochs": [
+      5
+     ],
+     "seconds": 477.2353141307831,
+     "maxrss_gb": 1.963671552
+    },
+    {
+     "overrides": {},
+     "seed": 2,
+     "note": "seed noise",
+     "val_metric": 0.376429895296824,
+     "val_per_congress": [
+      0.376429895296824
+     ],
+     "best_epochs": [
+      6
+     ],
+     "seconds": 590.2166030406952,
+     "maxrss_gb": 1.963671552
+    },
+    {
+     "overrides": {
+      "train.lr": 0.001
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3681415346684564,
+     "val_per_congress": [
+      0.3681415346684564
+     ],
+     "best_epochs": [
+      10
+     ],
+     "seconds": 523.2415001392365,
+     "maxrss_gb": 2.038759424
+    },
+    {
+     "overrides": {
+      "train.weight_decay": 0.01
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3717313722907112,
+     "val_per_congress": [
+      0.3717313722907112
+     ],
+     "best_epochs": [
+      8
+     ],
+     "seconds": 441.56392073631287,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "model.dropout": 0.4
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3717036321328295,
+     "val_per_congress": [
+      0.3717036321328295
+     ],
+     "best_epochs": [
+      13
+     ],
+     "seconds": 994.6235549449921,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "model.drop_edge": 0.4
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.37363691520919917,
+     "val_per_congress": [
+      0.37363691520919917
+     ],
+     "best_epochs": [
+      7
+     ],
+     "seconds": 402.415647983551,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "model.d": 64
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3788937696355644,
+     "val_per_congress": [
+      0.3788937696355644
+     ],
+     "best_epochs": [
+      20
+     ],
+     "seconds": 536.4724569320679,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "train.max_epochs": 10
+     },
+     "seed": 0,
+     "note": "cosine horizon matched to E*~7",
+     "val_metric": 0.37125420277912424,
+     "val_per_congress": [
+      0.37125420277912424
+     ],
+     "best_epochs": [
+      10
+     ],
+     "seconds": 410.0971519947052,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "model.pair_hidden": 64
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3763387557052484,
+     "val_per_congress": [
+      0.3763387557052484
+     ],
+     "best_epochs": [
+      10
+     ],
+     "seconds": 564.6840510368347,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "model.d": 64
+     },
+     "seed": 1,
+     "note": "confirm d64",
+     "val_metric": 0.3714042135304066,
+     "val_per_congress": [
+      0.3714042135304066
+     ],
+     "best_epochs": [
+      12
+     ],
+     "seconds": 249.18961882591248,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "model.d": 64,
+      "train.max_epochs": 30,
+      "train.patience": 5
+     },
+     "seed": 0,
+     "note": "d64 still improving at ep 20",
+     "val_metric": 0.3759909954944611,
+     "val_per_congress": [
+      0.3759909954944611
+     ],
+     "best_epochs": [
+      10
+     ],
+     "seconds": 285.1112759113312,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "model.layers": 1
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.37115424589912643,
+     "val_per_congress": [
+      0.37115424589912643
+     ],
+     "best_epochs": [
+      5
+     ],
+     "seconds": 119.40584707260132,
+     "maxrss_gb": 2.08592896
+    },
+    {
+     "overrides": {
+      "model.dropout": 0.1
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3753856767013999,
+     "val_per_congress": [
+      0.3753856767013999
+     ],
+     "best_epochs": [
+      7
+     ],
+     "seconds": 328.37477803230286,
+     "maxrss_gb": 2.204336128
+    },
+    {
+     "overrides": {
+      "model.drop_edge": 0.0
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.37314209421651334,
+     "val_per_congress": [
+      0.37314209421651334
+     ],
+     "best_epochs": [
+      7
+     ],
+     "seconds": 392.35321497917175,
+     "maxrss_gb": 2.354233344
+    },
+    {
+     "overrides": {
+      "train.sup_half_life": null
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3734745963186936,
+     "val_per_congress": [
+      0.3734745963186936
+     ],
+     "best_epochs": [
+      7
+     ],
+     "seconds": 338.0555090904236,
+     "maxrss_gb": 2.354233344
+    },
+    {
+     "overrides": {
+      "H": 2
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.37281129089201326,
+     "val_per_congress": [
+      0.37281129089201326
+     ],
+     "best_epochs": [
+      7
+     ],
+     "seconds": 120.3157811164856,
+     "maxrss_gb": 2.354233344
+    },
+    {
+     "overrides": {
+      "model.decomposition": "block"
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3748607314689775,
+     "val_per_congress": [
+      0.3748607314689775
+     ],
+     "best_epochs": [
+      10
+     ],
+     "seconds": 196.31362390518188,
+     "maxrss_gb": 2.69451264
+    },
+    {
+     "overrides": {
+      "train.loss": "bpr"
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.37045441517420064,
+     "val_per_congress": [
+      0.37045441517420064
+     ],
+     "best_epochs": [
+      10
+     ],
+     "seconds": 474.7687430381775,
+     "maxrss_gb": 3.412230144
+    },
+    {
+     "overrides": {
+      "model.pair_hidden": 64
+     },
+     "seed": 1,
+     "note": "",
+     "val_metric": 0.3709473525656178,
+     "val_per_congress": [
+      0.3709473525656178
+     ],
+     "best_epochs": [
+      10
+     ],
+     "seconds": 173.3390281200409,
+     "maxrss_gb": 3.412230144
+    },
+    {
+     "overrides": {
+      "model.pair_hidden": 64
+     },
+     "seed": 2,
+     "note": "",
+     "val_metric": 0.37422158645840353,
+     "val_per_congress": [
+      0.37422158645840353
+     ],
+     "best_epochs": [
+      12
+     ],
+     "seconds": 489.5628311634064,
+     "maxrss_gb": 3.412230144
+    },
+    {
+     "overrides": {
+      "model.d": 64
+     },
+     "seed": 2,
+     "note": "",
+     "val_metric": 0.37026100460715466,
+     "val_per_congress": [
+      0.37026100460715466
+     ],
+     "best_epochs": [
+      6
+     ],
+     "seconds": 56.33797764778137,
+     "maxrss_gb": 3.412230144
+    },
+    {
+     "overrides": {
+      "model.layers": 3
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.3751072911982846,
+     "val_per_congress": [
+      0.3751072911982846
+     ],
+     "best_epochs": [
+      8
+     ],
+     "seconds": 207.43069887161255,
+     "maxrss_gb": 3.412230144
+    },
+    {
+     "overrides": {
+      "model.layers": 3
+     },
+     "seed": 1,
+     "note": "",
+     "val_metric": 0.37332100192364415,
+     "val_per_congress": [
+      0.37332100192364415
+     ],
+     "best_epochs": [
+      11
+     ],
+     "seconds": 278.1916470527649,
+     "maxrss_gb": 3.773612032
+    },
+    {
+     "overrides": {
+      "model.dropout": 0.1,
+      "model.pair_hidden": 64,
+      "model.decomposition": "block"
+     },
+     "seed": 0,
+     "note": "combo of single-seed near-misses",
+     "val_metric": 0.37526592704161615,
+     "val_per_congress": [
+      0.37526592704161615
+     ],
+     "best_epochs": [
+      5
+     ],
+     "seconds": 54.38776922225952,
+     "maxrss_gb": 2.954067968
+    },
+    {
+     "overrides": {
+      "model.dropout": 0.1,
+      "model.pair_hidden": 64,
+      "model.decomposition": "block"
+     },
+     "seed": 1,
+     "note": "combo",
+     "val_metric": 0.3742365605146703,
+     "val_per_congress": [
+      0.3742365605146703
+     ],
+     "best_epochs": [
+      9
+     ],
+     "seconds": 68.28016877174377,
+     "maxrss_gb": 3.58735872
+    },
+    {
+     "overrides": {
+      "model.num_bases": 2
+     },
+     "seed": 0,
+     "note": "round-0 DESIGN grid (copied from rgcn_t1_fold117.json; seed-0 runs are bitwise reproducible, apriori re-run gave the identical score)",
+     "val_metric": 0.3708604780545556,
+     "val_per_congress": [
+      0.3708604780545556
+     ],
+     "best_epochs": [
+      10
+     ],
+     "seconds": 109.34670996665955
+    },
+    {
+     "overrides": {
+      "model.num_bases": 8
+     },
+     "seed": 0,
+     "note": "round-0 DESIGN grid (copied from rgcn_t1_fold117.json; seed-0 runs are bitwise reproducible, apriori re-run gave the identical score)",
+     "val_metric": 0.3697255989752468,
+     "val_per_congress": [
+      0.3697255989752468
+     ],
+     "best_epochs": [
+      7
+     ],
+     "seconds": 119.5582480430603
+    },
+    {
+     "overrides": {
+      "train.lr": 0.01
+     },
+     "seed": 0,
+     "note": "round-0 DESIGN grid (copied from rgcn_t1_fold117.json; seed-0 runs are bitwise reproducible, apriori re-run gave the identical score)",
+     "val_metric": 0.3733722023402063,
+     "val_per_congress": [
+      0.3733722023402063
+     ],
+     "best_epochs": [
+      5
+     ],
+     "seconds": 69.06207084655762
+    }
+   ],
+   "findings": [
+    "Seed noise of APRIORI on val 116: 0.3735 / 0.3704 / 0.3764 (sd 0.003); every single factor and the combo lie within about +-0.005 of the mean.",
+    "Single-seed d=64 (0.3789) did not replicate (seeds 1, 2: 0.3714, 0.3703).",
+    "lr 1e-3 and BPR are worse (0.368, 0.370); layers 1 slightly worse (0.371): the 2-hop receptive field matters a little.",
+    "train.sup_half_life has NO effect (identical score 0.37347): steps hold one Congress and train.fit divides by the weighted bill count, so the recency weight cancels. Same for Task 2 and for G1 (shared train.py)."
+   ]
+  },
+  "t2": {
+   "protocol": "plain",
+   "fit": "fit 109..v-1 for v in 114,115,116",
+   "metric": "mean AUROC over validation 114, 115, 116 (each fit on 109..v-1)",
+   "tuned_on": [
+    114,
+    115,
+    116
+   ],
+   "tol": 0.01,
+   "apriori_seed_mean": 0.7913372373583663,
+   "apriori_seed_sd": 0.0029415713464917234,
+   "chosen_overrides": {},
+   "chosen_note": "APRIORI kept: no factor beat the APRIORI seed mean by D_TOL",
+   "summary": [
+    {
+     "overrides": {
+      "model.num_bases": 8
+     },
+     "n_seeds": 2,
+     "val_mean": 0.796505151349433,
+     "val_sd": 0.0014089515878441302,
+     "gain_vs_apriori_mean": 0.005167913991066753,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.layers": 3
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7926606361397345,
+     "val_sd": null,
+     "gain_vs_apriori_mean": 0.0013233987813682235,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.d": 64
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7924593839994638,
+     "val_sd": null,
+     "gain_vs_apriori_mean": 0.0011221466410975545,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.lr": 0.001
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7916746437247011,
+     "val_sd": null,
+     "gain_vs_apriori_mean": 0.0003374063663348359,
+     "adopted": false
+    },
+    {
+     "overrides": {},
+     "n_seeds": 2,
+     "val_mean": 0.7913372373583663,
+     "val_sd": 0.0029415713464917234,
+     "gain_vs_apriori_mean": 0.0,
+     "adopted": true
+    },
+    {
+     "overrides": {
+      "model.dropout": 0.4
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7909173812376445,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.00041985612072170664,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.max_epochs": 12
+     },
+     "n_seeds": 1,
+     "val_mean": 0.790621862315477,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0007153750428892103,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.num_bases": 2
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7901641834535414,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0011730539048248056,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.lr": 0.01
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7896942809077734,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0016429564505928695,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.layers": 1
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7895403648617115,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0017968724966547223,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.sup_half_life": null
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7893568196189543,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0019804177394119327,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "train.weight_decay": 0.01
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7892751132714704,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.002062124086895878,
+     "adopted": false
+    },
+    {
+     "overrides": {
+      "model.drop_edge": 0.4
+     },
+     "n_seeds": 1,
+     "val_mean": 0.7888101504284788,
+     "val_sd": null,
+     "gain_vs_apriori_mean": -0.0025270869298874565,
+     "adopted": false
+    }
+   ],
+   "runs": [
+    {
+     "overrides": {},
+     "seed": 0,
+     "note": "apriori",
+     "val_metric": 0.7892572323119179,
+     "val_per_congress": [
+      0.7679177201343639,
+      0.8013958700744439,
+      0.798458106726946
+     ],
+     "best_epochs": [
+      9,
+      4,
+      5
+     ],
+     "seconds": 1134.0198509693146,
+     "maxrss_gb": 1.987264512
+    },
+    {
+     "overrides": {},
+     "seed": 1,
+     "note": "",
+     "val_metric": 0.7934172424048146,
+     "val_per_congress": [
+      0.7704751504701104,
+      0.8081332234920189,
+      0.8016433532523145
+     ],
+     "best_epochs": [
+      8,
+      5,
+      5
+     ],
+     "seconds": 878.4758679866791,
+     "maxrss_gb": 2.155626496
+    },
+    {
+     "overrides": {
+      "model.dropout": 0.4
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.7909173812376445,
+     "val_per_congress": [
+      0.7722100221508987,
+      0.8022770275250469,
+      0.7982650940369882
+     ],
+     "best_epochs": [
+      14,
+      6,
+      6
+     ],
+     "seconds": 1305.0859808921814,
+     "maxrss_gb": 2.155626496
+    },
+    {
+     "overrides": {
+      "train.weight_decay": 0.01
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.7892751132714704,
+     "val_per_congress": [
+      0.7691053270772968,
+      0.8009729315765913,
+      0.7977470811605231
+     ],
+     "best_epochs": [
+      9,
+      4,
+      5
+     ],
+     "seconds": 1021.509256362915,
+     "maxrss_gb": 2.155626496
+    },
+    {
+     "overrides": {
+      "train.max_epochs": 12
+     },
+     "seed": 0,
+     "note": "cosine horizon matched to E*~5",
+     "val_metric": 0.790621862315477,
+     "val_per_congress": [
+      0.7723573153196895,
+      0.8026994267038438,
+      0.7968088449228978
+     ],
+     "best_epochs": [
+      9,
+      5,
+      5
+     ],
+     "seconds": 787.454717874527,
+     "maxrss_gb": 2.155626496
+    },
+    {
+     "overrides": {
+      "train.lr": 0.001
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.7916746437247011,
+     "val_per_congress": [
+      0.7759675518103029,
+      0.8068799583645689,
+      0.7921764209992315
+     ],
+     "best_epochs": [
+      10,
+      7,
+      7
+     ],
+     "seconds": 842.5094377994537,
+     "maxrss_gb": 2.202468352
+    },
+    {
+     "overrides": {
+      "model.d": 64
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.7924593839994638,
+     "val_per_congress": [
+      0.7719053126772125,
+      0.8112295890209023,
+      0.7942432503002768
+     ],
+     "best_epochs": [
+      9,
+      6,
+      8
+     ],
+     "seconds": 370.9417839050293,
+     "maxrss_gb": 2.202468352
+    },
+    {
+     "overrides": {
+      "model.layers": 1
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.7895403648617115,
+     "val_per_congress": [
+      0.7723302997771372,
+      0.8024421939858734,
+      0.7938486008221242
+     ],
+     "best_epochs": [
+      9,
+      5,
+      5
+     ],
+     "seconds": 194.9754707813263,
+     "maxrss_gb": 2.202468352
+    },
+    {
+     "overrides": {
+      "model.drop_edge": 0.4
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.7888101504284788,
+     "val_per_congress": [
+      0.7686332935484854,
+      0.8013622525199683,
+      0.7964349052169827
+     ],
+     "best_epochs": [
+      8,
+      4,
+      5
+     ],
+     "seconds": 356.8383159637451,
+     "maxrss_gb": 2.202468352
+    },
+    {
+     "overrides": {
+      "train.sup_half_life": null
+     },
+     "seed": 0,
+     "note": "",
+     "val_metric": 0.7893568196189543,
+     "val_per_congress": [
+      0.7679177201343639,
+      0.8012941634891786,
+      0.7988585752333206
+     ],
+     "best_epochs": [
+      9,
+      4,
+      5
+     ],
+     "seconds": 417.93289494514465,
+     "maxrss_gb": 2.567192576
+    },
+    {
+     "overrides": {
+      "model.num_bases": 8
+     },
+     "seed": 0,
+     "note": "rerun of prior-log run (determinism check)",
+     "val_metric": 0.7955088721273048,
+     "val_per_congress": [
+      0.7848067419471066,
+      0.8041438130216788,
+      0.7975760614131286
+     ],
+     "best_epochs": [
+      9,
+      4,
+      6
+     ],
+     "seconds": 322.5591402053833,
+     "maxrss_gb": 2.567192576
+    },
+    {
+     "overrides": {
+      "model.num_bases": 8
+     },
+     "seed": 1,
+     "note": "",
+     "val_metric": 0.7975014305715611,
+     "val_per_congress": [
+      0.783356395006617,
+      0.8088718658821371,
+      0.800276030825929
+     ],
+     "best_epochs": [
+      10,
+      5,
+      5
+     ],
+     "seconds": 576.8974919319153,
+     "maxrss_gb": 2.567192576
+    },
+    {
+     "overrides": {
+      "model.num_bases": 2
+     },
+     "seed": 0,
+     "note": "round-0 DESIGN grid (copied from rgcn_t2_fold117.json; seed-0 runs are bitwise reproducible, apriori re-run gave the identical score)",
+     "val_metric": 0.7901641834535414,
+     "val_per_congress": [
+      0.7711171542233632,
+      0.8037357282694869,
+      0.7956396678677738
+     ],
+     "best_epochs": [
+      9,
+      6,
+      5
+     ],
+     "seconds": 150.70693922042847
+    },
+    {
+     "overrides": {
+      "train.lr": 0.01
+     },
+     "seed": 0,
+     "note": "round-0 DESIGN grid (copied from rgcn_t2_fold117.json; seed-0 runs are bitwise reproducible, apriori re-run gave the identical score)",
+     "val_metric": 0.7896942809077734,
+     "val_per_congress": [
+      0.7691746505594956,
+      0.8027263027701225,
+      0.797181889393702
+     ],
+     "best_epochs": [
+      9,
+      4,
+      5
+     ],
+     "seconds": 141.7564742565155
+    },
+    {
+     "overrides": {
+      "model.layers": 3
+     },
+     "seed": 0,
+     "note": "round-0 DESIGN grid (copied from rgcn_t2_fold117.json; seed-0 runs are bitwise reproducible, apriori re-run gave the identical score)",
+     "val_metric": 0.7926606361397345,
+     "val_per_congress": [
+      0.7761690299112517,
+      0.8044403935590924,
+      0.7973724849488596
+     ],
+     "best_epochs": [
+      9,
+      5,
+      5
+     ],
+     "seconds": 300.92434096336365
+    }
+   ],
+   "findings": [
+    "Seed noise of APRIORI: 0.7893 / 0.7934.",
+    "num_bases 8 is the best factor (seeds 0.7955 / 0.7975, mean 0.7965, +0.0052 over the APRIORI mean, driven by Congress 114); below the 0.01 tolerance, so not adopted (documented near-miss to experiment with).",
+    "Regularisation (dropout 0.4, wd 1e-2, DropEdge 0.4), lr 1e-3, d 64, layers 1/3, a shorter cosine horizon (12 epochs) and sup hl None are all within +-0.004."
+   ]
+  }
+ },
+ "post_fix_recheck": {
+  "date": "2026-11-09",
+  "code": "current train.py: Task-1 val_smooth = 3; step loss divided by the unweighted bill count",
+  "role": "val",
+  "test_used_for_selection": false,
+  "note": "Re-score of the chosen (FROZEN) settings under the code changes made after the round-1 search. Round-1 numbers above were measured with val_smooth = 1 (Task 1) and the old weighted-count normaliser. Validation Congress only; no new search; no setting changed.",
+  "t1": {
+   "val116_recall20_4threads": {
+    "0": 0.3691,
+    "1": 0.3697,
+    "2": 0.375
+   },
+   "mean_4threads": 0.3713,
+   "source_4threads": "tuning/g2_r2_raw/t1_A.jsonl",
+   "val116_recall20_8threads": {
+    "0": 0.3732,
+    "1": 0.3729,
+    "2": 0.3767
+   },
+   "mean_8threads": 0.3743,
+   "source_8threads": "baselines_build/out/final_simple_3seeds (8 threads, fit 109-115, validate 116, early stopping val metric)",
+   "round1_seed_mean": 0.3734
+  },
+  "t2": {
+   "apriori_mean_114_116": {
+    "0": 0.7886,
+    "1": 0.7935
+   },
+   "num_bases_8": {
+    "0": 0.795,
+    "1": 0.7972
+   },
+   "gain": 0.005,
+   "source": "tuning/g2_r2_raw/t2_C.jsonl",
+   "note": "near-miss re-confirmed (+0.005 < D_TOL 0.01)"
+  },
+  "round2_partial": {
+   "note": "interrupted round-2 search (validation only, current code, seed 0 unless stated): nb8 0.3693, d64 0.3740, dropout 0.1 0.3721, avg_window 3 0.3720 / 0.3720 (seeds 0/1), 12-epoch horizon 0.3686, hl 3 0.3717, block 0.3741, 3 layers 0.3726; Task 2 avg_window 3 0.7930, hl 3 0.7900. All inside the APRIORI seed range 0.3691-0.3750; none adopted (the user stopped tuning)."
+  },
+  "decision": "unchanged (FROZEN = APRIORI)"
+ }
+}

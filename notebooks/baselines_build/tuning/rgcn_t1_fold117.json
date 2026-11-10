@@ -1,0 +1,97 @@
+{
+ "model": "rgcn",
+ "task": "t1",
+ "fold": 117,
+ "t0": 0,
+ "protocol": "stream",
+ "tuned_on": [
+  116
+ ],
+ "role": "val",
+ "tol": 0.005,
+ "chosen": {},
+ "best_val": 0.3734745963186936,
+ "runs": [
+  {
+   "overrides": {},
+   "val_metric": 0.3734745963186936,
+   "val_per_congress": [
+    0.3734745963186936
+   ],
+   "best_epochs": [
+    7
+   ],
+   "seconds": 124.23829197883606,
+   "adopted": true,
+   "note": "apriori"
+  },
+  {
+   "overrides": {
+    "model.num_bases": 2
+   },
+   "factor": "model.num_bases",
+   "value": 2,
+   "val_metric": 0.3708604780545556,
+   "val_per_congress": [
+    0.3708604780545556
+   ],
+   "best_epochs": [
+    10
+   ],
+   "seconds": 109.34670996665955,
+   "gain": -0.0026141182641380434,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "model.num_bases": 8
+   },
+   "factor": "model.num_bases",
+   "value": 8,
+   "val_metric": 0.3697255989752468,
+   "val_per_congress": [
+    0.3697255989752468
+   ],
+   "best_epochs": [
+    7
+   ],
+   "seconds": 119.5582480430603,
+   "gain": -0.0037489973434468027,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "train.lr": 0.01
+   },
+   "factor": "train.lr",
+   "value": 0.01,
+   "val_metric": 0.3733722023402063,
+   "val_per_congress": [
+    0.3733722023402063
+   ],
+   "best_epochs": [
+    5
+   ],
+   "seconds": 69.06207084655762,
+   "gain": -0.00010239397848732512,
+   "adopted": false
+  },
+  {
+   "overrides": {
+    "model.layers": 3
+   },
+   "factor": "model.layers",
+   "value": 3,
+   "val_metric": 0.3751072911982846,
+   "val_per_congress": [
+    0.3751072911982846
+   ],
+   "best_epochs": [
+    8
+   ],
+   "seconds": 110.8105857372284,
+   "gain": 0.0016326948795910012,
+   "adopted": false
+  }
+ ]
+}

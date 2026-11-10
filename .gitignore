@@ -226,3 +226,5 @@ billstatus_bulk/
 congress_api/
 parsed/
 derived/
+
+.DS_STORE

@@ -1,0 +1,155 @@
+[rgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.2995  val Recall@20 0.3228 (avg 0.3228)  *
+    epoch  2  loss 5.0416  val Recall@20 0.3495 (avg 0.3362)  *
+    epoch  3  loss 4.9469  val Recall@20 0.3623 (avg 0.3449)  *
+    epoch  4  loss 4.9178  val Recall@20 0.3651 (avg 0.3590)  *
+    epoch  5  loss 4.8877  val Recall@20 0.3682 (avg 0.3652)  *
+    epoch  6  loss 4.8762  val Recall@20 0.3716 (avg 0.3683)  *
+    epoch  7  loss 4.8619  val Recall@20 0.3705 (avg 0.3701)  *
+    epoch  8  loss 4.8474  val Recall@20 0.3683 (avg 0.3701)  *
+    epoch  9  loss 4.8237  val Recall@20 0.3695 (avg 0.3694)
+    epoch 10  loss 4.8083  val Recall@20 0.3732 (avg 0.3703)  *
+    epoch 11  loss 4.7895  val Recall@20 0.3664 (avg 0.3697)
+    epoch 12  loss 4.7693  val Recall@20 0.3670 (avg 0.3689)
+    epoch 13  loss 4.7433  val Recall@20 0.3678 (avg 0.3671)
+    epoch 14  loss 4.7222  val Recall@20 0.3641 (avg 0.3663)
+[rgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 10
+    epoch  1  loss 5.2952  (refit, stop at 10)
+    epoch  2  loss 5.0173  (refit, stop at 10)
+    epoch  3  loss 4.9292  (refit, stop at 10)
+    epoch  4  loss 4.9003  (refit, stop at 10)
+    epoch  5  loss 4.8741  (refit, stop at 10)
+    epoch  6  loss 4.8592  (refit, stop at 10)
+    epoch  7  loss 4.8451  (refit, stop at 10)
+    epoch  8  loss 4.8222  (refit, stop at 10)
+    epoch  9  loss 4.8092  (refit, stop at 10)
+    epoch 10  loss 4.7925  (refit, stop at 10)
+[rgcn t1 fold 117] E* = 10, val 0.3703, test 0.3982, 129s
+[rgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.4676  val Recall@20 0.3040 (avg 0.3040)  *
+    epoch  2  loss 5.0468  val Recall@20 0.3486 (avg 0.3263)  *
+    epoch  3  loss 4.9359  val Recall@20 0.3587 (avg 0.3371)  *
+    epoch  4  loss 4.9126  val Recall@20 0.3693 (avg 0.3588)  *
+    epoch  5  loss 4.8868  val Recall@20 0.3711 (avg 0.3663)  *
+    epoch  6  loss 4.8687  val Recall@20 0.3614 (avg 0.3673)  *
+    epoch  7  loss 4.8511  val Recall@20 0.3681 (avg 0.3669)
+    epoch  8  loss 4.8287  val Recall@20 0.3653 (avg 0.3649)
+    epoch  9  loss 4.8207  val Recall@20 0.3708 (avg 0.3680)  *
+    epoch 10  loss 4.7964  val Recall@20 0.3695 (avg 0.3685)  *
+    epoch 11  loss 4.7711  val Recall@20 0.3704 (avg 0.3702)  *
+    epoch 12  loss 4.7534  val Recall@20 0.3729 (avg 0.3709)  *
+    epoch 13  loss 4.7314  val Recall@20 0.3649 (avg 0.3694)
+    epoch 14  loss 4.7091  val Recall@20 0.3650 (avg 0.3676)
+    epoch 15  loss 4.6881  val Recall@20 0.3630 (avg 0.3643)
+    epoch 16  loss 4.6725  val Recall@20 0.3628 (avg 0.3636)
+[rgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 12
+    epoch  1  loss 5.4503  (refit, stop at 12)
+    epoch  2  loss 5.0059  (refit, stop at 12)
+    epoch  3  loss 4.9390  (refit, stop at 12)
+    epoch  4  loss 4.9107  (refit, stop at 12)
+    epoch  5  loss 4.8814  (refit, stop at 12)
+    epoch  6  loss 4.8691  (refit, stop at 12)
+    epoch  7  loss 4.8482  (refit, stop at 12)
+    epoch  8  loss 4.8241  (refit, stop at 12)
+    epoch  9  loss 4.8025  (refit, stop at 12)
+    epoch 10  loss 4.7968  (refit, stop at 12)
+    epoch 11  loss 4.7638  (refit, stop at 12)
+    epoch 12  loss 4.7546  (refit, stop at 12)
+[rgcn t1 fold 117] E* = 12, val 0.3709, test 0.3935, 151s
+[rgcn t1 t0=0 stream fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 5.3092  val Recall@20 0.3292 (avg 0.3292)  *
+    epoch  2  loss 5.0281  val Recall@20 0.3521 (avg 0.3406)  *
+    epoch  3  loss 4.9526  val Recall@20 0.3642 (avg 0.3485)  *
+    epoch  4  loss 4.9168  val Recall@20 0.3694 (avg 0.3619)  *
+    epoch  5  loss 4.8892  val Recall@20 0.3728 (avg 0.3688)  *
+    epoch  6  loss 4.8786  val Recall@20 0.3721 (avg 0.3714)  *
+    epoch  7  loss 4.8524  val Recall@20 0.3725 (avg 0.3724)  *
+    epoch  8  loss 4.8379  val Recall@20 0.3763 (avg 0.3736)  *
+    epoch  9  loss 4.8179  val Recall@20 0.3686 (avg 0.3725)
+    epoch 10  loss 4.7991  val Recall@20 0.3767 (avg 0.3739)  *
+    epoch 11  loss 4.7860  val Recall@20 0.3694 (avg 0.3716)
+    epoch 12  loss 4.7590  val Recall@20 0.3715 (avg 0.3725)
+    epoch 13  loss 4.7295  val Recall@20 0.3695 (avg 0.3702)
+    epoch 14  loss 4.7121  val Recall@20 0.3707 (avg 0.3706)
+[rgcn t1 t0=0 stream fold 117] refit 109-116, stop at E* = 10
+    epoch  1  loss 5.2734  (refit, stop at 10)
+    epoch  2  loss 5.0065  (refit, stop at 10)
+    epoch  3  loss 4.9314  (refit, stop at 10)
+    epoch  4  loss 4.9026  (refit, stop at 10)
+    epoch  5  loss 4.8813  (refit, stop at 10)
+    epoch  6  loss 4.8607  (refit, stop at 10)
+    epoch  7  loss 4.8438  (refit, stop at 10)
+    epoch  8  loss 4.8209  (refit, stop at 10)
+    epoch  9  loss 4.8037  (refit, stop at 10)
+    epoch 10  loss 4.7773  (refit, stop at 10)
+[rgcn t1 fold 117] E* = 10, val 0.3739, test 0.3888, 128s
+[rgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3120  val AUROC 0.7614 (avg 0.7614)  *
+    epoch  2  loss 0.1916  val AUROC 0.7788 (avg 0.7701)  *
+    epoch  3  loss 0.1843  val AUROC 0.7911 (avg 0.7771)  *
+    epoch  4  loss 0.1744  val AUROC 0.8008 (avg 0.7902)  *
+    epoch  5  loss 0.1715  val AUROC 0.7959 (avg 0.7959)  *
+    epoch  6  loss 0.1673  val AUROC 0.7894 (avg 0.7954)
+    epoch  7  loss 0.1601  val AUROC 0.7887 (avg 0.7913)
+    epoch  8  loss 0.1576  val AUROC 0.7894 (avg 0.7892)
+    epoch  9  loss 0.1521  val AUROC 0.7914 (avg 0.7898)
+    epoch 10  loss 0.1421  val AUROC 0.7855 (avg 0.7887)
+    epoch 11  loss 0.1340  val AUROC 0.7812 (avg 0.7860)
+[rgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 5
+    epoch  1  loss 0.3009  (refit, stop at 5)
+    epoch  2  loss 0.1862  (refit, stop at 5)
+    epoch  3  loss 0.1773  (refit, stop at 5)
+    epoch  4  loss 0.1705  (refit, stop at 5)
+    epoch  5  loss 0.1685  (refit, stop at 5)
+[rgcn t2 fold 117] E* = 5, val 0.7959, test 0.8088, 80s
+[rgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.2993  val AUROC 0.7712 (avg 0.7712)  *
+    epoch  2  loss 0.1905  val AUROC 0.7933 (avg 0.7823)  *
+    epoch  3  loss 0.1842  val AUROC 0.7991 (avg 0.7879)  *
+    epoch  4  loss 0.1789  val AUROC 0.7998 (avg 0.7974)  *
+    epoch  5  loss 0.1716  val AUROC 0.8009 (avg 0.7999)  *
+    epoch  6  loss 0.1648  val AUROC 0.7939 (avg 0.7982)
+    epoch  7  loss 0.1638  val AUROC 0.8102 (avg 0.8017)  *
+    epoch  8  loss 0.1560  val AUROC 0.7948 (avg 0.7996)
+    epoch  9  loss 0.1492  val AUROC 0.7981 (avg 0.8010)
+    epoch 10  loss 0.1496  val AUROC 0.8009 (avg 0.7979)
+    epoch 11  loss 0.1361  val AUROC 0.7987 (avg 0.7992)
+    epoch 12  loss 0.1331  val AUROC 0.7941 (avg 0.7979)
+    epoch 13  loss 0.1374  val AUROC 0.8026 (avg 0.7984)
+[rgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 7
+    epoch  1  loss 0.2850  (refit, stop at 7)
+    epoch  2  loss 0.1874  (refit, stop at 7)
+    epoch  3  loss 0.1781  (refit, stop at 7)
+    epoch  4  loss 0.1757  (refit, stop at 7)
+    epoch  5  loss 0.1723  (refit, stop at 7)
+    epoch  6  loss 0.1645  (refit, stop at 7)
+    epoch  7  loss 0.1596  (refit, stop at 7)
+[rgcn t2 fold 117] E* = 7, val 0.8017, test 0.8077, 97s
+[rgcn t2 t0=0 plain fold 117] validation fit 109-115 -> 116
+    epoch  1  loss 0.3291  val AUROC 0.7642 (avg 0.7642)  *
+    epoch  2  loss 0.1961  val AUROC 0.7902 (avg 0.7772)  *
+    epoch  3  loss 0.1844  val AUROC 0.8027 (avg 0.7857)  *
+    epoch  4  loss 0.1776  val AUROC 0.8054 (avg 0.7994)  *
+    epoch  5  loss 0.1723  val AUROC 0.8068 (avg 0.8050)  *
+    epoch  6  loss 0.1667  val AUROC 0.8001 (avg 0.8041)
+    epoch  7  loss 0.1626  val AUROC 0.7951 (avg 0.8007)
+    epoch  8  loss 0.1566  val AUROC 0.7986 (avg 0.7979)
+    epoch  9  loss 0.1540  val AUROC 0.7903 (avg 0.7946)
+    epoch 10  loss 0.1534  val AUROC 0.7749 (avg 0.7879)
+    epoch 11  loss 0.1448  val AUROC 0.7897 (avg 0.7850)
+[rgcn t2 t0=0 plain fold 117] refit 109-116, stop at E* = 5
+    epoch  1  loss 0.3036  (refit, stop at 5)
+    epoch  2  loss 0.1914  (refit, stop at 5)
+    epoch  3  loss 0.1794  (refit, stop at 5)
+    epoch  4  loss 0.1735  (refit, stop at 5)
+    epoch  5  loss 0.1689  (refit, stop at 5)
+[rgcn t2 fold 117] E* = 5, val 0.8050, test 0.8120, 77s
+
+G2 R-GCN: validation (fit on 109..c-2) and test (refit on 109..c-1) scores
+   fold task  t0 protocol     model  seed     metric  best_epoch config_set selection  runtime_s    val   test
+0   117   t1   0   stream  G2 R-GCN     0  Recall@20          10     frozen     clean   128.7000 0.3732 0.3982
+1   117   t1   0   stream  G2 R-GCN     1  Recall@20          12     frozen     clean   151.1000 0.3729 0.3935
+2   117   t1   0   stream  G2 R-GCN     2  Recall@20          10     frozen     clean   128.3000 0.3767 0.3888
+3   117   t2   0    plain  G2 R-GCN     0      AUROC           5     frozen     clean    79.9000 0.7959 0.8088
+4   117   t2   0    plain  G2 R-GCN     1      AUROC           7     frozen     clean    96.5000 0.8102 0.8077
+5   117   t2   0    plain  G2 R-GCN     2      AUROC           5     frozen     clean    76.8000 0.8068 0.8120
