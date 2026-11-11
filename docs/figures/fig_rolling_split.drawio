@@ -83,5 +83,5 @@
 <mxCell id="c6_117" value="validate" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eda100;fontColor=#0b0b0b;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="726" y="256" width="60" height="30" as="geometry" /></mxCell>
 <mxCell id="c6_118" value="locked" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontSize=10;fillColor=#4a3aa7;fontColor=#ffffff;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="790" y="256" width="60" height="30" as="geometry" /></mxCell>
 <mxCell id="c6_119" value="excluded" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f5f5f5;fontColor=#999999;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="854" y="256" width="60" height="30" as="geometry" /></mxCell>
-<mxCell id="note" value="Each row is one honest “next Congress” forecast: tune on the validation Congress, refit on train + validation, score the test Congress once. Congress 108 is message-passing history only. The milestone reports fold 117; Congress 118 stays locked until the final model; 119 is still in session." style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=11;align=left;fontSize=11;fontColor=#52514e;" vertex="1" parent="1"><mxGeometry x="150" y="302" width="764" height="54" as="geometry" /></mxCell>
+
 </root></mxGraphModel></diagram></mxfile>
