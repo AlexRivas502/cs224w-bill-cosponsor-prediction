@@ -1,1 +1,0 @@
-G2 R-GCN: not implemented yet (baselines/models/), skipped.

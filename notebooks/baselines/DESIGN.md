@@ -52,7 +52,7 @@ component of every GNN (proposals 2 and 3 agreed), and its "GNN term off" arm is
 ---------------------------------------------------------------------------------------------------
 ## 2. Task definitions (identical to the split notebook)
 
-Port these verbatim, as functions, from `notebooks/_build/cells/00_setup.py` into `baselines/data.py`:
+Port these verbatim, as functions, from `tools/split_notebook/cells/00_setup.py` into `baselines/data.py`:
 `load`, `congress_start/end`, `build_cosponsor_events` (`cosp`, withdrawn rows dropped), `window_targets`,
 `build_advancement_labels` (with its `censored` flag), `adv_cutoff`, `in_office_at`,
 `_party_asof_table` (-> `members.party_code_asof`), the setup caucus assignment (`_dshare`, `CAUCUS_MIN_SHARE`
@@ -301,7 +301,7 @@ experiments. `DEVICE = "cpu"`; "mps" is allowed but not the reference.
 
 ### 6.2 Offline search (orchestrator, fold 117, validation only)
 - One factor at a time from APRIORI. A change is adopted only if it gains at least 0.005 Recall@20 (D_TOL = MDE/2) or 0.01 AUROC.
-- Logs go to `baselines_build/tuning/<model>_<task>.json`: config, val metric, best epoch, runtime and `tuned_on`. Test numbers are never logged.
+- Logs go to `tools/baselines_notebook/tuning/<model>_<task>.json`: config, val metric, best epoch, runtime and `tuned_on`. Test numbers are never logged.
 
 | Model | APRIORI defaults | Search (T1 +stream, t0 = 0, val 116; fit 109..115) | ~runs |
 |---|---|---|---|
@@ -361,7 +361,7 @@ New references:
 
 Imports go one way: `config -> data -> evaluate -> features -> graphs -> models.* -> train -> report`.
 `evaluate` depends only on numpy/scipy and `data`. Every public function has a docstring. The cache lives
-in `R/derived/cache/baselines/<key>.{parquet,npy,pt}`, keyed by a hash of the relevant config and
+in `<repo>/data/cache/baselines/<key>.{parquet,npy,pt}`, keyed by a hash of the relevant config and
 `FEATURE_VERSION`. Bump `FEATURE_VERSION` to "2" for the depth rule.
 
 ```python
@@ -474,7 +474,7 @@ fit (the validation fit and the refit differ in title and standardisation statis
    - +stream: sponsor_hist 0.3071, rw2hop 0.3080 (±0.001, because the digest rounds to 3 decimals)
    - val 116: sponsor_hist 0.2542 / 0.2884
    - Task 2: chamber_maj 0.5449, eb_rate_t0safe 0.5598, eb_rate 0.6924 (n = 12,953)
-2. **Label parity** (`baselines_build/tests/test_parity.py`): exec `00_setup.py` once and `assert_frame_equal` `window_targets(0/7, point_in_time=True)`, `build_advancement_labels()`, `ROSTER_ASOF_ALL` and `MAJORITY` against the package.
+2. **Label parity** (`tools/baselines_notebook/tests/test_parity.py`): exec `00_setup.py` once and `assert_frame_equal` `window_targets(0/7, point_in_time=True)`, `build_advancement_labels()`, `ROSTER_ASOF_ALL` and `MAJORITY` against the package.
 3. **Graph asserts** (`check_graph`, on every graph):
    - no edge type has `tbill` as its source (also in the cached homogeneous view)
    - every `cosp_t` lag <= t0, and every `referred_t` Eastern date <= cut_b
@@ -500,7 +500,7 @@ fit (the validation fit and the refit differ in title and standardisation statis
     - assert that censored hbills never enter an EB rate denominator
 
 ---------------------------------------------------------------------------------------------------
-## 10. Notebook plan (`baselines_build/cells/NN_*.py` -> `notebooks/baselines.ipynb`)
+## 10. Notebook plan (`tools/baselines_notebook/cells/NN_*.py` -> `notebooks/02_baselines.ipynb`)
 
 The notebook stays thin: each section has markdown (what, why, citation) and 1-5 calls into the package.
 The working directory is `R/notebooks`; `find_root()` searches upward for `parsed/`.
@@ -521,7 +521,7 @@ The working directory is `R/notebooks`; `find_root()` searches upward for `parse
 
 `assemble.py` concatenates the cells into the ipynb (as in `_build`). `run_cells.py` runs them in one
 namespace with environment overrides (`BASELINES_MODE`, `BASELINES_QUICK`, `BASELINES_THREADS`) and
-writes `baselines_build/out/<run>/{stdout.txt, results.csv, report.json}`.
+writes `tools/baselines_notebook/out/<run>/{stdout.txt, results.csv, report.json}`.
 
 ---------------------------------------------------------------------------------------------------
 ## 11. Expected results and runtime (for sanity, not targets)

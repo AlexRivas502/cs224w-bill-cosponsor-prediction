@@ -26,10 +26,10 @@ that already exist, so it is safe to interrupt and resume.
 API key: set CONGRESS_API_KEY, or put it in secrets.ini next to this file.
 
 Usage:
-  python3 fetch_congress.py                                   # default phases, bulk congress range
-  python3 fetch_congress.py --phases all                      # everything
-  python3 fetch_congress.py --phases member_details committee_details
-  python3 fetch_congress.py --congresses 117 118 --refresh    # re-download existing files
+  python3 data_processing/fetch_congress.py                                   # default phases, bulk congress range
+  python3 data_processing/fetch_congress.py --phases all                      # everything
+  python3 data_processing/fetch_congress.py --phases member_details committee_details
+  python3 data_processing/fetch_congress.py --congresses 117 118 --refresh    # re-download existing files
 """
 import argparse
 import configparser
@@ -45,9 +45,10 @@ from collections import deque
 from datetime import datetime
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent  # Final Project/data
-DEFAULT_OUT = HERE / "congress_api"
-BULK_DIR = HERE / "billstatus_bulk"
+HERE = Path(__file__).resolve().parent  # <repo>/data_processing (secrets.ini lives here)
+DATA = HERE.parent / "data"
+DEFAULT_OUT = DATA / "congress_api"
+BULK_DIR = DATA / "billstatus_bulk"
 SECRETS_FILE = HERE / "secrets.ini"
 API_ROOT = os.environ.get("CONGRESS_API_ROOT", "https://api.congress.gov/v3/")
 

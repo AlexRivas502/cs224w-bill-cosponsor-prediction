@@ -18,13 +18,13 @@ Output
                                    table doesn't re-parse 170k XML files
 
 Usage (run from your own terminal; uv installs PySpark, Java 17 must be installed):
-  uv run data/parsers.py --list                        # show available tables
-  uv run data/parsers.py                               # build every table
-  uv run data/parsers.py --table bills                 # one table
-  uv run data/parsers.py --table bill_cosponsors bill_actions
-  uv run data/parsers.py --table api                   # all API tables (or: billstatus)
-  uv run data/parsers.py --congresses 116 117 118      # only these partitions
-  uv run data/parsers.py --rebuild-staging             # after re-downloading the bulk XML
+  uv run data_processing/parsers.py --list                        # show available tables
+  uv run data_processing/parsers.py                               # build every table
+  uv run data_processing/parsers.py --table bills                 # one table
+  uv run data_processing/parsers.py --table bill_cosponsors bill_actions
+  uv run data_processing/parsers.py --table api                   # all API tables (or: billstatus)
+  uv run data_processing/parsers.py --congresses 116 117 118      # only these partitions
+  uv run data_processing/parsers.py --rebuild-staging             # after re-downloading the bulk XML
 
 Partitioned tables are rewritten one congress partition at a time (dynamic partition
 overwrite), so `--congresses 118` replaces congress=118 and leaves the others alone. Each
@@ -40,7 +40,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
-DATA_DIR = Path(__file__).resolve().parent
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"  # <repo>/data
 BULK_DIR = DATA_DIR / "billstatus_bulk"
 API_DIR = DATA_DIR / "congress_api"
 DEFAULT_OUT = DATA_DIR / "parsed"

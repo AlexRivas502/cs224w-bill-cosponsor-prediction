@@ -32,7 +32,7 @@ from .graphs import build_graph, check_graph, fit_node_standardizers, standardiz
 from .models import build_model
 
 EVAL_TIEBREAK = 1e-9
-TUNING_DIR = Path(__file__).resolve().parents[1] / "baselines_build" / "tuning"
+TUNING_DIR = Path(__file__).resolve().parents[2] / "tools" / "baselines_notebook" / "tuning"
 
 
 # --- Reproducibility -------------------------------------------------------------------------------------

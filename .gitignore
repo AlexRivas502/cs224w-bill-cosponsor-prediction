@@ -218,13 +218,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---- project-specific -------------------------------------------------
+# API key for data_processing/fetch_congress.py
 secrets.ini
-__pycache__/
-
-# large or regenerable data
-billstatus_bulk/
-congress_api/
-parsed/
-derived/
-
-.DS_STORE
+# all data (6 GB): downloads, parsed tables, caches; rebuild with data_processing/
+data/
+# headless test-run logs from the notebook harnesses
+tools/*/out/
+tools/baselines_notebook/tuning/r2_raw/
+# OS / editor / notebook junk
+.DS_Store
+.ipynb_checkpoints/

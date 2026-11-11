@@ -1,1 +1,0 @@
-G2 R-GCN: not selected in MODELS, skipped.

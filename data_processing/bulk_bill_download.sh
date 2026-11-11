@@ -1,8 +1,8 @@
 #!/bin/bash
-# Download GovInfo BILLSTATUS bulk files into data/billstatus_bulk/<congress>/<type>/.
+# Download GovInfo BILLSTATUS bulk files into <repo>/data/billstatus_bulk/<congress>/<type>/.
 # Congresses 108–119 (the 119th is still in session; exclude it from training data).
 
-cd "$(dirname "$0")" || exit 1
+mkdir -p "$(dirname "$0")/../data" && cd "$(dirname "$0")/../data" || exit 1
 OUT=billstatus_bulk
 
 for congress in {108..119}; do

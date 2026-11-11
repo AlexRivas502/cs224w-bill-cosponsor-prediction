@@ -1,8 +1,8 @@
 """Data loading, task labels, eligibility pools and folds.
 
-Every definition here is ported from the split notebook (`notebooks/_build/cells/00_setup.py` and the
+Every definition here is ported from the split notebook (`tools/split_notebook/cells/00_setup.py` and the
 engine block of `40_splits.py`) so that labels, censoring, point-in-time pools, caucus and majority are
-identical; `baselines_build/tests/test_parity.py` asserts it. Ported names keep a comment with their
+identical; `tools/baselines_notebook/tests/test_parity.py` asserts it. Ported names keep a comment with their
 origin. Nothing here is learned.
 """
 from __future__ import annotations
@@ -43,12 +43,12 @@ _TOKENS = itertools.count(1)
 
 def find_root(start: Path | None = None) -> Path:
     """Repo root = first directory at or above `start` (default: the working directory, then this package's
-    folder) containing parsed/."""
+    folder) containing data/parsed/."""
     for here in [Path(start or Path.cwd()).resolve(), Path(__file__).resolve().parent]:
         for p in [here, *here.parents]:
-            if (p / "parsed").is_dir():
+            if (p / "data" / "parsed").is_dir():
                 return p
-    raise FileNotFoundError("Couldn't find the parsed/ folder; run the notebook from inside the repo.")
+    raise FileNotFoundError("Couldn't find the data/parsed/ folder; run the notebook from inside the repo.")
 
 
 def congress_start(c) -> pd.Timestamp:
@@ -357,8 +357,8 @@ def _cache_key(parsed: Path, extra: str = "") -> str:
 
 
 def default_cache_dir(root: Path) -> Path:
-    """R/derived/cache/baselines (created on demand)."""
-    d = root / "derived" / "cache" / "baselines"
+    """<repo>/data/cache/baselines (created on demand)."""
+    d = root / "data" / "cache" / "baselines"
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -369,7 +369,7 @@ def load_corpus(cfg: RunConfig | None = None, root: Path | None = None) -> Corpu
     cfg = cfg or RunConfig()
     t_all = time.time()
     root = Path(root) if root else find_root()
-    parsed = root / "parsed"
+    parsed = root / "data" / "parsed"
     cache = Path(cfg.cache_dir) if cfg.cache_dir else default_cache_dir(root)
     cache.mkdir(parents=True, exist_ok=True)
     load = Loader(parsed)
