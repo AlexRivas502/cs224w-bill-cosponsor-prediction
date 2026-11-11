@@ -28,7 +28,9 @@ tools/                    for developers: build and test harnesses (notebooks ar
   split_notebook/           source cells + headless runner for 01
   baselines_notebook/       source cells, runner, leakage/parity tests, tuning logs for 02
   report/                   builds docs/split_report.html from 01's outputs
-data/                     (not in git, ~6 GB) raw downloads, parsed tables, caches
+data/
+  parsed/                   the 21 Parquet tables both notebooks read (~176 MB, in git)
+  billstatus_bulk/, congress_api/, cache/   raw downloads and caches (~6 GB, not in git)
 ```
 
 ## Quickstart
@@ -37,7 +39,7 @@ data/                     (not in git, ~6 GB) raw downloads, parsed tables, cach
    ```bash
    python -m pip install -r notebooks/requirements.txt
    ```
-2. **Get the data.** It isn't in git; this builds `data/`:
+2. **Data.** The parsed tables in `data/parsed/` come with the repo, so you can skip this step. To rebuild them from the raw sources (several hours, and an API key):
    ```bash
    bash data_processing/bulk_bill_download.sh                 # GovInfo BILLSTATUS XML -> data/billstatus_bulk/
    python3 data_processing/fetch_congress.py                  # Congress.gov API -> data/congress_api/ (needs an API key, see the script)

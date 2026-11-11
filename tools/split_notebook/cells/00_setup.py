@@ -1,6 +1,8 @@
 # %% [markdown]
 # # Choosing a train / validation / test split
 #
+# > **Disclaimer:** this entire notebook was created with Claude (Anthropic's AI assistant) for exploration purposes only.
+#
 # **Goal:** decide how to split the Congress data (Congresses 108–118) for the two tasks in the proposal:
 #
 # 1. **Cosponsor prediction** (temporal link prediction): for a bill at time *t* (day 0 or day 7 after

@@ -222,8 +222,11 @@ __marimo__/
 # ---- project-specific -------------------------------------------------
 # API key for data_processing/fetch_congress.py
 secrets.ini
-# all data (6 GB): downloads, parsed tables, caches; rebuild with data_processing/
-data/
+# raw downloads and caches (~6 GB) stay local; the parsed Parquet tables (~176 MB) are committed
+data/*
+!data/parsed/
+data/parsed/**/*.crc
+data/parsed/**/_SUCCESS
 # headless test-run logs from the notebook harnesses
 tools/*/out/
 tools/baselines_notebook/tuning/r2_raw/
